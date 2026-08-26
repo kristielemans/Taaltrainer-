@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gymnasion Taaltrainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F7F3E8;
+    --paper-line:#DCD5C0;
+    --ink:#1C2541;
+    --ink-soft:#5B6478;
+    --teal:#1B4B43;
+    --mustard:#E8A33D;
+    --coral:#E8613C;
+    --green:#2F7A4D;
+    --white:#FFFDF8;
+    --radius:14px;
+    --shadow: 0 2px 0 rgba(28,37,65,0.06), 0 8px 24px rgba(28,37,65,0.06);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 1px 1px, rgba(28,37,65,0.06) 1px, transparent 0) 0 0/22px 22px,
+      var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{
+    max-width:760px;
+    margin:0 auto;
+    padding:20px 18px 60px;
+  }
+  header.app-header{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:28px;
+    flex-wrap:wrap;
+  }
+  .brand h1{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-optical-sizing:auto;
+    font-size:2.1rem;
+    margin:0 0 2px;
+    letter-spacing:-0.01em;
+  }
+  .brand p{
+    margin:0;
+    color:var(--ink-soft);
+    font-size:0.92rem;
+  }
+  .btn{
+    font-family:'IBM Plex Sans', sans-serif;
+    font-weight:600;
+    font-size:0.88rem;
+    border:1.5px solid var(--ink);
+    background:var(--white);
+    color:var(--ink);
+    padding:9px 16px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:transform .12s ease, box-shadow .12s ease;
+    white-space:nowrap;
+  }
+  .btn:hover{ transform:translateY(-1px); box-shadow:var(--shadow); }
+  .btn:active{ transform:translateY(0); }
+  .btn-ghost{ border-color:var(--paper-line); color:var(--ink-soft); background:transparent; }
+  .btn-primary{ background:var(--ink); color:var(--white); border-color:var(--ink); }
+  .btn-stamp{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:1.05rem;
+    border:3px dashed var(--coral);
+    color:var(--coral);
+    background:transparent;
+    border-radius:50%;
+    width:132px; height:132px;
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+    line-height:1.15;
+    transform:rotate(-4deg);
+    cursor:pointer;
+    transition:transform .15s ease, background .15s ease, color .15s ease;
+    margin:18px auto 4px;
+  }
+  .btn-stamp:hover{ transform:rotate(0deg) scale(1.03); background:var(--coral); color:var(--white); }
+  .btn-stamp:disabled{ opacity:0.35; cursor:not-allowed; }
+  .btn-stamp:disabled:hover{ transform:rotate(-4deg) scale(1); background:transparent; color:var(--coral); }
+
+  section.card{
+    background:var(--white);
+    border:1px solid var(--paper-line);
+    border-radius:var(--radius);
+    padding:22px 22px 26px;
+    box-shadow:var(--shadow);
+    margin-bottom:18px;
+  }
+  .card h2{
+    font-family:'Fraunces', serif;
+    font-size:1.25rem;
+    margin:0 0 4px;
+  }
+  .card .hint{ color:var(--ink-soft); font-size:0.86rem; margin:0 0 16px; }
+
+  .filter-group{ margin-bottom:18px; }
+  .filter-group:last-child{ margin-bottom:0; }
+  .filter-group > label{
+    display:block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.09em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+  }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{
+    font-size:0.87rem;
+    font-weight:500;
+    padding:7px 14px;
+    border-radius:999px;
+    border:1.5px solid var(--paper-line);
+    background:var(--paper);
+    color:var(--ink);
+    cursor:pointer;
+    user-select:none;
+    transition:all .12s ease;
+  }
+  .chip.active{ background:var(--ink); border-color:var(--ink); color:var(--white); }
+  .chip:hover{ border-color:var(--ink); }
+  .chip.disabled{ opacity:0.3; cursor:not-allowed; text-decoration:line-through; }
+  .chip.disabled:hover{ border-color:var(--paper-line); }
+
+  .lang-row{ display:flex; gap:22px; flex-wrap:wrap; margin-bottom:18px; }
+  .lang-row .filter-group{ flex:1; min-width:200px; margin-bottom:0; }
+  .lang-arrow{
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces', serif; font-size:1.4rem; color:var(--ink-soft);
+    padding-top:22px;
+  }
+
+  .pool-count{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.82rem;
+    color:var(--ink-soft);
+    text-align:center;
+    margin-top:2px;
+  }
+  .pool-count b{ color:var(--ink); }
+
+  /* quiz */
+  .quiz-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; gap:10px; }
+  .quiz-top-right{ display:flex; align-items:center; gap:10px; }
+  .stamps-row{ display:flex; gap:5px; flex-wrap:wrap; }
+  .btn-stop{ padding:6px 13px; font-size:0.78rem; }
+  .btn-help{ width:36px; height:36px; padding:0; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; flex-shrink:0; }
+  .stamp-dot{
+    width:11px; height:11px; border-radius:50%;
+    border:1.5px solid var(--paper-line);
+    background:transparent;
+  }
+  .stamp-dot.correct{ background:var(--green); border-color:var(--green); }
+  .stamp-dot.wrong{ background:var(--coral); border-color:var(--coral); }
+  .stamp-dot.skipped{ background:var(--ink-soft); border-color:var(--ink-soft); }
+  .stamp-dot.current{ border-color:var(--ink); }
+  .score-badge{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size:0.85rem;
+    color:var(--ink);
+  }
+
+  .term-card{
+    text-align:center;
+    padding:34px 20px 26px;
+  }
+  .lang-badge{
+    display:inline-flex;
+    align-items:center; justify-content:center;
+    width:54px; height:54px;
+    border-radius:50%;
+    border:3px dashed currentColor;
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size:0.95rem;
+    transform:rotate(-6deg);
+    margin-bottom:14px;
+  }
+  .lang-NL{ color:var(--ink); }
+  .lang-EN{ color:var(--coral); }
+  .lang-FR{ color:var(--mustard); }
+  .lang-DU{ color:var(--teal); }
+  .term-card .prompt{ color:var(--ink-soft); font-size:0.92rem; margin:0 0 6px; }
+  .term-card .source-term{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:2.4rem;
+    margin:0 0 6px;
+    letter-spacing:-0.01em;
+  }
+  .term-card .source-term.long-text{
+    font-family:'IBM Plex Sans', sans-serif;
+    font-weight:600;
+    font-size:1.35rem;
+    line-height:1.4;
+    letter-spacing:0;
+  }
+  .term-card .source-meta{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.76rem;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+  }
+
+  .options-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:22px;
+  }
+  @media (max-width:520px){ .options-grid{ grid-template-columns:1fr; } }
+  .option-btn{
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:1rem;
+    font-weight:500;
+    padding:14px 16px;
+    border-radius:10px;
+    border:1.5px solid var(--paper-line);
+    background:var(--white);
+    color:var(--ink);
+    cursor:pointer;
+    text-align:left;
+    transition:all .12s ease;
+  }
+  .option-btn:hover:not(:disabled){ border-color:var(--ink); background:var(--paper); }
+  .option-btn:disabled{ cursor:default; }
+  .option-btn.correct{ background:var(--green); border-color:var(--green); color:var(--white); }
+  .option-btn.wrong{ background:var(--coral); border-color:var(--coral); color:var(--white); }
+
+  .answer-input-row{ display:none; gap:10px; margin-top:22px; }
+  .answer-input-row input{
+    flex:1;
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:1.05rem;
+    padding:13px 16px;
+    border-radius:10px;
+    border:1.5px solid var(--paper-line);
+    background:var(--white);
+    color:var(--ink);
+  }
+  .answer-input-row input:focus{ outline:none; border-color:var(--ink); }
+  .answer-input-row input:disabled{ background:var(--paper); color:var(--ink-soft); }
+  .answer-input-row input.correct{ border-color:var(--green); background:#EAF4EC; color:var(--green); }
+  .answer-input-row input.wrong{ border-color:var(--coral); background:#FBEAE5; color:var(--coral); }
+  .answer-input-row input.gaveup{ border-color:var(--ink-soft); background:var(--paper); color:var(--ink-soft); }
+  .mic-btn{
+    width:48px; height:48px;
+    border-radius:50%;
+    border:1.5px solid var(--paper-line);
+    background:var(--white);
+    font-size:1.15rem;
+    cursor:pointer;
+    flex-shrink:0;
+    transition:all .15s ease;
+  }
+  .mic-btn:hover:not(:disabled){ border-color:var(--ink); }
+  .mic-btn.active{ background:var(--coral); border-color:var(--coral); color:var(--white); animation:pulse 1s infinite; }
+  .mic-btn:disabled{ opacity:0.3; cursor:not-allowed; }
+  @keyframes pulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.08); } }
+
+  .answer-actions{ display:none; gap:10px; margin-top:14px; }
+  .answer-actions .btn{ flex:1; }
+
+  .feedback{
+    margin-top:18px;
+    padding:14px 16px;
+    border-radius:10px;
+    background:var(--paper);
+    border:1px solid var(--paper-line);
+    font-size:0.92rem;
+    display:none;
+  }
+  .feedback.show{ display:block; }
+  .feedback .label{ font-weight:700; margin-bottom:3px; }
+  .feedback.ok .label{ color:var(--green); }
+  .feedback.bad .label{ color:var(--coral); }
+
+  .quiz-actions{ display:flex; justify-content:flex-end; margin-top:16px; }
+
+  /* end screen */
+  .result-score{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:3rem;
+    text-align:center;
+    margin:6px 0 2px;
+  }
+  .result-sub{ text-align:center; color:var(--ink-soft); margin:0 0 20px; font-size:0.92rem; }
+  .stamp-collection{
+    display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:22px;
+  }
+  .stamp-collection .mini{
+    width:38px; height:38px; border-radius:50%;
+    border:2px dashed currentColor;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono',monospace; font-size:0.7rem; font-weight:600;
+  }
+  .mini.correct{ color:var(--green); }
+  .mini.wrong{ color:var(--coral); }
+  .mini.skipped{ color:var(--ink-soft); }
+  .review-list{ display:flex; flex-direction:column; gap:10px; margin-top:6px; }
+  .review-item{
+    border:1px solid var(--paper-line);
+    border-radius:10px;
+    padding:12px 14px;
+    font-size:0.88rem;
+  }
+  .review-item .rt{ font-weight:600; margin-bottom:2px; }
+  .review-item .rt small{ color:var(--ink-soft); font-weight:400; }
+  .review-item .re{ color:var(--ink-soft); }
+
+  .lijst-item{ padding:13px 0; border-bottom:1px solid var(--paper-line); }
+  .lijst-item:last-child{ border-bottom:none; }
+  .lijst-item .lt{ font-family:'Fraunces', serif; font-weight:700; font-size:1.08rem; margin-bottom:2px; }
+  .lijst-item .lu{ color:var(--ink-soft); font-size:0.9rem; }
+  .lijst-item .lm{ font-family:'IBM Plex Mono', monospace; font-size:0.7rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.05em; margin-top:3px; }
+  .end-actions{ display:flex; gap:10px; justify-content:center; margin-top:22px; flex-wrap:wrap; }
+
+  /* modal */
+  .overlay{
+    position:fixed; inset:0;
+    background:rgba(28,37,65,0.45);
+    display:none;
+    align-items:flex-start;
+    justify-content:center;
+    padding:36px 16px;
+    overflow-y:auto;
+    z-index:50;
+  }
+  .overlay.show{ display:flex; }
+  .modal{
+    background:var(--white);
+    border-radius:var(--radius);
+    max-width:560px;
+    width:100%;
+    padding:24px 24px 26px;
+    box-shadow:0 20px 60px rgba(28,37,65,0.25);
+  }
+  .modal h3{ font-family:'Fraunces', serif; font-size:1.3rem; margin:0 0 4px; }
+  .modal .hint{ color:var(--ink-soft); font-size:0.86rem; margin:0 0 16px; }
+  .modal-close-row{ display:flex; justify-content:flex-end; margin-top:20px; gap:10px; }
+  .dropzone{
+    border:2px dashed var(--paper-line);
+    border-radius:10px;
+    padding:26px 16px;
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:0.88rem;
+    margin-bottom:14px;
+  }
+  .dropzone input{ margin-top:10px; }
+  .import-status{
+    font-size:0.86rem;
+    padding:10px 12px;
+    border-radius:8px;
+    margin-bottom:12px;
+    display:none;
+  }
+  .import-status.show{ display:block; }
+  .import-status.ok{ background:#EAF4EC; color:var(--green); border:1px solid #C9E4CD; }
+  .import-status.err{ background:#FBEAE5; color:var(--coral); border:1px solid #F2C9BC; }
+  .schema-box{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    background:var(--paper);
+    border:1px solid var(--paper-line);
+    border-radius:8px;
+    padding:10px 12px;
+    overflow-x:auto;
+    color:var(--ink-soft);
+    margin-bottom:14px;
+    white-space:nowrap;
+  }
+  .danger-zone{
+    margin-top:22px;
+    padding-top:16px;
+    border-top:1px dashed var(--paper-line);
+  }
+  .danger-zone p{ font-size:0.8rem; color:var(--ink-soft); margin:0 0 8px; }
+
+  .toast{
+    position:fixed;
+    bottom:20px; left:50%;
+    transform:translateX(-50%) translateY(20px);
+    background:var(--ink); color:var(--white);
+    padding:11px 18px; border-radius:999px;
+    font-size:0.86rem;
+    opacity:0; pointer-events:none;
+    transition:all .25s ease;
+    z-index:100;
+    max-width:90%;
+    text-align:center;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  .empty-note{ text-align:center; color:var(--ink-soft); font-size:0.88rem; padding:10px 0 2px; }
+
+  .screen{ display:none; }
+  .screen.active{ display:block; }
+
+  a.footer-note, .footer-note{
+    display:block; text-align:center; margin-top:22px; color:var(--ink-soft);
+    font-family:'IBM Plex Mono', monospace; font-size:0.72rem; letter-spacing:0.03em;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="app-header">
+    <div class="brand">
+      <h1>Gymnasion Taaltrainer</h1>
+      <p>Vaktermen oefenen in 4 talen &mdash; NL &middot; EN &middot; FR &middot; DE</p>
+    </div>
+    <div style="display:flex; gap:8px; align-items:flex-start;">
+      <button class="btn btn-ghost btn-help" id="btn-open-help" title="Hulp">?</button>
+      <button class="btn btn-ghost" id="btn-open-import">Lijst importeren</button>
+    </div>
+  </header>
+
+  <!-- HOME -->
+  <div class="screen active" id="screen-home">
+    <section class="card">
+      <h2>Kies je spelmodus</h2>
+      <p class="hint">Vertalen: een term omzetten van de ene taal naar de andere. Uitleg: term en betekenis aan elkaar koppelen, binnen één taal, over een beperkt aantal vragen. Leermodus: hetzelfde als uitleg, maar dan over alle beschikbare termen.</p>
+      <div class="chips" id="chips-mode" style="margin-bottom:18px;"></div>
+
+      <div id="config-vertalen">
+        <div class="lang-row">
+          <div class="filter-group">
+            <label>Starttaal</label>
+            <div class="chips" id="chips-start-lang"></div>
+          </div>
+          <div class="lang-arrow">&rarr;</div>
+          <div class="filter-group">
+            <label>Doeltaal</label>
+            <div class="chips" id="chips-target-lang"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="config-uitleg" style="display:none;">
+        <div class="lang-row">
+          <div class="filter-group">
+            <label>Taal</label>
+            <div class="chips" id="chips-uitleg-lang"></div>
+          </div>
+          <div class="filter-group">
+            <label>Richting</label>
+            <div class="chips" id="chips-uitleg-richting"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="config-leren" style="display:none;">
+        <p class="hint">Overloopt alle beschikbare termen, in willekeurige volgorde en willekeurig in de richting term&nbsp;&rarr;&nbsp;uitleg of uitleg&nbsp;&rarr;&nbsp;term.</p>
+        <div class="filter-group">
+          <label>Taal</label>
+          <div class="chips" id="chips-leren-lang"></div>
+        </div>
+      </div>
+
+      <div id="config-lezen" style="display:none;">
+        <p class="hint">Toont de volledige lijst van beschikbare termen met hun uitleg, alfabetisch gesorteerd &mdash; om rustig door te lezen zonder vragen.</p>
+        <div class="filter-group">
+          <label>Taal</label>
+          <div class="chips" id="chips-lezen-lang"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Kies je onderdeel</h2>
+      <p class="hint">Selecteer vak, hoofdstuk en graad. Laat een groep leeg om alles mee te tellen.</p>
+
+      <div class="filter-group">
+        <label>Vak</label>
+        <div class="chips" id="chips-vak"></div>
+      </div>
+      <div class="filter-group">
+        <label>Hoofdstuk</label>
+        <div class="chips" id="chips-hoofdstuk"></div>
+      </div>
+      <div class="filter-group">
+        <label>Graad</label>
+        <div class="chips" id="chips-graad"></div>
+      </div>
+    </section>
+
+    <div style="text-align:center;">
+      <button class="btn-stamp" id="btn-start">START</button>
+      <p class="pool-count" id="pool-count"></p>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="screen" id="screen-quiz">
+    <section class="card">
+      <div class="quiz-top">
+        <div class="stamps-row" id="stamps-row"></div>
+        <div class="quiz-top-right">
+          <div class="score-badge" id="score-badge">0/0</div>
+          <button class="btn btn-ghost btn-stop" id="btn-stop" title="Spel stoppen">Stop</button>
+        </div>
+      </div>
+
+      <div class="term-card">
+        <div class="lang-badge" id="lang-badge">EN</div>
+        <p class="prompt" id="quiz-prompt">Hoe zeg je dit in het Engels?</p>
+        <p class="source-term" id="quiz-term">&mdash;</p>
+        <p class="source-meta" id="quiz-meta"></p>
+      </div>
+
+      <div class="options-grid" id="options-grid"></div>
+
+      <div class="answer-input-row" id="answer-input-row">
+        <input type="text" id="answer-input" placeholder="Typ je antwoord..." autocomplete="off" autocapitalize="off" spellcheck="false">
+        <button class="mic-btn" id="btn-mic" type="button" title="Spreek je antwoord in">&#127908;</button>
+      </div>
+      <div class="answer-actions" id="answer-actions">
+        <button class="btn btn-primary" id="btn-check">Controleer</button>
+        <button class="btn btn-ghost" id="btn-show-answer">Toon antwoord</button>
+      </div>
+
+      <div class="feedback" id="feedback">
+        <div class="label" id="feedback-label"></div>
+        <div id="feedback-text"></div>
+      </div>
+
+      <div class="quiz-actions">
+        <button class="btn btn-primary" id="btn-next" style="display:none;">Volgende &rarr;</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- END -->
+  <div class="screen" id="screen-end">
+    <section class="card">
+      <p class="result-sub">Resultaat</p>
+      <div class="result-score" id="result-score">0/0</div>
+      <p class="result-sub" id="result-pct"></p>
+      <div class="stamp-collection" id="stamp-collection"></div>
+
+      <div id="review-wrap" style="display:none;">
+        <h2 style="font-size:1rem;">Nog eens bekijken</h2>
+        <div class="review-list" id="review-list"></div>
+      </div>
+
+      <div class="end-actions">
+        <button class="btn btn-primary" id="btn-replay">Opnieuw spelen</button>
+        <button class="btn btn-ghost" id="btn-home">Terug naar start</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- LEESLIJST -->
+  <div class="screen" id="screen-lijst">
+    <section class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h2 style="margin:0;">Leeslijst</h2>
+        <button class="btn btn-ghost" id="btn-lijst-terug">Terug</button>
+      </div>
+      <div id="lijst-items"></div>
+    </section>
+  </div>
+
+  <p class="footer-note">gedeelde termenbank &middot; werkt op elk toestel met een browser</p>
+</div>
+
+<!-- HELP MODAL -->
+<div class="overlay" id="overlay-help">
+  <div class="modal">
+    <h3>Hoe werkt deze app?</h3>
+    <p class="hint">Voor leerlingen én leerkrachten &mdash; sluit dit venster gewoon om verder te gaan.</p>
+
+    <p style="font-weight:600; margin-bottom:4px;">Voor leerlingen</p>
+    <p class="hint">Kies bovenaan je spelmodus, taal (of talen) en het vak, hoofdstuk en graad waarover je wil oefenen, en klik op start. Staat de lijst van jouw leerkracht of vak er nog niet tussen? Vraag het CSV-bestand aan je leerkracht (bv. via Smartschool) en klik zelf op <b>"Lijst importeren"</b> hierboven om het toe te voegen &mdash; dat moet maar eenmalig, per toestel of browser. Je kan gerust na elkaar lijsten van verschillende leerkrachten of vakken importeren; ze worden gewoon samengevoegd, niets gaat verloren.</p>
+
+    <p style="font-weight:600; margin:16px 0 4px;">Voor leerkrachten: een lijst opstellen</p>
+    <p class="hint">Maak een CSV-bestand (puntkomma-gescheiden) volgens dit schema:</p>
+    <div class="schema-box">vak;hoofdstuk;graad;termNl;termEN;termFR;termDU;uitlegNl;uitlegEN;uitlegFR;uitlegDU</div>
+    <p class="hint"><b>Vak</b>, <b>hoofdstuk</b> en <b>graad</b> zijn verplicht (graad mag meerdere waarden bevatten, gescheiden door een komma, bv. <code>2,3</code>). Van de 4 talen volstaat er &eacute;&eacute;n ingevuld &mdash; laat een taal of een uitleg gerust leeg als je die nog niet hebt; die term verschijnt dan gewoon niet in die taal, de rest blijft werken. Niet zeker van de opmaak? Klik op <b>"Lijst importeren" &rarr; "Exporteer volledige lijst (CSV)"</b> zonder zelf iets te importeren: je krijgt dan de ingebouwde voorbeeldlijst als kant-en-klaar Excel-sjabloon, dat je verder kan aanvullen.</p>
+
+    <p style="font-weight:600; margin:16px 0 4px;">Delen met collega's en leerlingen (bv. via Smartschool)</p>
+    <p class="hint">Importeer je eigen CSV in de app, exporteer daarna de volledige lijst (standaard + jouw termen) opnieuw als CSV, en zet dat bestand samen met deze app (<code>taaltrainer.html</code>) op Smartschool. Iedereen downloadt beide bestanden en importeert dat ene CSV-bestand eenmalig in zijn eigen exemplaar van de app.</p>
+
+    <p style="font-weight:600; margin:16px 0 4px;">Opnieuw beginnen</p>
+    <p class="hint">Gebruik <b>"Herstel standaardgegevens"</b> in het importvenster om alle geïmporteerde lijsten te verwijderen en terug te keren naar enkel de ingebouwde voorbeeldlijst.</p>
+
+    <div class="modal-close-row">
+      <button class="btn btn-primary" id="btn-close-help">Sluiten</button>
+    </div>
+  </div>
+</div>
+
+<!-- IMPORT MODAL -->
+<div class="overlay" id="overlay-import">
+  <div class="modal">
+    <h3>CSV-lijst importeren</h3>
+    <p class="hint">Voegt termen toe voor iedereen die deze app op dit toestel gebruikt. Klik op het <b>?</b>-icoon hierboven voor de volledige uitleg.</p>
+
+    <div class="schema-box">vak;hoofdstuk;graad;termNl;termEN;termFR;termDU;uitlegNl;uitlegEN;uitlegFR;uitlegDU</div>
+    <p class="hint" style="margin-top:-8px;">Vak, hoofdstuk en graad zijn verplicht. Van de 4 talen volstaat er &eacute;&eacute;n &mdash; laat je bijvoorbeeld de Duitse vertaling leeg, dan verschijnt die term gewoon niet zodra een leerling Duits kiest, maar blijft ze wel bruikbaar in de andere talen. Uitleg-velden zijn altijd optioneel.</p>
+
+    <div class="import-status" id="import-status"></div>
+
+    <div class="dropzone">
+      Kies een CSV-bestand (puntkomma-gescheiden, UTF-8)<br>
+      <input type="file" id="file-input" accept=".csv,text/csv">
+    </div>
+
+    <div class="preview-wrap" id="preview-wrap" style="display:none;">
+      <p class="hint" id="preview-summary" style="margin-bottom:6px;"></p>
+    </div>
+
+    <div class="modal-close-row">
+      <button class="btn btn-primary" id="btn-confirm-import" disabled>Importeren</button>
+      <button class="btn btn-ghost" id="btn-close-import">Sluiten</button>
+    </div>
+
+    <div class="danger-zone" style="border-top:1px dashed var(--paper-line); margin-top:22px; padding-top:16px;">
+      <p>Delen met collega's via Smartschool: exporteer de volledige lijst (standaard + geïmporteerd) als CSV en laat hen dat bestand hierboven importeren in hun eigen versie van de app.</p>
+      <button class="btn btn-ghost" id="btn-export-csv">Exporteer volledige lijst (CSV)</button>
+    </div>
+
+    <div class="danger-zone">
+      <p>Beheer (voor testen): herstel de termenbank naar enkel de standaardlijst. Dit verwijdert alle geïmporteerde CSV's voor iedereen.</p>
+      <button class="btn btn-ghost" id="btn-reset">Herstel standaardgegevens</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="overlay" id="overlay-confirm">
+  <div class="modal" style="max-width:420px;">
+    <h3 id="confirm-title">Weet je het zeker?</h3>
+    <p class="hint" id="confirm-text"></p>
+    <div class="modal-close-row">
+      <button class="btn btn-ghost" id="confirm-no">Annuleren</button>
+      <button class="btn btn-primary" id="confirm-yes">Ja, doorgaan</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'termbank_v1';
+const DEFAULT_TERMS = [{"vak": "Informatica", "hoofdstuk": "Word", "graad": ["1", "2"], "termNl": "Document", "termEN": "Document", "termFR": "Document", "termDU": "Dokument", "uitlegNl": "Een bestand waarin je tekst typt en bewerkt.", "uitlegEN": "A file in which you type and edit text.", "uitlegFR": "Un fichier dans lequel vous tapez et modifiez du texte.", "uitlegDU": "Eine Datei, in der du Text eingibst und bearbeitest.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Word", "graad": ["1", "2"], "termNl": "Lettertype", "termEN": "Font", "termFR": "Police", "termDU": "Schriftart", "uitlegNl": "De vorm en stijl van de letters in een tekst.", "uitlegEN": "The shape and style of the letters in a text.", "uitlegFR": "La forme et le style des lettres dans un texte.", "uitlegDU": "Die Form und der Stil der Buchstaben in einem Text.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Word", "graad": ["1", "2"], "termNl": "Alinea", "termEN": "Paragraph", "termFR": "Paragraphe", "termDU": "Absatz", "uitlegNl": "Een stuk tekst dat begint met een nieuwe regel en één samenhangend idee bevat.", "uitlegEN": "A piece of text that starts on a new line and contains one coherent idea.", "uitlegFR": "Un morceau de texte qui commence à la ligne et contient une idée cohérente.", "uitlegDU": "Ein Textabschnitt, der in einer neuen Zeile beginnt und einen zusammenhängenden Gedanken enthält.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Word", "graad": ["1", "2"], "termNl": "Opmaak", "termEN": "Formatting", "termFR": "Mise en forme", "termDU": "Formatierung", "uitlegNl": "Het aanpassen van het uiterlijk van tekst, zoals kleur en stijl.", "uitlegEN": "Adjusting the appearance of text, such as colour and style.", "uitlegFR": "L'ajustement de l'apparence du texte, comme la couleur et le style.", "uitlegDU": "Die Anpassung des Erscheinungsbilds von Text, z. B. Farbe und Stil.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Word", "graad": ["1", "2"], "termNl": "Spellingscontrole", "termEN": "Spell check", "termFR": "Vérification orthographique", "termDU": "Rechtschreibprüfung", "uitlegNl": "Een functie die spelfouten in een tekst opspoort.", "uitlegEN": "A feature that detects spelling mistakes in a text.", "uitlegFR": "Une fonction qui détecte les fautes d'orthographe dans un texte.", "uitlegDU": "Eine Funktion, die Rechtschreibfehler in einem Text erkennt.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Word", "graad": ["1", "2"], "termNl": "Afdrukken", "termEN": "Print", "termFR": "Imprimer", "termDU": "Drucken", "uitlegNl": "Een document op papier zetten met een printer.", "uitlegEN": "Putting a document on paper using a printer.", "uitlegFR": "Mettre un document sur papier à l'aide d'une imprimante.", "uitlegDU": "Ein Dokument mit einem Drucker auf Papier bringen.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Word", "graad": ["1", "2"], "termNl": "Sjabloon", "termEN": "Template", "termFR": "Modèle", "termDU": "Vorlage", "uitlegNl": "Een vooraf gemaakte opmaak die je als basis gebruikt voor een document.", "uitlegEN": "A pre-made layout that you use as a basis for a document.", "uitlegFR": "Une mise en page prédéfinie utilisée comme base pour un document.", "uitlegDU": "Ein vorgefertigtes Layout, das als Grundlage für ein Dokument dient.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Word", "graad": ["1", "2"], "termNl": "Kopiëren", "termEN": "Copy", "termFR": "Copier", "termDU": "Kopieren", "uitlegNl": "Een kopie van tekst of een bestand maken.", "uitlegEN": "Making a duplicate of text or a file.", "uitlegFR": "Faire une copie d'un texte ou d'un fichier.", "uitlegDU": "Eine Kopie von Text oder einer Datei erstellen.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Word", "graad": ["1", "2"], "termNl": "Plakken", "termEN": "Paste", "termFR": "Coller", "termDU": "Einfügen", "uitlegNl": "Gekopieerde tekst of een bestand op een andere plaats invoegen.", "uitlegEN": "Inserting copied text or a file in another place.", "uitlegFR": "Insérer un texte ou un fichier copié à un autre endroit.", "uitlegDU": "Kopierten Text oder eine Datei an einer anderen Stelle einfügen.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Word", "graad": ["1", "2"], "termNl": "Opslaan", "termEN": "Save", "termFR": "Enregistrer", "termDU": "Speichern", "uitlegNl": "Een document bewaren op de computer.", "uitlegEN": "Storing a document on the computer.", "uitlegFR": "Conserver un document sur l'ordinateur.", "uitlegDU": "Ein Dokument auf dem Computer speichern.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Excel", "graad": ["2", "3"], "termNl": "Werkblad", "termEN": "Worksheet", "termFR": "Feuille de calcul", "termDU": "Arbeitsblatt", "uitlegNl": "Eén blad binnen een Excel-bestand waarin je gegevens invoert.", "uitlegEN": "One sheet within an Excel file where you enter data.", "uitlegFR": "Une feuille au sein d'un fichier Excel où l'on saisit des données.", "uitlegDU": "Ein Blatt innerhalb einer Excel-Datei, in das du Daten eingibst.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Excel", "graad": ["2", "3"], "termNl": "Cel", "termEN": "Cell", "termFR": "Cellule", "termDU": "Zelle", "uitlegNl": "Het kruispunt van een rij en een kolom in een werkblad.", "uitlegEN": "The intersection of a row and a column in a worksheet.", "uitlegFR": "L'intersection d'une ligne et d'une colonne dans une feuille de calcul.", "uitlegDU": "Der Schnittpunkt einer Zeile und einer Spalte in einem Arbeitsblatt.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Excel", "graad": ["2", "3"], "termNl": "Formule", "termEN": "Formula", "termFR": "Formule", "termDU": "Formel", "uitlegNl": "Een berekening die je in een cel invoert, beginnend met een =.", "uitlegEN": "A calculation you enter in a cell, starting with an =.", "uitlegFR": "Un calcul saisi dans une cellule, commençant par un =.", "uitlegDU": "Eine Berechnung, die du in eine Zelle eingibst und die mit = beginnt.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Excel", "graad": ["2", "3"], "termNl": "Functie", "termEN": "Function", "termFR": "Fonction", "termDU": "Funktion", "uitlegNl": "Een vooraf gedefinieerde formule zoals SOM of GEMIDDELDE.", "uitlegEN": "A predefined formula such as SUM or AVERAGE.", "uitlegFR": "Une formule prédéfinie telle que SOMME ou MOYENNE.", "uitlegDU": "Eine vordefinierte Formel wie SUMME oder MITTELWERT.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Excel", "graad": ["2", "3"], "termNl": "Rij", "termEN": "Row", "termFR": "Ligne", "termDU": "Zeile", "uitlegNl": "Een horizontale lijn van cellen in een werkblad.", "uitlegEN": "A horizontal line of cells in a worksheet.", "uitlegFR": "Une ligne horizontale de cellules dans une feuille de calcul.", "uitlegDU": "Eine horizontale Reihe von Zellen in einem Arbeitsblatt.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Excel", "graad": ["2", "3"], "termNl": "Kolom", "termEN": "Column", "termFR": "Colonne", "termDU": "Spalte", "uitlegNl": "Een verticale lijn van cellen in een werkblad.", "uitlegEN": "A vertical line of cells in a worksheet.", "uitlegFR": "Une ligne verticale de cellules dans une feuille de calcul.", "uitlegDU": "Eine vertikale Reihe von Zellen in einem Arbeitsblatt.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Excel", "graad": ["2", "3"], "termNl": "Grafiek", "termEN": "Chart", "termFR": "Graphique", "termDU": "Diagramm", "uitlegNl": "Een visuele voorstelling van gegevens.", "uitlegEN": "A visual representation of data.", "uitlegFR": "Une représentation visuelle de données.", "uitlegDU": "Eine visuelle Darstellung von Daten.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Excel", "graad": ["2", "3"], "termNl": "Filter", "termEN": "Filter", "termFR": "Filtre", "termDU": "Filter", "uitlegNl": "Een functie om enkel bepaalde gegevens te tonen.", "uitlegEN": "A feature to show only certain data.", "uitlegFR": "Une fonction permettant d'afficher uniquement certaines données.", "uitlegDU": "Eine Funktion, um nur bestimmte Daten anzuzeigen.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Excel", "graad": ["2", "3"], "termNl": "Sorteren", "termEN": "Sort", "termFR": "Trier", "termDU": "Sortieren", "uitlegNl": "Gegevens ordenen volgens een bepaalde volgorde.", "uitlegEN": "Arranging data in a certain order.", "uitlegFR": "Organiser des données selon un certain ordre.", "uitlegDU": "Daten in einer bestimmten Reihenfolge anordnen.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Excel", "graad": ["2", "3"], "termNl": "Werkmap", "termEN": "Workbook", "termFR": "Classeur", "termDU": "Arbeitsmappe", "uitlegNl": "Het volledige Excel-bestand met een of meerdere werkbladen.", "uitlegEN": "The entire Excel file containing one or more worksheets.", "uitlegFR": "Le fichier Excel complet contenant une ou plusieurs feuilles.", "uitlegDU": "Die gesamte Excel-Datei mit einem oder mehreren Arbeitsblättern.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Access", "graad": ["3"], "termNl": "Database", "termEN": "Database", "termFR": "Base de données", "termDU": "Datenbank", "uitlegNl": "Een georganiseerde verzameling van gegevens.", "uitlegEN": "An organised collection of data.", "uitlegFR": "Une collection organisée de données.", "uitlegDU": "Eine organisierte Sammlung von Daten.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Access", "graad": ["3"], "termNl": "Tabel", "termEN": "Table", "termFR": "Table", "termDU": "Tabelle", "uitlegNl": "Een verzameling gegevens geordend in rijen en kolommen.", "uitlegEN": "A collection of data arranged in rows and columns.", "uitlegFR": "Une collection de données organisées en lignes et colonnes.", "uitlegDU": "Eine Sammlung von Daten, angeordnet in Zeilen und Spalten.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Access", "graad": ["3"], "termNl": "Query", "termEN": "Query", "termFR": "Requête", "termDU": "Abfrage", "uitlegNl": "Een vraag aan de database om bepaalde gegevens op te vragen.", "uitlegEN": "A request to the database to retrieve certain data.", "uitlegFR": "Une demande adressée à la base de données pour obtenir certaines données.", "uitlegDU": "Eine Anfrage an die Datenbank, um bestimmte Daten abzurufen.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Access", "graad": ["3"], "termNl": "Formulier", "termEN": "Form", "termFR": "Formulaire", "termDU": "Formular", "uitlegNl": "Een scherm om gegevens gemakkelijk in te voeren.", "uitlegEN": "A screen for entering data easily.", "uitlegFR": "Un écran permettant de saisir facilement des données.", "uitlegDU": "Ein Bildschirm zur einfachen Dateneingabe.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Access", "graad": ["3"], "termNl": "Rapport", "termEN": "Report", "termFR": "Rapport", "termDU": "Bericht", "uitlegNl": "Een overzichtelijke weergave van gegevens, klaar om af te drukken.", "uitlegEN": "A clear overview of data, ready to be printed.", "uitlegFR": "Un aperçu clair des données, prêt à être imprimé.", "uitlegDU": "Eine übersichtliche Darstellung von Daten, druckbereit.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Access", "graad": ["3"], "termNl": "Record", "termEN": "Record", "termFR": "Enregistrement", "termDU": "Datensatz", "uitlegNl": "Eén volledige rij gegevens in een tabel.", "uitlegEN": "One complete row of data in a table.", "uitlegFR": "Une ligne complète de données dans une table.", "uitlegDU": "Eine vollständige Datenzeile in einer Tabelle.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Access", "graad": ["3"], "termNl": "Veld", "termEN": "Field", "termFR": "Champ", "termDU": "Feld", "uitlegNl": "Eén kolom in een tabel die één soort gegeven bevat.", "uitlegEN": "One column in a table that holds one type of data.", "uitlegFR": "Une colonne d'une table contenant un seul type de donnée.", "uitlegDU": "Eine Spalte in einer Tabelle, die eine Art von Daten enthält.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Access", "graad": ["3"], "termNl": "Primaire sleutel", "termEN": "Primary key", "termFR": "Clé primaire", "termDU": "Primärschlüssel", "uitlegNl": "Een uniek veld dat elk record identificeert.", "uitlegEN": "A unique field that identifies each record.", "uitlegFR": "Un champ unique qui identifie chaque enregistrement.", "uitlegDU": "Ein eindeutiges Feld, das jeden Datensatz identifiziert.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Access", "graad": ["3"], "termNl": "Relatie", "termEN": "Relationship", "termFR": "Relation", "termDU": "Beziehung", "uitlegNl": "Een koppeling tussen twee tabellen.", "uitlegEN": "A link between two tables.", "uitlegFR": "Un lien entre deux tables.", "uitlegDU": "Eine Verknüpfung zwischen zwei Tabellen.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Access", "graad": ["3"], "termNl": "Index", "termEN": "Index", "termFR": "Index", "termDU": "Index", "uitlegNl": "Een hulpmiddel om gegevens sneller terug te vinden.", "uitlegEN": "A tool to find data faster.", "uitlegFR": "Un outil permettant de retrouver des données plus rapidement.", "uitlegDU": "Ein Hilfsmittel, um Daten schneller zu finden.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Programmeren", "graad": ["2", "3"], "termNl": "Variabele", "termEN": "Variable", "termFR": "Variable", "termDU": "Variable", "uitlegNl": "Een naam waarin je een waarde kan opslaan.", "uitlegEN": "A name in which you can store a value.", "uitlegFR": "Un nom dans lequel on peut stocker une valeur.", "uitlegDU": "Ein Name, unter dem du einen Wert speichern kannst.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Programmeren", "graad": ["2", "3"], "termNl": "Lus", "termEN": "Loop", "termFR": "Boucle", "termDU": "Schleife", "uitlegNl": "Een stuk code dat meerdere keren herhaald wordt.", "uitlegEN": "A piece of code that is repeated several times.", "uitlegFR": "Un morceau de code répété plusieurs fois.", "uitlegDU": "Ein Codeabschnitt, der mehrmals wiederholt wird.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Programmeren", "graad": ["2", "3"], "termNl": "Functie", "termEN": "Function", "termFR": "Fonction", "termDU": "Funktion", "uitlegNl": "Een stuk code met een naam dat je kan hergebruiken.", "uitlegEN": "A named piece of code that you can reuse.", "uitlegFR": "Un morceau de code nommé que l'on peut réutiliser.", "uitlegDU": "Ein benannter Codeabschnitt, den du wiederverwenden kannst.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Programmeren", "graad": ["2", "3"], "termNl": "Voorwaarde", "termEN": "Condition", "termFR": "Condition", "termDU": "Bedingung", "uitlegNl": "Een test die bepaalt of een stuk code wordt uitgevoerd.", "uitlegEN": "A test that determines whether a piece of code is executed.", "uitlegFR": "Un test qui détermine si un morceau de code est exécuté.", "uitlegDU": "Ein Test, der bestimmt, ob ein Codeabschnitt ausgeführt wird.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Programmeren", "graad": ["2", "3"], "termNl": "Array", "termEN": "Array", "termFR": "Tableau", "termDU": "Array", "uitlegNl": "Een lijst waarin je meerdere waarden onder één naam bewaart.", "uitlegEN": "A list in which you store several values under one name.", "uitlegFR": "Une liste dans laquelle plusieurs valeurs sont stockées sous un seul nom.", "uitlegDU": "Eine Liste, in der mehrere Werte unter einem Namen gespeichert werden.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Programmeren", "graad": ["2", "3"], "termNl": "Algoritme", "termEN": "Algorithm", "termFR": "Algorithme", "termDU": "Algorithmus", "uitlegNl": "Een stappenplan om een probleem op te lossen.", "uitlegEN": "A step-by-step plan to solve a problem.", "uitlegFR": "Une suite d'étapes pour résoudre un problème.", "uitlegDU": "Ein Schritt-für-Schritt-Plan zur Lösung eines Problems.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Programmeren", "graad": ["2", "3"], "termNl": "Compileren", "termEN": "Compile", "termFR": "Compiler", "termDU": "Kompilieren", "uitlegNl": "Broncode omzetten naar taal die de computer begrijpt.", "uitlegEN": "Converting source code into language the computer understands.", "uitlegFR": "Convertir le code source en langage compréhensible par l'ordinateur.", "uitlegDU": "Quellcode in eine für den Computer verständliche Sprache umwandeln.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Programmeren", "graad": ["2", "3"], "termNl": "Foutopsporing", "termEN": "Debugging", "termFR": "Débogage", "termDU": "Fehlersuche", "uitlegNl": "Fouten in code opsporen en verbeteren.", "uitlegEN": "Finding and fixing errors in code.", "uitlegFR": "Rechercher et corriger les erreurs dans le code.", "uitlegDU": "Fehler im Code finden und beheben.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Programmeren", "graad": ["2", "3"], "termNl": "Commentaar", "termEN": "Comment", "termFR": "Commentaire", "termDU": "Kommentar", "uitlegNl": "Uitleg in code die de computer negeert.", "uitlegEN": "Explanation in code that the computer ignores.", "uitlegFR": "Explication dans le code que l'ordinateur ignore.", "uitlegDU": "Erklärung im Code, die der Computer ignoriert.", "bron": "standaard"}, {"vak": "Informatica", "hoofdstuk": "Programmeren", "graad": ["2", "3"], "termNl": "Syntaxis", "termEN": "Syntax", "termFR": "Syntaxe", "termDU": "Syntax", "uitlegNl": "De regels waaraan code moet voldoen.", "uitlegEN": "The rules that code must follow.", "uitlegFR": "Les règles auxquelles le code doit se conformer.", "uitlegDU": "Die Regeln, denen Code entsprechen muss.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Analyse van functies", "graad": ["3"], "termNl": "Functie", "termEN": "Function", "termFR": "Fonction", "termDU": "Funktion", "uitlegNl": "Een verband dat aan elke x-waarde precies één y-waarde toekent.", "uitlegEN": "A relationship that assigns exactly one y-value to each x-value.", "uitlegFR": "Une relation qui associe exactement une valeur y à chaque valeur x.", "uitlegDU": "Eine Zuordnung, die jedem x-Wert genau einen y-Wert zuweist.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Analyse van functies", "graad": ["3"], "termNl": "Afgeleide", "termEN": "Derivative", "termFR": "Dérivée", "termDU": "Ableitung", "uitlegNl": "De helling van de raaklijn aan een grafiek in een bepaald punt.", "uitlegEN": "The slope of the tangent line to a graph at a given point.", "uitlegFR": "La pente de la tangente à un graphique en un point donné.", "uitlegDU": "Die Steigung der Tangente an einem Graphen in einem bestimmten Punkt.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Analyse van functies", "graad": ["3"], "termNl": "Limiet", "termEN": "Limit", "termFR": "Limite", "termDU": "Grenzwert", "uitlegNl": "De waarde waar een functie naartoe gaat als x een bepaalde waarde benadert.", "uitlegEN": "The value a function approaches as x gets close to a certain value.", "uitlegFR": "La valeur vers laquelle tend une fonction lorsque x se rapproche d'une certaine valeur.", "uitlegDU": "Der Wert, dem sich eine Funktion nähert, wenn x sich einem bestimmten Wert nähert.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Analyse van functies", "graad": ["3"], "termNl": "Continuïteit", "termEN": "Continuity", "termFR": "Continuité", "termDU": "Stetigkeit", "uitlegNl": "De eigenschap dat je een grafiek kan tekenen zonder de pen op te heffen.", "uitlegEN": "The property that lets you draw a graph without lifting your pen.", "uitlegFR": "La propriété qui permet de tracer un graphique sans lever le crayon.", "uitlegDU": "Die Eigenschaft, einen Graphen zeichnen zu können, ohne den Stift abzusetzen.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Analyse van functies", "graad": ["3"], "termNl": "Asymptoot", "termEN": "Asymptote", "termFR": "Asymptote", "termDU": "Asymptote", "uitlegNl": "Een rechte die een grafiek benadert maar nooit raakt.", "uitlegEN": "A line that a graph approaches but never touches.", "uitlegFR": "Une droite dont un graphique se rapproche sans jamais la toucher.", "uitlegDU": "Eine Gerade, der sich ein Graph annähert, ohne sie zu berühren.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Analyse van functies", "graad": ["3"], "termNl": "Extremum", "termEN": "Extremum", "termFR": "Extremum", "termDU": "Extremum", "uitlegNl": "Een maximum of minimum van een functie.", "uitlegEN": "A maximum or minimum of a function.", "uitlegFR": "Un maximum ou un minimum d'une fonction.", "uitlegDU": "Ein Maximum oder Minimum einer Funktion.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Analyse van functies", "graad": ["3"], "termNl": "Buigpunt", "termEN": "Inflection point", "termFR": "Point d'inflexion", "termDU": "Wendepunkt", "uitlegNl": "Het punt waar een grafiek van concaaf naar convex verandert (of omgekeerd).", "uitlegEN": "The point where a graph changes from concave to convex, or vice versa.", "uitlegFR": "Le point où un graphique passe de concave à convexe, ou inversement.", "uitlegDU": "Der Punkt, an dem ein Graph von konkav zu konvex wechselt oder umgekehrt.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Analyse van functies", "graad": ["3"], "termNl": "Stijgend", "termEN": "Increasing", "termFR": "Croissante", "termDU": "Steigend", "uitlegNl": "Een functie waarvan de waarden groter worden als x toeneemt.", "uitlegEN": "A function whose values become larger as x increases.", "uitlegFR": "Une fonction dont les valeurs augmentent quand x augmente.", "uitlegDU": "Eine Funktion, deren Werte größer werden, wenn x zunimmt.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Analyse van functies", "graad": ["3"], "termNl": "Dalend", "termEN": "Decreasing", "termFR": "Décroissante", "termDU": "Fallend", "uitlegNl": "Een functie waarvan de waarden kleiner worden als x toeneemt.", "uitlegEN": "A function whose values become smaller as x increases.", "uitlegFR": "Une fonction dont les valeurs diminuent quand x augmente.", "uitlegDU": "Eine Funktion, deren Werte kleiner werden, wenn x zunimmt.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Analyse van functies", "graad": ["3"], "termNl": "Domein", "termEN": "Domain", "termFR": "Domaine", "termDU": "Definitionsbereich", "uitlegNl": "De verzameling van alle toegelaten x-waarden van een functie.", "uitlegEN": "The set of all allowed x-values of a function.", "uitlegFR": "L'ensemble de toutes les valeurs x autorisées d'une fonction.", "uitlegDU": "Die Menge aller zulässigen x-Werte einer Funktion.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Analyse van functies", "graad": ["3"], "termNl": "Bereik", "termEN": "Range", "termFR": "Image", "termDU": "Wertebereich", "uitlegNl": "De verzameling van alle mogelijke y-waarden van een functie.", "uitlegEN": "The set of all possible y-values of a function.", "uitlegFR": "L'ensemble de toutes les valeurs y possibles d'une fonction.", "uitlegDU": "Die Menge aller möglichen y-Werte einer Funktion.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Analyse van functies", "graad": ["3"], "termNl": "Nulpunt", "termEN": "Zero (root)", "termFR": "Zéro (racine)", "termDU": "Nullstelle", "uitlegNl": "Een x-waarde waarvoor de functie gelijk is aan nul.", "uitlegEN": "An x-value for which the function equals zero.", "uitlegFR": "Une valeur x pour laquelle la fonction vaut zéro.", "uitlegDU": "Ein x-Wert, für den die Funktion gleich null ist.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Analyse van functies", "graad": ["3"], "termNl": "Integraal", "termEN": "Integral", "termFR": "Intégrale", "termDU": "Integral", "uitlegNl": "De oppervlakte tussen een grafiek en de x-as over een interval.", "uitlegEN": "The area between a graph and the x-axis over an interval.", "uitlegFR": "L'aire comprise entre un graphique et l'axe des x sur un intervalle.", "uitlegDU": "Die Fläche zwischen einem Graphen und der x-Achse über einem Intervall.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Analyse van functies", "graad": ["3"], "termNl": "Primitieve", "termEN": "Antiderivative", "termFR": "Primitive", "termDU": "Stammfunktion", "uitlegNl": "Een functie waarvan de afgeleide gelijk is aan de gegeven functie.", "uitlegEN": "A function whose derivative equals the given function.", "uitlegFR": "Une fonction dont la dérivée est égale à la fonction donnée.", "uitlegDU": "Eine Funktion, deren Ableitung der gegebenen Funktion entspricht.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Analyse van functies", "graad": ["3"], "termNl": "Raaklijn", "termEN": "Tangent line", "termFR": "Tangente", "termDU": "Tangente", "uitlegNl": "De rechte die een grafiek in één punt raakt zonder ze te snijden.", "uitlegEN": "The line that touches a graph at one point without crossing it.", "uitlegFR": "La droite qui touche un graphique en un point sans le couper.", "uitlegDU": "Die Gerade, die einen Graphen an einem Punkt berührt, ohne ihn zu schneiden.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Analyse van functies", "graad": ["3"], "termNl": "Richtingscoëfficiënt", "termEN": "Slope", "termFR": "Pente", "termDU": "Steigung", "uitlegNl": "Het getal dat aangeeft hoe steil een rechte loopt.", "uitlegEN": "The number that indicates how steep a line is.", "uitlegFR": "Le nombre qui indique à quel point une droite est inclinée.", "uitlegDU": "Die Zahl, die angibt, wie steil eine Gerade verläuft.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Analyse van functies", "graad": ["3"], "termNl": "Concaviteit", "termEN": "Concavity", "termFR": "Concavité", "termDU": "Krümmung", "uitlegNl": "De richting waarin een grafiek buigt, hol of bol.", "uitlegEN": "The direction in which a graph curves, concave or convex.", "uitlegFR": "La direction dans laquelle un graphique se courbe, concave ou convexe.", "uitlegDU": "Die Richtung, in die sich ein Graph krümmt, konkav oder konvex.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Analyse van functies", "graad": ["3"], "termNl": "Periodieke functie", "termEN": "Periodic function", "termFR": "Fonction périodique", "termDU": "Periodische Funktion", "uitlegNl": "Een functie die zich na een vaste afstand steeds herhaalt.", "uitlegEN": "A function that repeats itself after a fixed interval.", "uitlegFR": "Une fonction qui se répète après un intervalle fixe.", "uitlegDU": "Eine Funktion, die sich nach einem festen Abstand wiederholt.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Analyse van functies", "graad": ["3"], "termNl": "Exponentiële functie", "termEN": "Exponential function", "termFR": "Fonction exponentielle", "termDU": "Exponentialfunktion", "uitlegNl": "Een functie waarbij de variabele in de exponent staat.", "uitlegEN": "A function in which the variable appears in the exponent.", "uitlegFR": "Une fonction dans laquelle la variable se trouve en exposant.", "uitlegDU": "Eine Funktion, bei der die Variable im Exponenten steht.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Analyse van functies", "graad": ["3"], "termNl": "Logaritmische functie", "termEN": "Logarithmic function", "termFR": "Fonction logarithmique", "termDU": "Logarithmusfunktion", "uitlegNl": "De omgekeerde functie van een exponentiële functie.", "uitlegEN": "The inverse function of an exponential function.", "uitlegFR": "La fonction réciproque d'une fonction exponentielle.", "uitlegDU": "Die Umkehrfunktion einer Exponentialfunktion.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Statistiek en kansrekenen", "graad": ["3"], "termNl": "Kans", "termEN": "Probability", "termFR": "Probabilité", "termDU": "Wahrscheinlichkeit", "uitlegNl": "Een maat tussen 0 en 1 voor hoe waarschijnlijk een gebeurtenis is.", "uitlegEN": "A measure between 0 and 1 of how likely an event is.", "uitlegFR": "Une mesure comprise entre 0 et 1 de la probabilité d'un événement.", "uitlegDU": "Ein Maß zwischen 0 und 1 dafür, wie wahrscheinlich ein Ereignis ist.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Statistiek en kansrekenen", "graad": ["3"], "termNl": "Steekproef", "termEN": "Sample", "termFR": "Échantillon", "termDU": "Stichprobe", "uitlegNl": "Een deel van een populatie dat onderzocht wordt.", "uitlegEN": "A part of a population that is examined.", "uitlegFR": "Une partie d'une population que l'on examine.", "uitlegDU": "Ein Teil einer Grundgesamtheit, der untersucht wird.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Statistiek en kansrekenen", "graad": ["3"], "termNl": "Populatie", "termEN": "Population", "termFR": "Population", "termDU": "Grundgesamtheit", "uitlegNl": "De volledige groep waarover je iets wil te weten komen.", "uitlegEN": "The entire group you want to learn something about.", "uitlegFR": "L'ensemble complet du groupe que l'on souhaite étudier.", "uitlegDU": "Die gesamte Gruppe, über die man etwas herausfinden möchte.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Statistiek en kansrekenen", "graad": ["3"], "termNl": "Gemiddelde", "termEN": "Mean", "termFR": "Moyenne", "termDU": "Mittelwert", "uitlegNl": "De som van alle waarden gedeeld door het aantal waarnemingen.", "uitlegEN": "The sum of all values divided by the number of observations.", "uitlegFR": "La somme de toutes les valeurs divisée par le nombre d'observations.", "uitlegDU": "Die Summe aller Werte geteilt durch die Anzahl der Beobachtungen.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Statistiek en kansrekenen", "graad": ["3"], "termNl": "Mediaan", "termEN": "Median", "termFR": "Médiane", "termDU": "Median", "uitlegNl": "De middelste waarde als je alle gegevens ordent.", "uitlegEN": "The middle value when the data is arranged in order.", "uitlegFR": "La valeur du milieu lorsque les données sont classées.", "uitlegDU": "Der mittlere Wert, wenn die Daten der Größe nach geordnet werden.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Statistiek en kansrekenen", "graad": ["3"], "termNl": "Modus", "termEN": "Mode", "termFR": "Mode", "termDU": "Modus", "uitlegNl": "De waarde die het vaakst voorkomt in een gegevensverzameling.", "uitlegEN": "The value that occurs most often in a data set.", "uitlegFR": "La valeur qui apparaît le plus souvent dans un ensemble de données.", "uitlegDU": "Der Wert, der in einem Datensatz am häufigsten vorkommt.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Statistiek en kansrekenen", "graad": ["3"], "termNl": "Standaardafwijking", "termEN": "Standard deviation", "termFR": "Écart type", "termDU": "Standardabweichung", "uitlegNl": "Een maat voor hoe ver de gegevens gemiddeld van het gemiddelde afliggen.", "uitlegEN": "A measure of how far the data typically lie from the mean.", "uitlegFR": "Une mesure de l'écart moyen des données par rapport à la moyenne.", "uitlegDU": "Ein Maß dafür, wie weit die Daten im Durchschnitt vom Mittelwert entfernt liegen.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Statistiek en kansrekenen", "graad": ["3"], "termNl": "Variantie", "termEN": "Variance", "termFR": "Variance", "termDU": "Varianz", "uitlegNl": "Het kwadraat van de standaardafwijking.", "uitlegEN": "The square of the standard deviation.", "uitlegFR": "Le carré de l'écart type.", "uitlegDU": "Das Quadrat der Standardabweichung.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Statistiek en kansrekenen", "graad": ["3"], "termNl": "Frequentie", "termEN": "Frequency", "termFR": "Fréquence", "termDU": "Häufigkeit", "uitlegNl": "Het aantal keer dat een waarde voorkomt.", "uitlegEN": "The number of times a value occurs.", "uitlegFR": "Le nombre de fois qu'une valeur apparaît.", "uitlegDU": "Die Anzahl, wie oft ein Wert vorkommt.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Statistiek en kansrekenen", "graad": ["3"], "termNl": "Kansverdeling", "termEN": "Probability distribution", "termFR": "Loi de probabilité", "termDU": "Wahrscheinlichkeitsverteilung", "uitlegNl": "Een overzicht van alle mogelijke uitkomsten met hun bijhorende kans.", "uitlegEN": "An overview of all possible outcomes with their corresponding probability.", "uitlegFR": "Un aperçu de tous les résultats possibles avec leur probabilité respective.", "uitlegDU": "Eine Übersicht aller möglichen Ergebnisse mit ihrer jeweiligen Wahrscheinlichkeit.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Statistiek en kansrekenen", "graad": ["3"], "termNl": "Combinatie", "termEN": "Combination", "termFR": "Combinaison", "termDU": "Kombination", "uitlegNl": "Een keuze van elementen waarbij de volgorde niet telt.", "uitlegEN": "A selection of elements in which the order does not matter.", "uitlegFR": "Un choix d'éléments dans lequel l'ordre n'a pas d'importance.", "uitlegDU": "Eine Auswahl von Elementen, bei der die Reihenfolge keine Rolle spielt.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Statistiek en kansrekenen", "graad": ["3"], "termNl": "Permutatie", "termEN": "Permutation", "termFR": "Permutation", "termDU": "Permutation", "uitlegNl": "Een rangschikking van elementen waarbij de volgorde wel telt.", "uitlegEN": "An arrangement of elements in which the order does matter.", "uitlegFR": "Un arrangement d'éléments dans lequel l'ordre est important.", "uitlegDU": "Eine Anordnung von Elementen, bei der die Reihenfolge eine Rolle spielt.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Statistiek en kansrekenen", "graad": ["3"], "termNl": "Onafhankelijke gebeurtenissen", "termEN": "Independent events", "termFR": "Événements indépendants", "termDU": "Unabhängige Ereignisse", "uitlegNl": "Gebeurtenissen waarvan de ene het resultaat van de andere niet beïnvloedt.", "uitlegEN": "Events where the outcome of one does not affect the other.", "uitlegFR": "Des événements dont l'un n'influence pas le résultat de l'autre.", "uitlegDU": "Ereignisse, bei denen das eine das Ergebnis des anderen nicht beeinflusst.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Statistiek en kansrekenen", "graad": ["3"], "termNl": "Voorwaardelijke kans", "termEN": "Conditional probability", "termFR": "Probabilité conditionnelle", "termDU": "Bedingte Wahrscheinlichkeit", "uitlegNl": "De kans op een gebeurtenis, gegeven dat een andere gebeurtenis al plaatsvond.", "uitlegEN": "The probability of an event given that another event has already occurred.", "uitlegFR": "La probabilité d'un événement sachant qu'un autre événement s'est déjà produit.", "uitlegDU": "Die Wahrscheinlichkeit eines Ereignisses unter der Bedingung, dass ein anderes bereits eingetreten ist.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Statistiek en kansrekenen", "graad": ["3"], "termNl": "Binomiale verdeling", "termEN": "Binomial distribution", "termFR": "Loi binomiale", "termDU": "Binomialverteilung", "uitlegNl": "De kansverdeling van het aantal successen bij een vast aantal onafhankelijke proeven.", "uitlegEN": "The probability distribution of the number of successes in a fixed number of independent trials.", "uitlegFR": "La loi de probabilité du nombre de succès pour un nombre fixe d'épreuves indépendantes.", "uitlegDU": "Die Wahrscheinlichkeitsverteilung der Anzahl der Erfolge bei einer festen Anzahl unabhängiger Versuche.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Statistiek en kansrekenen", "graad": ["3"], "termNl": "Normale verdeling", "termEN": "Normal distribution", "termFR": "Loi normale", "termDU": "Normalverteilung", "uitlegNl": "Een klokvormige, symmetrische kansverdeling die vaak in de natuur voorkomt.", "uitlegEN": "A bell-shaped, symmetric probability distribution that often occurs in nature.", "uitlegFR": "Une loi de probabilité symétrique en forme de cloche, fréquente dans la nature.", "uitlegDU": "Eine glockenförmige, symmetrische Wahrscheinlichkeitsverteilung, die in der Natur häufig vorkommt.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Statistiek en kansrekenen", "graad": ["3"], "termNl": "Boxplot", "termEN": "Box plot", "termFR": "Boîte à moustaches", "termDU": "Boxplot", "uitlegNl": "Een grafiek die de spreiding van gegevens toont via kwartielen.", "uitlegEN": "A graph that shows the spread of data using quartiles.", "uitlegFR": "Un graphique qui montre la dispersion des données à l'aide des quartiles.", "uitlegDU": "Eine Grafik, die die Streuung der Daten anhand von Quartilen zeigt.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Statistiek en kansrekenen", "graad": ["3"], "termNl": "Correlatie", "termEN": "Correlation", "termFR": "Corrélation", "termDU": "Korrelation", "uitlegNl": "De mate waarin twee variabelen samenhangen.", "uitlegEN": "The degree to which two variables are related.", "uitlegFR": "Le degré de lien entre deux variables.", "uitlegDU": "Das Ausmaß, in dem zwei Variablen zusammenhängen.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Statistiek en kansrekenen", "graad": ["3"], "termNl": "Histogram", "termEN": "Histogram", "termFR": "Histogramme", "termDU": "Histogramm", "uitlegNl": "Een staafdiagram dat de verdeling van numerieke gegevens toont.", "uitlegEN": "A bar chart that shows the distribution of numerical data.", "uitlegFR": "Un diagramme en bâtons qui montre la répartition de données numériques.", "uitlegDU": "Ein Balkendiagramm, das die Verteilung numerischer Daten zeigt.", "bron": "standaard"}, {"vak": "Wiskunde", "hoofdstuk": "Statistiek en kansrekenen", "graad": ["3"], "termNl": "Steekproefruimte", "termEN": "Sample space", "termFR": "Univers", "termDU": "Ergebnisraum", "uitlegNl": "De verzameling van alle mogelijke uitkomsten van een kansexperiment.", "uitlegEN": "The set of all possible outcomes of a probability experiment.", "uitlegFR": "L'ensemble de tous les résultats possibles d'une expérience aléatoire.", "uitlegDU": "Die Menge aller möglichen Ergebnisse eines Zufallsexperiments.", "bron": "standaard"}];
+const REQUIRED_COLS = ['vak','hoofdstuk','graad','termnl','termen','termfr','termdu'];
+const LANGS = [
+  { code:'NL', label:'Nederlands' },
+  { code:'EN', label:'Engels' },
+  { code:'FR', label:'Frans' },
+  { code:'DU', label:'Duits' },
+];
+const LANG_KEY = { NL:'Nl', EN:'EN', FR:'FR', DU:'DU' };
+const LANG_LABEL_IN = { NL:'het Nederlands', EN:'het Engels', FR:'het Frans', DU:'het Duits' };
+const MODE_OPTIONS = [
+  { code:'vertalen', label:'Vertalen' },
+  { code:'uitleg', label:'Uitleg' },
+  { code:'leren', label:'Leermodus' },
+  { code:'lezen', label:'Leesmodus' },
+];
+const RICHTING_OPTIONS = [
+  { code:'term-naar-uitleg', label:'Term \u2192 uitleg' },
+  { code:'uitleg-naar-term', label:'Uitleg \u2192 term' },
+];
+
+let termbank = [];
+let filters = { vak:new Set(), hoofdstuk:new Set(), graad:new Set() };
+let gameMode = 'vertalen';
+let langState = { start:'NL', target:'EN' };
+let uitlegState = { lang:'NL', richting:'term-naar-uitleg' };
+let lerenState = { lang:'NL' };
+let leesState = { lang:'NL' };
+let quiz = { questions:[], index:0, score:0, answers:[] };
+let pendingImportRows = null;
+let pendingImportLabel = '';
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+}
+
+function showConfirm(text, onYes){
+  document.getElementById('confirm-text').textContent = text;
+  document.getElementById('overlay-confirm').classList.add('show');
+  const yesBtn = document.getElementById('confirm-yes');
+  const noBtn = document.getElementById('confirm-no');
+  function cleanup(){
+    document.getElementById('overlay-confirm').classList.remove('show');
+    yesBtn.removeEventListener('click', yesHandler);
+    noBtn.removeEventListener('click', noHandler);
+  }
+  function yesHandler(){ cleanup(); onYes(); }
+  function noHandler(){ cleanup(); }
+  yesBtn.addEventListener('click', yesHandler);
+  noBtn.addEventListener('click', noHandler);
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._h);
+  showToast._h = setTimeout(()=>t.classList.remove('show'), 2600);
+}
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+/* ---------- storage ---------- */
+const hasSharedStorage = (typeof window.storage !== 'undefined') && !!window.storage;
+
+async function storageGet(key){
+  if(hasSharedStorage) return window.storage.get(key, true);
+  const raw = localStorage.getItem(key);
+  if(raw === null) throw new Error('not found');
+  return { key, value: raw, shared:false };
+}
+
+async function storageSet(key, value){
+  if(hasSharedStorage) return window.storage.set(key, value, true);
+  localStorage.setItem(key, value);
+  return { key, value, shared:false };
+}
+
+async function loadTermbank(){
+  try{
+    const res = await storageGet(STORAGE_KEY);
+    if(res && res.value){
+      termbank = JSON.parse(res.value);
+      if(!Array.isArray(termbank) || termbank.length === 0){ throw new Error('leeg'); }
+    } else {
+      throw new Error('geen data');
+    }
+  } catch(e){
+    termbank = DEFAULT_TERMS.map(t=>({...t}));
+    try{ await storageSet(STORAGE_KEY, JSON.stringify(termbank)); }catch(e2){ console.error(e2); }
+  }
+  if(!hasSharedStorage){
+    showToast('Standalone modus: gegevens worden enkel lokaal in deze browser bewaard, niet gedeeld met anderen.');
+  }
+}
+
+async function saveTermbank(){
+  try{
+    await storageSet(STORAGE_KEY, JSON.stringify(termbank));
+    return true;
+  }catch(e){
+    console.error(e);
+    showToast('Opslaan is mislukt. Probeer het opnieuw.');
+    return false;
+  }
+}
+
+/* ---------- CSV import ---------- */
+function parseCSV(text){
+  text = text.replace(/^\uFEFF/, '');
+  const lines = text.split(/\r\n|\n|\r/).filter(l => l.trim().length > 0);
+  if(lines.length < 2) throw new Error('Het bestand bevat geen gegevensrijen.');
+
+  const semiCount = (lines[0].match(/;/g)||[]).length;
+  const commaCount = (lines[0].match(/,/g)||[]).length;
+  const delim = semiCount >= commaCount ? ';' : ',';
+
+  const header = lines[0].split(delim).map(h=>h.trim().toLowerCase());
+  const colIndex = {};
+  header.forEach((h,i)=>{ colIndex[h]=i; });
+
+  const missing = REQUIRED_COLS.filter(c => !(c in colIndex));
+  if(missing.length){
+    throw new Error('Ontbrekende kolommen: ' + missing.join(', ') + '. Verwacht: vak;hoofdstuk;graad;termNl;termEN;termFR;termDU;uitlegNl;uitlegEN;uitlegFR;uitlegDU');
+  }
+
+  const get = (parts, key) => (colIndex[key] !== undefined && parts[colIndex[key]] !== undefined) ? parts[colIndex[key]].trim() : '';
+
+  const rows = [];
+  let skipped = 0;
+  for(let i=1;i<lines.length;i++){
+    const parts = lines[i].split(delim);
+    const row = {
+      vak: get(parts,'vak'),
+      hoofdstuk: get(parts,'hoofdstuk'),
+      graad: get(parts,'graad').split(',').map(g=>g.trim()).filter(Boolean),
+      termNl: get(parts,'termnl'),
+      termEN: get(parts,'termen'),
+      termFR: get(parts,'termfr'),
+      termDU: get(parts,'termdu'),
+      uitlegNl: get(parts,'uitlegnl'),
+      uitlegEN: get(parts,'uitlegen'),
+      uitlegFR: get(parts,'uitlegfr'),
+      uitlegDU: get(parts,'uitlegdu'),
+    };
+    if(!row.vak || !row.hoofdstuk || row.graad.length===0){
+      skipped++;
+      continue;
+    }
+    if(!row.termNl && !row.termEN && !row.termFR && !row.termDU){
+      skipped++;
+      continue;
+    }
+    rows.push(row);
+  }
+  if(rows.length === 0) throw new Error('Geen enkele geldige rij gevonden. Controleer of alle verplichte velden ingevuld zijn.');
+  return { rows, skipped };
+}
+
+function resetImportModalState(){
+  pendingImportRows = null;
+  pendingImportLabel = '';
+  document.getElementById('file-input').value = '';
+  document.getElementById('preview-wrap').style.display = 'none';
+  document.getElementById('import-status').className = 'import-status';
+  document.getElementById('btn-confirm-import').disabled = true;
+}
+
+document.getElementById('file-input').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  const statusEl = document.getElementById('import-status');
+  const previewWrap = document.getElementById('preview-wrap');
+  const previewSummary = document.getElementById('preview-summary');
+  const confirmBtn = document.getElementById('btn-confirm-import');
+
+  statusEl.className = 'import-status';
+  previewWrap.style.display = 'none';
+  confirmBtn.disabled = true;
+  pendingImportRows = null;
+
+  if(!file) return;
+  pendingImportLabel = file.name;
+
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try{
+      const { rows, skipped } = parseCSV(ev.target.result);
+      pendingImportRows = rows.map(r => ({...r, bron: file.name}));
+      statusEl.className = 'import-status ok show';
+      statusEl.textContent = rows.length + ' geldige termen gevonden' + (skipped ? ' (' + skipped + ' rijen overgeslagen wegens ontbrekende velden)' : '') + '.';
+      previewWrap.style.display = 'block';
+      const sample = rows.slice(0,3).map(r => r.termNl + ' (' + r.vak + ' / ' + r.hoofdstuk + ')').join(', ');
+      previewSummary.textContent = 'Voorbeeld: ' + sample + (rows.length>3 ? ', ...' : '');
+      confirmBtn.disabled = false;
+    }catch(err){
+      statusEl.className = 'import-status err show';
+      statusEl.textContent = err.message;
+    }
+  };
+  reader.onerror = () => {
+    statusEl.className = 'import-status err show';
+    statusEl.textContent = 'Kon het bestand niet lezen.';
+  };
+  reader.readAsText(file, 'UTF-8');
+});
+
+document.getElementById('btn-confirm-import').addEventListener('click', async ()=>{
+  if(!pendingImportRows || pendingImportRows.length===0) return;
+  termbank = termbank.concat(pendingImportRows);
+  const ok = await saveTermbank();
+  if(ok){
+    showToast(pendingImportRows.length + ' termen uit "' + pendingImportLabel + '" toegevoegd.');
+    closeImportModal();
+    buildFilterUI();
+  }
+});
+
+document.getElementById('btn-open-import').addEventListener('click', ()=>{
+  resetImportModalState();
+  document.getElementById('overlay-import').classList.add('show');
+});
+document.getElementById('btn-open-help').addEventListener('click', ()=>{
+  document.getElementById('overlay-help').classList.add('show');
+});
+document.getElementById('btn-close-help').addEventListener('click', ()=>{
+  document.getElementById('overlay-help').classList.remove('show');
+});
+document.getElementById('btn-close-import').addEventListener('click', closeImportModal);
+function closeImportModal(){
+  document.getElementById('overlay-import').classList.remove('show');
+  resetImportModalState();
+}
+
+function csvEscape(value){
+  const v = String(value == null ? '' : value);
+  if(/[;"\n]/.test(v)) return '"' + v.replace(/"/g, '""') + '"';
+  return v;
+}
+
+function exportCSV(){
+  const header = ['vak','hoofdstuk','graad','termNl','termEN','termFR','termDU','uitlegNl','uitlegEN','uitlegFR','uitlegDU'];
+  const lines = [header.join(';')];
+  termbank.forEach(t => {
+    const row = [
+      t.vak, t.hoofdstuk, (t.graad || []).join(','),
+      t.termNl, t.termEN, t.termFR, t.termDU,
+      t.uitlegNl || '', t.uitlegEN || '', t.uitlegFR || '', t.uitlegDU || ''
+    ];
+    lines.push(row.map(csvEscape).join(';'));
+  });
+  const csvContent = '\uFEFF' + lines.join('\r\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'termenlijst.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast(termbank.length + ' termen geëxporteerd.');
+}
+document.getElementById('btn-export-csv').addEventListener('click', exportCSV);
+
+document.getElementById('btn-reset').addEventListener('click', () => {
+  showConfirm('Alle geïmporteerde termen worden verwijderd voor iedereen die deze app gebruikt. Doorgaan?', async () => {
+    termbank = DEFAULT_TERMS.map(t=>({...t}));
+    const ok = await saveTermbank();
+    if(ok){
+      showToast('Termenbank hersteld naar standaardgegevens.');
+      closeImportModal();
+      buildFilterUI();
+    }
+  });
+});
+
+/* ---------- language & mode selection ---------- */
+function renderSingleChips(containerId, options, selectedCode, onSelect){
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  options.forEach(o => {
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (selectedCode === o.code ? ' active' : '');
+    chip.textContent = o.label;
+    chip.addEventListener('click', () => onSelect(o.code));
+    el.appendChild(chip);
+  });
+}
+
+function renderLangChips(containerId, selectedCode, disabledCode, onSelect){
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  LANGS.forEach(l => {
+    const chip = document.createElement('div');
+    let cls = 'chip';
+    if(l.code === selectedCode) cls += ' active';
+    if(l.code === disabledCode) cls += ' disabled';
+    chip.className = cls;
+    chip.textContent = l.label;
+    if(l.code !== disabledCode){
+      chip.addEventListener('click', () => onSelect(l.code));
+    }
+    el.appendChild(chip);
+  });
+}
+
+function refreshLangUI(){
+  renderLangChips('chips-start-lang', langState.start, langState.target, (code) => {
+    langState.start = code;
+    refreshLangUI();
+  });
+  renderLangChips('chips-target-lang', langState.target, langState.start, (code) => {
+    langState.target = code;
+    refreshLangUI();
+  });
+  updatePoolCount();
+}
+
+function refreshUitlegUI(){
+  renderSingleChips('chips-uitleg-lang', LANGS, uitlegState.lang, (code) => {
+    uitlegState.lang = code;
+    refreshUitlegUI();
+  });
+  renderSingleChips('chips-uitleg-richting', RICHTING_OPTIONS, uitlegState.richting, (code) => {
+    uitlegState.richting = code;
+    refreshUitlegUI();
+  });
+  updatePoolCount();
+}
+
+function refreshLerenUI(){
+  renderSingleChips('chips-leren-lang', LANGS, lerenState.lang, (code) => {
+    lerenState.lang = code;
+    refreshLerenUI();
+  });
+  updatePoolCount();
+}
+
+function refreshLeesUI(){
+  renderSingleChips('chips-lezen-lang', LANGS, leesState.lang, (code) => {
+    leesState.lang = code;
+    refreshLeesUI();
+  });
+  updatePoolCount();
+}
+
+function renderModeChips(){
+  renderSingleChips('chips-mode', MODE_OPTIONS, gameMode, (code) => {
+    gameMode = code;
+    renderModeChips();
+    document.getElementById('config-vertalen').style.display = gameMode === 'vertalen' ? 'block' : 'none';
+    document.getElementById('config-uitleg').style.display = gameMode === 'uitleg' ? 'block' : 'none';
+    document.getElementById('config-leren').style.display = gameMode === 'leren' ? 'block' : 'none';
+    document.getElementById('config-lezen').style.display = gameMode === 'lezen' ? 'block' : 'none';
+    updatePoolCount();
+  });
+}
+
+/* ---------- filter UI ---------- */
+function unique(arr){ return [...new Set(arr)].sort((a,b)=>a.localeCompare(b,'nl')); }
+
+function buildFilterUI(){
+  const vakOptions = unique(termbank.map(t=>t.vak));
+  filters.vak = new Set([...filters.vak].filter(v=>vakOptions.includes(v)));
+
+  renderChips('chips-vak', vakOptions, filters.vak, () => {
+    const validHoofdstukken = unique(termbank.filter(t => filters.vak.size===0 || filters.vak.has(t.vak)).map(t=>t.hoofdstuk));
+    filters.hoofdstuk = new Set([...filters.hoofdstuk].filter(h=>validHoofdstukken.includes(h)));
+    buildFilterUI();
+  });
+
+  const hoofdstukPool = termbank.filter(t => filters.vak.size===0 || filters.vak.has(t.vak));
+  const hoofdstukOptions = unique(hoofdstukPool.map(t=>t.hoofdstuk));
+  renderChips('chips-hoofdstuk', hoofdstukOptions, filters.hoofdstuk, updatePoolCount);
+
+  const graadOptions = unique(termbank.flatMap(t=>t.graad)).sort((a,b)=>a.localeCompare(b, 'nl', {numeric:true}));
+  renderChips('chips-graad', graadOptions, filters.graad, updatePoolCount);
+
+  updatePoolCount();
+}
+
+function renderChips(containerId, options, selectedSet, onChange){
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  options.forEach(opt => {
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (selectedSet.has(opt) ? ' active' : '');
+    chip.textContent = opt;
+    chip.addEventListener('click', () => {
+      if(selectedSet.has(opt)) selectedSet.delete(opt); else selectedSet.add(opt);
+      chip.classList.toggle('active');
+      onChange();
+    });
+    el.appendChild(chip);
+  });
+}
+
+function getFilteredPool(){
+  return termbank.filter(t =>
+    (filters.vak.size===0 || filters.vak.has(t.vak)) &&
+    (filters.hoofdstuk.size===0 || filters.hoofdstuk.has(t.hoofdstuk)) &&
+    (filters.graad.size===0 || t.graad.some(g=>filters.graad.has(g)))
+  );
+}
+
+function getPlayablePool(){
+  const base = getFilteredPool();
+  if(gameMode === 'vertalen'){
+    const sKey = 'term' + LANG_KEY[langState.start];
+    const tKey = 'term' + LANG_KEY[langState.target];
+    return base.filter(t => t[sKey] && t[tKey]);
+  } else if(gameMode === 'uitleg'){
+    const key = 'term' + LANG_KEY[uitlegState.lang];
+    const uKey = 'uitleg' + LANG_KEY[uitlegState.lang];
+    return base.filter(t => t[key] && t[uKey]);
+  } else if(gameMode === 'leren'){
+    const key = 'term' + LANG_KEY[lerenState.lang];
+    const uKey = 'uitleg' + LANG_KEY[lerenState.lang];
+    return base.filter(t => t[key] && t[uKey]);
+  } else {
+    const key = 'term' + LANG_KEY[leesState.lang];
+    return base.filter(t => t[key]);
+  }
+}
+
+function updatePoolCount(){
+  const pool = getPlayablePool();
+  const countEl = document.getElementById('pool-count');
+  const startBtn = document.getElementById('btn-start');
+  const minNeeded = gameMode === 'lezen' ? 1 : 4;
+  countEl.innerHTML = '<b>' + pool.length + '</b> term' + (pool.length===1?'':'en') + ' beschikbaar';
+  startBtn.disabled = pool.length < minNeeded;
+  if(pool.length < minNeeded){
+    countEl.innerHTML += gameMode === 'lezen' ? ' &mdash; geen termen voor deze keuze' : ' &mdash; kies een breder onderdeel (min. 4 nodig)';
+  }
+  startBtn.textContent = gameMode === 'lezen' ? 'TOON' : 'START';
+}
+
+/* ---------- quiz ---------- */
+function pickDistractors(pool, key, correct, excludeTerm){
+  let candidates = pool.filter(t => t !== excludeTerm).map(t => t[key]).filter(v => v && v !== correct);
+  candidates = shuffle(unique(candidates));
+  let distractors = candidates.slice(0,3);
+  if(distractors.length < 3){
+    let more = termbank.filter(t => t !== excludeTerm).map(t => t[key]).filter(v => v && v !== correct && !distractors.includes(v));
+    more = shuffle(unique(more));
+    distractors = distractors.concat(more.slice(0, 3-distractors.length));
+  }
+  return distractors;
+}
+
+function buildQuestion(term, pool){
+  if(gameMode === 'vertalen'){
+    const startLang = langState.start;
+    const targetLang = langState.target;
+    const targetKey = 'term' + LANG_KEY[targetLang];
+    const startKey = 'term' + LANG_KEY[startLang];
+    const correct = term[targetKey];
+    return { kind:'vertalen', answerType:'kort', term, startLang, targetLang, startText: term[startKey], correct };
+  }
+
+  const lang = gameMode === 'leren' ? lerenState.lang : uitlegState.lang;
+  const richting = gameMode === 'leren'
+    ? (Math.random() < 0.5 ? 'term-naar-uitleg' : 'uitleg-naar-term')
+    : uitlegState.richting;
+  const termKey = 'term' + LANG_KEY[lang];
+  const uitlegKey = 'uitleg' + LANG_KEY[lang];
+
+  if(richting === 'term-naar-uitleg'){
+    const correct = term[uitlegKey];
+    const distractors = pickDistractors(pool, uitlegKey, correct, term);
+    const options = shuffle([correct, ...distractors]);
+    return { kind:'uitleg', answerType:'lang', lang, richting, term, promptText: term[termKey], correct, options };
+  } else {
+    const correct = term[termKey];
+    return { kind:'uitleg', answerType:'kort', lang, richting, term, promptText: term[uitlegKey], correct };
+  }
+}
+
+function startQuiz(){
+  const pool = getPlayablePool();
+  if(pool.length < 4) return;
+  const numQuestions = gameMode === 'leren' ? pool.length : Math.min(10, pool.length);
+  const chosenTerms = shuffle(pool).slice(0, numQuestions);
+  quiz.questions = chosenTerms.map(t => buildQuestion(t, pool));
+  quiz.index = 0;
+  quiz.score = 0;
+  quiz.answers = [];
+  showScreen('quiz');
+  renderStamps();
+  renderQuestion();
+}
+
+function renderStamps(){
+  const row = document.getElementById('stamps-row');
+  row.innerHTML = '';
+  quiz.questions.forEach((q, i) => {
+    const dot = document.createElement('div');
+    let cls = 'stamp-dot';
+    if(i < quiz.answers.length){
+      const a = quiz.answers[i];
+      cls += a.correct ? ' correct' : (a.gaveUp ? ' skipped' : ' wrong');
+    }
+    else if(i === quiz.index) cls += ' current';
+    dot.className = cls;
+    row.appendChild(dot);
+  });
+  document.getElementById('score-badge').textContent = quiz.score + '/' + quiz.questions.length;
+}
+
+function renderQuestion(){
+  const q = quiz.questions[quiz.index];
+  const badge = document.getElementById('lang-badge');
+  const promptEl = document.getElementById('quiz-prompt');
+  const termEl = document.getElementById('quiz-term');
+
+  if(q.kind === 'vertalen'){
+    badge.textContent = q.targetLang;
+    badge.className = 'lang-badge lang-' + q.targetLang;
+    promptEl.textContent = 'Hoe zeg je dit in ' + LANG_LABEL_IN[q.targetLang] + '?';
+    termEl.textContent = q.startText;
+    termEl.className = 'source-term';
+  } else {
+    badge.textContent = q.lang;
+    badge.className = 'lang-badge lang-' + q.lang;
+    promptEl.textContent = q.richting === 'term-naar-uitleg'
+      ? 'Wat betekent dit, in ' + LANG_LABEL_IN[q.lang] + '?'
+      : 'Welke term hoort bij deze uitleg, in ' + LANG_LABEL_IN[q.lang] + '?';
+    termEl.textContent = q.promptText;
+    termEl.className = 'source-term' + (q.promptText.length > 38 ? ' long-text' : '');
+  }
+  document.getElementById('quiz-meta').textContent = q.term.vak + ' \u2014 ' + q.term.hoofdstuk;
+
+  const optionsGrid = document.getElementById('options-grid');
+  const answerRow = document.getElementById('answer-input-row');
+  const answerActions = document.getElementById('answer-actions');
+  const input = document.getElementById('answer-input');
+  const btnCheck = document.getElementById('btn-check');
+  const btnShow = document.getElementById('btn-show-answer');
+  const btnMic = document.getElementById('btn-mic');
+
+  if(q.answerType === 'lang'){
+    optionsGrid.style.display = 'grid';
+    optionsGrid.innerHTML = '';
+    q.options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = opt;
+      btn.addEventListener('click', () => submitAnswer(opt, false));
+      optionsGrid.appendChild(btn);
+    });
+    answerRow.style.display = 'none';
+    btnCheck.style.display = 'none';
+    answerActions.style.display = 'flex';
+    btnShow.disabled = false;
+  } else {
+    optionsGrid.style.display = 'none';
+    optionsGrid.innerHTML = '';
+    answerRow.style.display = 'flex';
+    btnCheck.style.display = 'inline-block';
+    answerActions.style.display = 'flex';
+    input.value = '';
+    input.className = '';
+    input.disabled = false;
+    btnCheck.disabled = false;
+    btnShow.disabled = false;
+    btnMic.disabled = !speechSupported;
+    btnMic.title = speechSupported ? 'Spreek je antwoord in' : 'Spraakherkenning niet ondersteund in deze browser';
+    updateMicButtonUI(false);
+    setTimeout(() => input.focus(), 30);
+  }
+
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('btn-next').style.display = 'none';
+  renderStamps();
+}
+
+function normalizeAnswer(str){
+  return (str || '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, ' ')
+    .replace(/[.,;:!?'"()]/g, '');
+}
+
+function submitAnswer(userAnswer, gaveUp){
+  const q = quiz.questions[quiz.index];
+  let correct = false;
+  if(!gaveUp){
+    if(q.answerType === 'kort'){
+      correct = normalizeAnswer(userAnswer) === normalizeAnswer(q.correct);
+    } else {
+      correct = userAnswer === q.correct;
+    }
+  }
+  quiz.answers.push({ q, chosen: gaveUp ? null : userAnswer, correct, gaveUp });
+  if(correct) quiz.score++;
+
+  if(q.answerType === 'lang'){
+    document.querySelectorAll('.option-btn').forEach(b => {
+      b.disabled = true;
+      if(b.textContent === q.correct) b.classList.add('correct');
+      else if(b.textContent === userAnswer && !correct) b.classList.add('wrong');
+    });
+  } else {
+    const input = document.getElementById('answer-input');
+    input.disabled = true;
+    document.getElementById('btn-check').disabled = true;
+    document.getElementById('btn-mic').disabled = true;
+    if(gaveUp){
+      input.value = q.correct;
+      input.className = 'gaveup';
+    } else {
+      input.className = correct ? 'correct' : 'wrong';
+    }
+  }
+  document.getElementById('btn-show-answer').disabled = true;
+
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback show ' + (correct ? 'ok' : 'bad');
+  let label;
+  if(gaveUp) label = 'Antwoord: ' + q.correct;
+  else if(correct) label = 'Juist!';
+  else label = 'Niet juist \u2014 correct antwoord: ' + q.correct;
+  document.getElementById('feedback-label').textContent = label;
+
+  let uitlegText = '';
+  if(q.kind === 'vertalen'){
+    uitlegText = q.term['uitleg'+LANG_KEY[q.targetLang]] || q.term['uitleg'+LANG_KEY[q.startLang]] || '';
+  }
+  document.getElementById('feedback-text').textContent = uitlegText;
+
+  renderStamps();
+  document.getElementById('btn-next').style.display = 'inline-block';
+}
+
+/* ---------- typed / spoken answer controls ---------- */
+const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
+const speechSupported = !!SpeechRecognitionCtor;
+const SPEECH_LOCALE = { NL:'nl-NL', EN:'en-US', FR:'fr-FR', DU:'de-DE' };
+let recognition = null;
+let micActive = false;
+
+if(speechSupported){
+  recognition = new SpeechRecognitionCtor();
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    document.getElementById('answer-input').value = transcript;
+  };
+  recognition.onerror = () => { showToast('Spraakherkenning mislukt \u2014 probeer opnieuw of typ je antwoord.'); };
+  recognition.onend = () => { micActive = false; updateMicButtonUI(false); };
+}
+
+function updateMicButtonUI(active){
+  const btn = document.getElementById('btn-mic');
+  if(!btn) return;
+  btn.classList.toggle('active', active);
+}
+
+function toggleMic(){
+  if(!speechSupported || document.getElementById('btn-mic').disabled) return;
+  if(micActive){ recognition.stop(); return; }
+  const q = quiz.questions[quiz.index];
+  const lang = q.kind === 'vertalen' ? q.targetLang : q.lang;
+  recognition.lang = SPEECH_LOCALE[lang] || 'nl-NL';
+  micActive = true;
+  updateMicButtonUI(true);
+  try{ recognition.start(); } catch(e){ micActive = false; updateMicButtonUI(false); }
+}
+
+function handleCheck(){
+  const val = document.getElementById('answer-input').value;
+  if(!val.trim()){ showToast('Typ of spreek eerst een antwoord in.'); return; }
+  submitAnswer(val, false);
+}
+
+function handleShowAnswer(){
+  submitAnswer(null, true);
+}
+
+document.getElementById('btn-mic').addEventListener('click', toggleMic);
+document.getElementById('btn-check').addEventListener('click', handleCheck);
+document.getElementById('btn-show-answer').addEventListener('click', handleShowAnswer);
+document.getElementById('answer-input').addEventListener('keydown', (e) => {
+  if(e.key === 'Enter'){ e.preventDefault(); handleCheck(); }
+});
+
+document.getElementById('btn-next').addEventListener('click', () => {
+  quiz.index++;
+  if(quiz.index >= quiz.questions.length){
+    showEnd();
+  } else {
+    renderQuestion();
+  }
+});
+
+function stopQuiz(){
+  if(micActive && recognition){ recognition.stop(); }
+  if(quiz.answers.length === 0){
+    showScreen('home');
+    return;
+  }
+  showConfirm('Spel stoppen en het resultaat tot nu toe tonen?', () => {
+    quiz.questions = quiz.questions.slice(0, quiz.answers.length);
+    showEnd();
+  });
+}
+document.getElementById('btn-stop').addEventListener('click', stopQuiz);
+
+function showEnd(){
+  showScreen('end');
+  document.getElementById('result-score').textContent = quiz.score + '/' + quiz.questions.length;
+  const pct = Math.round((quiz.score/quiz.questions.length)*100);
+  document.getElementById('result-pct').textContent = pct + '% correct';
+
+  const collection = document.getElementById('stamp-collection');
+  collection.innerHTML = '';
+  quiz.answers.forEach((a,i) => {
+    const mini = document.createElement('div');
+    mini.className = 'mini ' + (a.correct ? 'correct' : (a.gaveUp ? 'skipped' : 'wrong'));
+    mini.textContent = a.q.kind === 'vertalen' ? a.q.targetLang : a.q.lang;
+    collection.appendChild(mini);
+  });
+
+  const wrongAnswers = quiz.answers.filter(a => !a.correct);
+  const reviewWrap = document.getElementById('review-wrap');
+  const reviewList = document.getElementById('review-list');
+  reviewList.innerHTML = '';
+  if(wrongAnswers.length > 0){
+    reviewWrap.style.display = 'block';
+    wrongAnswers.forEach(a => {
+      const div = document.createElement('div');
+      div.className = 'review-item';
+      let rt, re;
+      if(a.q.kind === 'vertalen'){
+        re = a.q.term['uitleg'+LANG_KEY[a.q.targetLang]] || a.q.term['uitleg'+LANG_KEY[a.q.startLang]] || '';
+        rt = a.q.startText + ' \u2192 ' + a.q.correct + ' <small>(' + a.q.startLang + ' \u2192 ' + a.q.targetLang + (a.gaveUp ? ', overgeslagen' : '') + ')</small>';
+      } else {
+        re = a.q.richting === 'term-naar-uitleg' ? '' : (a.q.term['uitleg'+LANG_KEY[a.q.lang]] || '');
+        rt = a.q.promptText + ' \u2192 ' + a.q.correct + ' <small>(' + a.q.lang + (a.gaveUp ? ', overgeslagen' : '') + ')</small>';
+      }
+      div.innerHTML = '<div class="rt">' + rt + '</div><div class="re">' + re + '</div>';
+      reviewList.appendChild(div);
+    });
+  } else {
+    reviewWrap.style.display = 'none';
+  }
+}
+
+function showLeeslijst(){
+  const pool = getPlayablePool();
+  const lang = leesState.lang;
+  const termKey = 'term' + LANG_KEY[lang];
+  const uitlegKey = 'uitleg' + LANG_KEY[lang];
+  const sorted = [...pool].sort((a,b) => (a[termKey]||'').localeCompare(b[termKey]||'', 'nl'));
+  const container = document.getElementById('lijst-items');
+  container.innerHTML = '';
+  sorted.forEach(t => {
+    const div = document.createElement('div');
+    div.className = 'lijst-item';
+    div.innerHTML = '<div class="lt">' + t[termKey] + '</div>' +
+      (t[uitlegKey] ? '<div class="lu">' + t[uitlegKey] + '</div>' : '') +
+      '<div class="lm">' + t.vak + ' \u2014 ' + t.hoofdstuk + '</div>';
+    container.appendChild(div);
+  });
+  showScreen('lijst');
+}
+
+document.getElementById('btn-start').addEventListener('click', () => {
+  if(gameMode === 'lezen') showLeeslijst();
+  else startQuiz();
+});
+document.getElementById('btn-lijst-terug').addEventListener('click', () => showScreen('home'));
+document.getElementById('btn-replay').addEventListener('click', startQuiz);
+document.getElementById('btn-home').addEventListener('click', () => showScreen('home'));
+
+/* ---------- init ---------- */
+(async function init(){
+  await loadTermbank();
+  renderModeChips();
+  refreshLangUI();
+  refreshUitlegUI();
+  refreshLerenUI();
+  refreshLeesUI();
+  buildFilterUI();
+})();
+</script>
+</body>
+</html>
