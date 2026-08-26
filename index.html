@@ -1240,9 +1240,15 @@ function renderQuestion(){
     input.disabled = false;
     btnCheck.disabled = false;
     btnShow.disabled = false;
-    btnMic.disabled = !speechSupported;
-    btnMic.title = speechSupported ? 'Spreek je antwoord in' : 'Spraakherkenning niet ondersteund in deze browser';
-    updateMicButtonUI(false);
+     if(isIOS){
+      btnMic.style.display = 'none';
+      document.getElementById('ios-mic-hint').style.display = 'block';
+    } else {
+      btnMic.style.display = '';
+      btnMic.disabled = !speechSupported;
+      btnMic.title = speechSupported ? 'Spreek je antwoord in' : 'Spraakherkenning niet ondersteund in deze browser';
+      updateMicButtonUI(false);
+    }
     setTimeout(() => input.focus(), 30);
   }
 
@@ -1312,8 +1318,9 @@ function submitAnswer(userAnswer, gaveUp){
 }
 
 /* ---------- typed / spoken answer controls ---------- */
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
-const speechSupported = !!SpeechRecognitionCtor;
+const speechSupported = !!SpeechRecognitionCtor && !isIOS;
 const SPEECH_LOCALE = { NL:'nl-NL', EN:'en-US', FR:'fr-FR', DU:'de-DE' };
 let recognition = null;
 const SPEECH_SILENCE_MS = 700;
