@@ -1886,10 +1886,10 @@ function genCombiTermenBegrip(){
       explanation:'Bij een variatie is de volgorde net wel belangrijk — AB en BA zijn verschillend.' },
     { promptHtml:'Wat is de formule voor het aantal permutaties van n verschillende elementen?', correct:'n!', options:['n!','n²','n×(n-1)','2n'],
       explanation:'Het aantal manieren om n verschillende elementen te rangschikken is n! (n faculteit).' },
-    { promptHtml:'Wat is de formule voor nPr (variatie zonder herhaling van r uit n)?', correct:'n! / (n−r)!', options:['n! / (n−r)!','n! / (r!·(n−r)!)','n^r','r!'],
-      explanation:'nPr = n! / (n−r)! telt het aantal geordende keuzes van r uit n, zonder herhaling.' },
-    { promptHtml:'Wat is de formule voor nCr (combinatie zonder herhaling van r uit n)?', correct:'n! / (r!·(n−r)!)', options:['n! / (n−r)!','n! / (r!·(n−r)!)','n^r','n×r'],
-      explanation:'nCr = n! / (r!·(n−r)!) telt het aantal keuzes van r uit n waarbij de volgorde niet telt.' },
+    { promptHtml:'Wat is de formule voor het aantal variaties zonder herhaling van p uit n?', correct:'n! / (n−p)!', options:['n! / (n−p)!','n! / (p!·(n−p)!)','n^p','p!'],
+      explanation:'Het aantal variaties zonder herhaling van p uit n is n! / (n−p)!: dat telt het aantal geordende keuzes van p uit n, zonder herhaling.' },
+    { promptHtml:'Wat is de formule voor het aantal combinaties zonder herhaling van p uit n?', correct:'n! / (p!·(n−p)!)', options:['n! / (n−p)!','n! / (p!·(n−p)!)','n^p','n×p'],
+      explanation:'Het aantal combinaties zonder herhaling van p uit n is n! / (p!·(n−p)!): dat telt het aantal keuzes van p uit n waarbij de volgorde niet telt.' },
     { promptHtml:'Bij een variatie óf combinatie <b>met herhaling</b>: mag eenzelfde element meerdere keren gekozen worden?', correct:'Ja', options:['Ja','Nee'],
       explanation:'"Met herhaling" betekent net dat je hetzelfde element meer dan één keer mag kiezen.' },
     { promptHtml:'Wat betekent 0! (0 faculteit)?', correct:'1', options:['0','1','Niet gedefinieerd','-1'],
@@ -1916,81 +1916,81 @@ function genFaculteitBereken(){
 
 function genPermutatieBereken(){
   const n = randInt(5, 10);
-  const r = randInt(2, Math.min(4, n - 1));
+  const p = randInt(2, Math.min(4, n - 1));
   return {
     kind:'functie', catId:'combi_rekenen', catLabel:'Rekenen',
-    promptHtml: `Bereken het aantal variaties zonder herhaling van ${r} uit ${n} (notatie: ${n}P${r}).`,
-    answerType:'kort', checkKind:'number', checkData:{ value: nPr(n, r) }, correct: String(nPr(n, r)),
-    explanation: `${n}P${r} = ${n}! / (${n}−${r})! = ${factorial(n)} / ${factorial(n - r)} = ${nPr(n, r)}.`,
+    promptHtml: `Bereken het aantal variaties zonder herhaling van ${p} uit ${n}.`,
+    answerType:'kort', checkKind:'number', checkData:{ value: nPr(n, p) }, correct: String(nPr(n, p)),
+    explanation: `Het aantal variaties zonder herhaling van ${p} uit ${n} is n! / (n−p)! = ${n}! / (${n}−${p})! = ${factorial(n)} / ${factorial(n - p)} = ${nPr(n, p)}.`,
   };
 }
 
 function genCombinatieBereken(){
   const n = randInt(5, 15);
-  const r = randInt(2, Math.min(6, n - 1));
+  const p = randInt(2, Math.min(6, n - 1));
   return {
     kind:'functie', catId:'combi_rekenen', catLabel:'Rekenen',
-    promptHtml: `Bereken het aantal combinaties zonder herhaling van ${r} uit ${n} (notatie: ${n}C${r}).`,
-    answerType:'kort', checkKind:'number', checkData:{ value: nCr(n, r) }, correct: String(nCr(n, r)),
-    explanation: `${n}C${r} = ${n}! / (${r}! · (${n}−${r})!) = ${nCr(n, r)}.`,
+    promptHtml: `Bereken het aantal combinaties zonder herhaling van ${p} uit ${n}.`,
+    answerType:'kort', checkKind:'number', checkData:{ value: nCr(n, p) }, correct: String(nCr(n, p)),
+    explanation: `Het aantal combinaties zonder herhaling van ${p} uit ${n} is n! / (p!·(n−p)!) = ${n}! / (${p}! · (${n}−${p})!) = ${nCr(n, p)}.`,
   };
 }
 
 function genVariatieHerhalingBereken(){
   const n = randInt(2, 8);
-  const r = randInt(2, 4);
+  const p = randInt(2, 4);
   return {
     kind:'functie', catId:'combi_rekenen', catLabel:'Rekenen',
-    promptHtml: `Bereken het aantal variaties MET herhaling van ${r} uit ${n} (dus ${n}^${r}).`,
-    answerType:'kort', checkKind:'number', checkData:{ value: nVarHerhaling(n, r) }, correct: String(nVarHerhaling(n, r)),
-    explanation: `Bij een variatie met herhaling mag elk van de ${r} plaatsen om het even welke van de ${n} mogelijkheden zijn: ${n}^${r} = ${nVarHerhaling(n, r)}.`,
+    promptHtml: `Bereken het aantal variaties MET herhaling van ${p} uit ${n} (dus ${n}^${p}).`,
+    answerType:'kort', checkKind:'number', checkData:{ value: nVarHerhaling(n, p) }, correct: String(nVarHerhaling(n, p)),
+    explanation: `Bij een variatie met herhaling mag elk van de ${p} plaatsen om het even welke van de ${n} mogelijkheden zijn: ${n}^${p} = ${nVarHerhaling(n, p)}.`,
   };
 }
 
 function genCombinatieHerhalingBereken(){
   const n = randInt(2, 5);
-  const r = randInt(2, 6);
-  const val = nCrHerhaling(n, r);
+  const p = randInt(2, 6);
+  const val = nCrHerhaling(n, p);
   return {
     kind:'functie', catId:'combi_rekenen', catLabel:'Rekenen',
-    promptHtml: `Bereken de herhalingscombinatie (combinatie MET herhaling) van ${r} uit ${n} soorten.`,
+    promptHtml: `Bereken de herhalingscombinatie (combinatie MET herhaling) van ${p} uit ${n} soorten.`,
     answerType:'kort', checkKind:'number', checkData:{ value: val }, correct: String(val),
-    explanation: `Een herhalingscombinatie van ${r} uit ${n} soorten reken je als (${n}+${r}−1)C${r} = ${n + r - 1}C${r} = ${val}.`,
+    explanation: `Een herhalingscombinatie van ${p} uit ${n} soorten bereken je als het aantal combinaties zonder herhaling van ${p} uit (${n}+${p}−1) = ${n + p - 1}: dat geeft ${val}.`,
   };
 }
 
 function genVerhaalCombinatie(){
   const templates = [
-    (n, r) => `Je selecteert ${r} personen uit een groep van ${n} voor een projectteam (de volgorde van selectie maakt niet uit).`,
-    (n, r) => `Uit een klas van ${n} leerlingen worden er ${r} gekozen voor een quiz (geen specifieke rol per leerling).`,
-    (n, r) => `Je trekt ${r} kaarten uit een stapel van ${n} verschillende kaarten, zonder op de volgorde te letten.`,
+    (n, p) => `Je selecteert ${p} personen uit een groep van ${n} voor een projectteam (de volgorde van selectie maakt niet uit).`,
+    (n, p) => `Uit een klas van ${n} leerlingen worden er ${p} gekozen voor een quiz (geen specifieke rol per leerling).`,
+    (n, p) => `Je trekt ${p} kaarten uit een stapel van ${n} verschillende kaarten, zonder op de volgorde te letten.`,
   ];
   const n = randInt(8, 40);
-  const r = randInt(2, Math.min(6, n - 1));
+  const p = randInt(2, Math.min(6, n - 1));
   const tpl = randChoice(templates);
-  const val = nCr(n, r);
+  const val = nCr(n, p);
   return {
     kind:'functie', catId:'combi_verhaal', catLabel:'Woordprobleem',
-    promptHtml: `${tpl(n, r)}<br>Op hoeveel manieren kan dat?`,
+    promptHtml: `${tpl(n, p)}<br>Op hoeveel manieren kan dat?`,
     answerType:'kort', checkKind:'number', checkData:{ value: val }, correct: String(val),
-    explanation: `Volgorde maakt hier niet uit en herhaling kan niet → combinatie zonder herhaling: ${n}C${r} = ${val}.`,
+    explanation: `Volgorde maakt hier niet uit en herhaling kan niet → dit is het aantal combinaties zonder herhaling van ${p} uit ${n}: ${val}.`,
   };
 }
 
 function genVerhaalCombinatieHerhaling(){
   const templates = [
-    (n, r) => `Je kiest ${r} koffiekoeken bij de bakker, die ${n} soorten koeken heeft. Je mag meerdere koeken van dezelfde soort kiezen, en de volgorde waarin je ze kiest maakt niet uit.`,
-    (n, r) => `Je kiest ${r} bolletjes ijs uit ${n} smaken, waarbij je gerust meerdere keren dezelfde smaak mag nemen (volgorde niet belangrijk).`,
+    (n, p) => `Je kiest ${p} koffiekoeken bij de bakker, die ${n} soorten koeken heeft. Je mag meerdere koeken van dezelfde soort kiezen, en de volgorde waarin je ze kiest maakt niet uit.`,
+    (n, p) => `Je kiest ${p} bolletjes ijs uit ${n} smaken, waarbij je gerust meerdere keren dezelfde smaak mag nemen (volgorde niet belangrijk).`,
   ];
   const n = randInt(2, 5);
-  const r = randInt(3, 8);
+  const p = randInt(3, 8);
   const tpl = randChoice(templates);
-  const val = nCrHerhaling(n, r);
+  const val = nCrHerhaling(n, p);
   return {
     kind:'functie', catId:'combi_verhaal', catLabel:'Woordprobleem',
-    promptHtml: `${tpl(n, r)}<br>Op hoeveel manieren kan dat?`,
+    promptHtml: `${tpl(n, p)}<br>Op hoeveel manieren kan dat?`,
     answerType:'kort', checkKind:'number', checkData:{ value: val }, correct: String(val),
-    explanation: `Volgorde maakt niet uit, maar herhaling kan wel → combinatie met herhaling van ${r} uit ${n}: (${n}+${r}−1)C${r} = ${val}.`,
+    explanation: `Volgorde maakt niet uit, maar herhaling kan wel → dit is een combinatie met herhaling van ${p} uit ${n}: ${val}.`,
   };
 }
 
@@ -2006,28 +2006,28 @@ function genVerhaalPermutatieVol(){
 
 function genVerhaalPermutatieDeel(){
   const n = randInt(6, 15);
-  const r = randInt(2, 4);
+  const p = randInt(2, 4);
   return {
     kind:'functie', catId:'combi_verhaal', catLabel:'Woordprobleem',
-    promptHtml: `Bij een wedstrijd met ${n} deelnemers worden de eerste ${r} plaatsen bepaald (elke plaats is anders, niemand kan twee plaatsen tegelijk hebben).<br>Op hoeveel manieren kan dat?`,
-    answerType:'kort', checkKind:'number', checkData:{ value: nPr(n, r) }, correct: String(nPr(n, r)),
-    explanation: `De volgorde is belangrijk (1e ≠ 2e) en herhaling kan niet → variatie zonder herhaling: ${n}P${r} = ${nPr(n, r)}.`,
+    promptHtml: `Bij een wedstrijd met ${n} deelnemers worden de eerste ${p} plaatsen bepaald (elke plaats is anders, niemand kan twee plaatsen tegelijk hebben).<br>Op hoeveel manieren kan dat?`,
+    answerType:'kort', checkKind:'number', checkData:{ value: nPr(n, p) }, correct: String(nPr(n, p)),
+    explanation: `De volgorde is belangrijk (1e ≠ 2e) en herhaling kan niet → dit is een variatie zonder herhaling van ${p} uit ${n}: ${nPr(n, p)}.`,
   };
 }
 
 function genVerhaalVariatieHerhaling(){
   const isDigits = Math.random() < 0.5;
   const n = isDigits ? 10 : 26;
-  const r = isDigits ? randInt(3, 5) : randInt(2, 3);
+  const p = isDigits ? randInt(3, 5) : randInt(2, 3);
   const promptHtml = isDigits
-    ? `Een pincode bestaat uit ${r} cijfers (0 t.e.m. 9), waarbij een cijfer meerdere keren mag voorkomen en de volgorde telt.<br>Hoeveel verschillende pincodes zijn er?`
-    : `Een code bestaat uit ${r} letters (A t.e.m. Z), waarbij een letter meerdere keren mag voorkomen en de volgorde telt.<br>Hoeveel verschillende codes zijn er?`;
-  const val = nVarHerhaling(n, r);
+    ? `Een pincode bestaat uit ${p} cijfers (0 t.e.m. 9), waarbij een cijfer meerdere keren mag voorkomen en de volgorde telt.<br>Hoeveel verschillende pincodes zijn er?`
+    : `Een code bestaat uit ${p} letters (A t.e.m. Z), waarbij een letter meerdere keren mag voorkomen en de volgorde telt.<br>Hoeveel verschillende codes zijn er?`;
+  const val = nVarHerhaling(n, p);
   return {
     kind:'functie', catId:'combi_verhaal', catLabel:'Woordprobleem',
     promptHtml,
     answerType:'kort', checkKind:'number', checkData:{ value: val }, correct: String(val),
-    explanation: `Volgorde telt en herhaling mag → variatie met herhaling: ${n}^${r} = ${val}.`,
+    explanation: `Volgorde telt en herhaling mag → variatie met herhaling: ${n}^${p} = ${val}.`,
   };
 }
 
@@ -2056,74 +2056,133 @@ function genClassificatie(){
 }
 
 /* ---- boomstructuur (keuzeboom) als SVG ----
-   Alle 4 types worden getekend als een boom van 2 niveaus over dezelfde
-   letters. Bij "zonder herhaling" mag een tak niet terugkeren naar zijn
-   eigen letter; bij "combinatie" (volgorde telt niet) wordt enkel
-   vooruit vertakt (in alfabetische volgorde) zodat elke combinatie
-   maar één keer als tak voorkomt — een gangbare manier om ook
-   combinaties in een boomstructuur te tonen. */
-function keuzeboomChildren(type, labels, l1){
-  if(type === 'variatie_zonder') return labels.filter(l2 => l2 !== l1);
+   Ondersteunt bomen van p niveaus (2 of 3) over n letters (3 of 4).
+   Bij "zonder herhaling" mag een label niet terugkeren naar een label
+   dat al eerder in hetzelfde pad gebruikt werd; bij "combinatie"
+   (volgorde telt niet) wordt enkel vooruit vertakt (in alfabetische
+   volgorde) zodat elke combinatie maar één keer als pad voorkomt —
+   een gangbare manier om ook combinaties in een boomstructuur te
+   tonen. Welke combinatie van n/p/type we tonen, kiezen we random maar
+   begrensd: het aantal bladeren (= het aantal tel-mogelijkheden) moet
+   tussen MIN_BOOM_LEAVES en MAX_BOOM_LEAVES blijven, anders wordt de
+   tekening te dicht (bv. "variatie met herhaling" van 3 uit 4 geeft al
+   64 bladeren) of te triviaal (bv. "combinatie zonder herhaling" van
+   n uit n geeft maar 1 blad) om nog iets te tonen. */
+const MIN_BOOM_LEAVES = 2;
+const MAX_BOOM_LEAVES = 16; // getest op iPhone-breedte (390px): 16 blijft leesbaar, 20 werd al krap
+const LABELSETS_3 = [['A','B','C'], ['R','S','T'], ['X','Y','Z']];
+const LABELSETS_4 = [['A','B','C','D'], ['P','Q','R','S'], ['W','X','Y','Z']];
+
+function keuzeboomChildren(type, labels, usedPath){
+  if(usedPath.length === 0) return labels.slice(); // eerste keuze: alles kan nog
+  const last = usedPath[usedPath.length - 1];
+  if(type === 'variatie_zonder') return labels.filter(l => !usedPath.includes(l));
   if(type === 'variatie_met') return labels.slice();
-  if(type === 'combinatie_zonder') return labels.filter(l2 => l2 > l1);
-  return labels.filter(l2 => l2 >= l1); // combinatie_met
+  if(type === 'combinatie_zonder') return labels.filter(l => l > last);
+  return labels.filter(l => l >= last); // combinatie_met
 }
 
-function svgKeuzeboom(type, labels){
-  const groups = labels
-    .map(l1 => ({ l1, children: keuzeboomChildren(type, labels, l1) }))
-    .filter(g => g.children.length > 0);
-  const leafCount = groups.reduce((s, g) => s + g.children.length, 0) || 1;
-  const W = Math.max(260, leafCount * 54 + 40);
-  const H = 190;
-  const rootY = 30, l1Y = 92, l2Y = 156;
-  const leafSpacing = (W - 40) / leafCount;
-  const rootX = W / 2;
+/* Bouwt de boom recursief op tot diepte p, en snoeit "dode" takken weg
+   die niet tot een volledig pad van lengte p leiden (bv. bij combinatie
+   zonder herhaling loopt niet elk startpunt door tot het einde). */
+function buildKeuzeboomTree(type, labels, p){
+  function recurse(usedPath){
+    return keuzeboomChildren(type, labels, usedPath)
+      .map(l => {
+        const path = [...usedPath, l];
+        if(path.length === p) return { label:l, children:[] };
+        const children = recurse(path);
+        return children.length ? { label:l, children } : null;
+      })
+      .filter(Boolean);
+  }
+  return recurse([]);
+}
 
-  let svg = `<circle cx="${rootX}" cy="${rootY}" r="4" fill="var(--ink)"/>`;
-  let x = 20 + leafSpacing / 2;
-  groups.forEach(g => {
-    const childXs = g.children.map(() => { const cx = x; x += leafSpacing; return cx; });
-    const groupX = childXs.reduce((a, b) => a + b, 0) / childXs.length;
-    svg += `<line x1="${rootX}" y1="${rootY}" x2="${groupX}" y2="${l1Y}" stroke="var(--paper-line)" stroke-width="1.5"/>`;
-    svg += `<circle cx="${groupX}" cy="${l1Y}" r="14" fill="var(--white)" stroke="var(--ink)" stroke-width="1.5"/>`;
-    svg += `<text x="${groupX}" y="${l1Y+5}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--ink)">${g.l1}</text>`;
-    g.children.forEach((l2, i) => {
-      const cx = childXs[i];
-      svg += `<line x1="${groupX}" y1="${l1Y}" x2="${cx}" y2="${l2Y}" stroke="var(--paper-line)" stroke-width="1.5"/>`;
-      svg += `<circle cx="${cx}" cy="${l2Y}" r="14" fill="var(--white)" stroke="var(--ink)" stroke-width="1.5"/>`;
-      svg += `<text x="${cx}" y="${l2Y+5}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--ink)">${l2}</text>`;
-    });
-  });
-  return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:340px;">${svg}</svg>`;
+function svgKeuzeboom(type, labels, p){
+  const tree = buildKeuzeboomTree(type, labels, p);
+
+  // ken elk blad een volgend x-slot toe; een ouder komt op het midden
+  // tussen zijn kinderen te staan (klassieke manier om een boom netjes
+  // te leggen zonder overlappende takken)
+  let nextSlot = 0;
+  function assignSlot(node){
+    if(node.children.length === 0){ node.slot = nextSlot++; return; }
+    node.children.forEach(assignSlot);
+    const slots = node.children.map(c => c.slot);
+    node.slot = (Math.min(...slots) + Math.max(...slots)) / 2;
+  }
+  tree.forEach(assignSlot);
+  const leafCount = Math.max(1, nextSlot);
+
+  const levelHeight = 58;
+  const topPad = 26;
+  const H = topPad + levelHeight * p + 24;
+  const W = Math.max(240, leafCount * 46 + 40);
+  const toPx = slot => 20 + (slot + 0.5) * ((W - 40) / leafCount);
+  const rootSlots = tree.map(n => n.slot);
+  const rootPx = toPx((Math.min(...rootSlots) + Math.max(...rootSlots)) / 2);
+
+  let svg = `<circle cx="${rootPx}" cy="${topPad}" r="4" fill="var(--ink)"/>`;
+  function draw(node, level, parentX, parentY){
+    const x = toPx(node.slot);
+    const y = topPad + levelHeight * level;
+    svg += `<line x1="${parentX}" y1="${parentY}" x2="${x}" y2="${y}" stroke="var(--paper-line)" stroke-width="1.5"/>`;
+    svg += `<circle cx="${x}" cy="${y}" r="13" fill="var(--white)" stroke="var(--ink)" stroke-width="1.5"/>`;
+    svg += `<text x="${x}" y="${y+4.5}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--ink)">${node.label}</text>`;
+    node.children.forEach(c => draw(c, level + 1, x, y));
+  }
+  tree.forEach(node => draw(node, 1, rootPx, topPad));
+
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:380px;">${svg}</svg>`;
 }
 
 function explainBoomstructuur(id){
   switch(id){
-    case 'variatie_zonder': return 'De volgorde telt (AB ≠ BA) en een letter mag niet herhaald worden → variatie zonder herhaling.';
-    case 'variatie_met': return 'De volgorde telt (AB ≠ BA) en een letter mag wel herhaald worden (bv. AA komt voor) → variatie met herhaling.';
-    case 'combinatie_zonder': return 'De volgorde telt niet (AB en BA zijn dezelfde keuze, dus die tak komt maar één keer voor) en een letter mag niet herhaald worden → combinatie zonder herhaling.';
-    default: return 'De volgorde telt niet (AB en BA zijn dezelfde keuze) en een letter mag wel herhaald worden (bv. AA komt voor) → combinatie met herhaling.';
+    case 'variatie_zonder': return 'De volgorde telt (AB ≠ BA) en een label mag niet herhaald worden binnen hetzelfde pad → variatie zonder herhaling.';
+    case 'variatie_met': return 'De volgorde telt (AB ≠ BA) en een label mag wel herhaald worden (bv. AA komt voor) → variatie met herhaling.';
+    case 'combinatie_zonder': return 'De volgorde telt niet (AB en BA zijn dezelfde keuze, dus dat pad komt maar één keer voor) en een label mag niet herhaald worden → combinatie zonder herhaling.';
+    default: return 'De volgorde telt niet (AB en BA zijn dezelfde keuze) en een label mag wel herhaald worden (bv. AA komt voor) → combinatie met herhaling.';
   }
 }
 
+/* Kiest willekeurig n (3 of 4 labels, "af en toe 4"), p (2 of 3
+   niveaus, meestal 3) en een type, maar houdt het aantal bladeren
+   binnen MIN/MAX_BOOM_LEAVES — de types die hier te veel of te weinig
+   bladeren zouden geven, vallen voor die n/p automatisch af. */
+function pickBoomParams(){
+  const p = Math.random() < 0.65 ? 3 : 2;
+  const n = Math.random() < 0.75 ? 3 : 4;
+  const leafCountFor = {
+    variatie_zonder: nPr(n, p),
+    variatie_met: nVarHerhaling(n, p),
+    combinatie_zonder: nCr(n, p),
+    combinatie_met: nCrHerhaling(n, p),
+  };
+  const allowedTypes = Object.keys(leafCountFor).filter(type => {
+    const leaves = leafCountFor[type];
+    return leaves >= MIN_BOOM_LEAVES && leaves <= MAX_BOOM_LEAVES;
+  });
+  return { n, p, type: randChoice(allowedTypes) };
+}
+
+const BOOMSTRUCTUUR_TYPE_LABELS = {
+  variatie_zonder:'Variatie zonder herhaling',
+  variatie_met:'Variatie met herhaling',
+  combinatie_zonder:'Combinatie zonder herhaling',
+  combinatie_met:'Combinatie met herhaling',
+};
+
 function genBoomstructuur(){
-  const types = [
-    { id:'variatie_zonder', label:'Variatie zonder herhaling' },
-    { id:'variatie_met', label:'Variatie met herhaling' },
-    { id:'combinatie_zonder', label:'Combinatie zonder herhaling' },
-    { id:'combinatie_met', label:'Combinatie met herhaling' },
-  ];
-  const chosen = randChoice(types);
-  const labelSets = [['A','B','C'], ['R','S','T'], ['X','Y','Z']];
-  const labels = randChoice(labelSets);
-  const svg = svgKeuzeboom(chosen.id, labels);
+  const { n, p, type } = pickBoomParams();
+  const labels = randChoice(n === 3 ? LABELSETS_3 : LABELSETS_4);
+  const svg = svgKeuzeboom(type, labels, p);
   return {
     kind:'functie', catId:'combi_boom', catLabel:'Boomstructuur',
-    promptHtml: `Bekijk deze boomstructuur voor het kiezen van 2 letters uit {${labels.join(', ')}}.<br>Welk soort telprobleem stelt ze voor?`,
+    promptHtml: `Bekijk deze boomstructuur voor het kiezen van ${p} letters uit {${labels.join(', ')}}.<br>Welk soort telprobleem stelt ze voor?`,
     svg,
-    answerType:'lang', options: shuffle(types.map(t => t.label)), correct: chosen.label,
-    explanation: explainBoomstructuur(chosen.id),
+    answerType:'lang', options: shuffle(Object.values(BOOMSTRUCTUUR_TYPE_LABELS)), correct: BOOMSTRUCTUUR_TYPE_LABELS[type],
+    explanation: explainBoomstructuur(type),
   };
 }
 
