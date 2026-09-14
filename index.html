@@ -263,6 +263,27 @@
   .answer-input-row input.correct{ border-color:var(--green); background:#EAF4EC; color:var(--green); }
   .answer-input-row input.wrong{ border-color:var(--coral); background:#FBEAE5; color:var(--coral); }
   .answer-input-row input.gaveup{ border-color:var(--ink-soft); background:var(--paper); color:var(--ink-soft); }
+  .answer-input-wrap{ flex:1; display:flex; min-width:0; }
+  .answer-prefix{
+    display:none;
+    align-items:center;
+    flex-shrink:0;
+    padding:0 0 0 16px;
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:1.05rem;
+    font-weight:600;
+    color:var(--ink);
+    background:var(--white);
+    border:1.5px solid var(--paper-line);
+    border-right:none;
+    border-radius:10px 0 0 10px;
+    white-space:nowrap;
+  }
+  .answer-input-wrap.with-prefix .answer-prefix{ display:flex; }
+  .answer-input-wrap.with-prefix input{ border-radius:0 10px 10px 0; border-left:none; }
+  .answer-prefix.correct{ border-color:var(--green); background:#EAF4EC; color:var(--green); }
+  .answer-prefix.wrong{ border-color:var(--coral); background:#FBEAE5; color:var(--coral); }
+  .answer-prefix.gaveup{ border-color:var(--ink-soft); background:var(--paper); color:var(--ink-soft); }
   .mic-btn{
     width:48px; height:48px;
     border-radius:50%;
@@ -292,6 +313,7 @@
   }
   .feedback.show{ display:block; }
   .feedback .label{ font-weight:700; margin-bottom:3px; }
+  #feedback-text{ white-space:pre-line; }
   .feedback.ok .label{ color:var(--green); }
   .feedback.bad .label{ color:var(--coral); }
 
@@ -327,7 +349,30 @@
   }
   .review-item .rt{ font-weight:600; margin-bottom:2px; }
   .review-item .rt small{ color:var(--ink-soft); font-weight:400; }
-  .review-item .re{ color:var(--ink-soft); }
+  .review-item .re{ color:var(--ink-soft); white-space:pre-line; }
+
+  .functie-badge{
+    display:none;
+    align-items:center; justify-content:center;
+    padding:0 16px; height:36px;
+    border-radius:999px;
+    border:1.5px solid var(--ink);
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size:0.76rem;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--ink);
+    margin:0 auto 14px;
+  }
+  .functie-extra{ display:none; margin:14px 0 6px; }
+  .functie-extra svg{ display:block; margin:0 auto; max-width:100%; height:auto; background:var(--white); }
+  .functie-table{ border-collapse:collapse; margin:6px auto; font-family:'IBM Plex Mono', monospace; font-size:0.92rem; }
+  .functie-table td, .functie-table th{ border:1px solid var(--paper-line); padding:7px 16px; }
+  .functie-table th{ background:var(--paper); }
+  .functie-sub{ display:block; color:var(--ink-soft); font-size:0.72rem; font-weight:400; margin-top:6px; }
+  .functie-input-hint{ color:var(--ink-soft); font-size:0.78rem; margin:6px 0 0; display:none; }
+  .mic-ios-hint{ display:none; color:var(--ink-soft); font-size:0.78rem; margin:6px 0 0; }
 
   .lijst-item{ padding:13px 0; border-bottom:1px solid var(--paper-line); }
   .lijst-item:last-child{ border-bottom:none; }
@@ -442,8 +487,20 @@
   <div class="screen active" id="screen-home">
     <section class="card">
       <h2>Kies je spelmodus</h2>
-      <p class="hint">Vertalen: een term omzetten van de ene taal naar de andere. Uitleg: term en betekenis aan elkaar koppelen, binnen één taal, over een beperkt aantal vragen. Leermodus: hetzelfde als uitleg, maar dan over alle beschikbare termen.</p>
+      <p class="hint">Vertalen: een term omzetten van de ene taal naar de andere. Uitleg: term en betekenis aan elkaar koppelen, binnen één taal, over een beperkt aantal vragen. Leermodus: hetzelfde als uitleg, maar dan over alle beschikbare termen. Functies oefenen: telkens opnieuw willekeurig samengestelde oefeningen over eerstegraadsfuncties (functiewaarden, nulwaarden, grafieken, functievoorschriften...), speciaal voor wiskunde.</p>
       <div class="chips" id="chips-mode" style="margin-bottom:18px;"></div>
+
+      <div id="config-functies" style="display:none;">
+        <p class="hint">Vragen worden telkens opnieuw willekeurig samengesteld, dus ze komen niet steeds terug. Kies welke soorten je wil oefenen.</p>
+        <div class="filter-group">
+          <label>Soorten vragen</label>
+          <div class="chips" id="chips-functie-cat"></div>
+        </div>
+        <div class="filter-group">
+          <label>Aantal vragen</label>
+          <div class="chips" id="chips-functie-aantal"></div>
+        </div>
+      </div>
 
       <div id="config-vertalen">
         <div class="lang-row">
@@ -489,7 +546,7 @@
       </div>
     </section>
 
-    <section class="card">
+    <section class="card" id="card-onderdeel">
       <h2>Kies je onderdeel</h2>
       <p class="hint">Selecteer vak, hoofdstuk en graad. Laat een groep leeg om alles mee te tellen.</p>
 
@@ -526,17 +583,24 @@
 
       <div class="term-card">
         <div class="lang-badge" id="lang-badge">EN</div>
+        <div class="functie-badge" id="functie-badge">Functies</div>
         <p class="prompt" id="quiz-prompt">Hoe zeg je dit in het Engels?</p>
         <p class="source-term" id="quiz-term">&mdash;</p>
         <p class="source-meta" id="quiz-meta"></p>
+        <div class="functie-extra" id="quiz-functie-extra"></div>
       </div>
 
       <div class="options-grid" id="options-grid"></div>
 
       <div class="answer-input-row" id="answer-input-row">
-        <input type="text" id="answer-input" placeholder="Typ je antwoord..." autocomplete="off" autocapitalize="off" spellcheck="false">
+        <div class="answer-input-wrap" id="answer-input-wrap">
+          <span class="answer-prefix" id="answer-prefix"></span>
+          <input type="text" id="answer-input" placeholder="Typ je antwoord..." autocomplete="off" autocapitalize="off" spellcheck="false">
+        </div>
         <button class="mic-btn" id="btn-mic" type="button" title="Spreek je antwoord in">&#127908;</button>
       </div>
+      <p class="mic-ios-hint" id="ios-mic-hint">Spraakinvoer werkt niet in deze app op iPhone/iPad &mdash; typ je antwoord, of gebruik het microfoontoetsje van het toetsenbord van je toestel zelf.</p>
+      <p class="functie-input-hint" id="functie-input-hint"></p>
       <div class="answer-actions" id="answer-actions">
         <button class="btn btn-primary" id="btn-check">Controleer</button>
         <button class="btn btn-ghost" id="btn-show-answer">Toon antwoord</button>
@@ -594,7 +658,7 @@
     <p class="hint">Voor leerlingen én leerkrachten &mdash; sluit dit venster gewoon om verder te gaan.</p>
 
     <p style="font-weight:600; margin-bottom:4px;">Voor leerlingen</p>
-    <p class="hint">Kies bovenaan je spelmodus, taal (of talen) en het vak, hoofdstuk en graad waarover je wil oefenen, en klik op start. Staat de lijst van jouw leerkracht of vak er nog niet tussen? Vraag het CSV-bestand aan je leerkracht (bv. via Smartschool) en klik zelf op <b>"Lijst importeren"</b> hierboven om het toe te voegen &mdash; dat moet maar eenmalig, per toestel of browser. Je kan gerust na elkaar lijsten van verschillende leerkrachten of vakken importeren; ze worden gewoon samengevoegd, niets gaat verloren.</p>
+    <p class="hint">Kies bovenaan je spelmodus, taal (of talen) en het vak, hoofdstuk en graad waarover je wil oefenen, en klik op start. Kies je <b>"Functies oefenen"</b>, dan krijg je willekeurig samengestelde wiskunde-oefeningen over eerstegraadsfuncties &mdash; die worden niet uit een lijst gehaald maar telkens opnieuw berekend, dus ze komen niet steeds terug. Staat de lijst van jouw leerkracht of vak er nog niet tussen? Vraag het CSV-bestand aan je leerkracht (bv. via Smartschool) en klik zelf op <b>"Lijst importeren"</b> hierboven om het toe te voegen &mdash; dat moet maar eenmalig, per toestel of browser. Je kan gerust na elkaar lijsten van verschillende leerkrachten of vakken importeren; ze worden gewoon samengevoegd, niets gaat verloren.</p>
 
     <p style="font-weight:600; margin:16px 0 4px;">Voor leerkrachten: een lijst opstellen</p>
     <p class="hint">Maak een CSV-bestand (puntkomma-gescheiden) volgens dit schema:</p>
@@ -657,7 +721,7 @@
     <p class="hint" id="confirm-text"></p>
     <div class="modal-close-row">
       <button class="btn btn-ghost" id="confirm-no">Annuleren</button>
-      <button class="btn btn-primary" id="confirm-yes">Ja, doorgaan</button>
+      <button class="btn btn-primary" id="confirm-yes">Ja</button>
     </div>
   </div>
 </div>
@@ -681,6 +745,7 @@ const MODE_OPTIONS = [
   { code:'uitleg', label:'Uitleg' },
   { code:'leren', label:'Leermodus' },
   { code:'lezen', label:'Leesmodus' },
+  { code:'functies', label:'Functies oefenen' },
 ];
 const RICHTING_OPTIONS = [
   { code:'term-naar-uitleg', label:'Term \u2192 uitleg' },
@@ -694,6 +759,17 @@ let langState = { start:'NL', target:'EN' };
 let uitlegState = { lang:'NL', richting:'term-naar-uitleg' };
 let lerenState = { lang:'NL' };
 let leesState = { lang:'NL' };
+/* De leerling kiest niet tussen fijne onderdelen, maar tussen 3 brede
+   categorieën; elke categorie kiest zelf ad randum uit een pool van
+   fijnere vraagtypes (zie GRAFISCH_GENS / REKENEN_GENS / TERMEN_GENS
+   en generateForCategory hieronder). */
+const FUNCTIE_CATEGORIES = [
+  { id:'grafisch', label:'Grafisch' },
+  { id:'rekenen', label:'Rekenen' },
+  { id:'termen', label:'Termen & begrippen' },
+];
+const FUNCTIE_AANTAL_OPTIONS = [5, 10, 15, 20];
+let functieState = { categories: new Set(FUNCTIE_CATEGORIES.map(c=>c.id)), aantal: 10 };
 let quiz = { questions:[], index:0, score:0, answers:[] };
 let pendingImportRows = null;
 let pendingImportLabel = '';
@@ -734,6 +810,815 @@ function shuffle(arr){
     [a[i],a[j]]=[a[j],a[i]];
   }
   return a;
+}
+
+/* ==================================================================
+   FUNCTIES-OEFENMODULE (eerstegraadsfuncties)
+   ================================================================== */
+function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
+function randNonZero(min, max){ let v; do{ v = randInt(min, max); } while(v === 0); return v; }
+function randChoice(arr){ return arr[randInt(0, arr.length - 1)]; }
+
+function formatLinear(a, b){
+  let s = '';
+  if(a === 1) s = 'x';
+  else if(a === -1) s = '-x';
+  else if(a !== 0) s = a + 'x';
+  if(b !== 0){
+    if(s === '') s = String(b);
+    else s += (b > 0 ? ' + ' + b : ' - ' + Math.abs(b));
+  } else if(s === ''){
+    s = '0';
+  }
+  return s;
+}
+
+function fx(a, b, x){ return a * x + b; }
+
+/* ---- flexible answer parsing ---- */
+/* ingesproken woorden ("min", "plus", "komma") omzetten naar wiskundige tekens,
+   vooraleer verder te ontleden — nodig omdat spraakherkenning die woorden
+   meestal niet zelf omzet naar -, + of , */
+function normalizeSpokenMath(str){
+  return String(str)
+    .replace(/\bmin\b/gi, '-')
+    .replace(/\bplus\b/gi, '+')
+    .replace(/\bkomma\b/gi, ',');
+}
+
+function parseFlexibleNumber(str){
+  if(str === null || str === undefined) return null;
+  let s = normalizeSpokenMath(str).trim().toLowerCase();
+  if(s === '') return null;
+  s = s.replace(/^[a-z]\s*=\s*/, '');
+  s = s.replace(/,/g, '.');
+  s = s.replace(/[\s€]/g, '');
+  s = s.replace(/km\/uur|km|uur\b|u\b|m\b/g, '');
+  const fracMatch = s.match(/^(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)$/);
+  if(fracMatch) return parseFloat(fracMatch[1]) / parseFloat(fracMatch[2]);
+  const v = parseFloat(s);
+  return isNaN(v) ? null : v;
+}
+
+function parseFlexibleNumberList(str){
+  if(!str) return [];
+  let s = normalizeSpokenMath(str).toLowerCase().replace(/,/g, ' ').replace(/[();]/g, ' ');
+  s = s.replace(/-\s+(?=\d)/g, '-');
+  const matches = s.match(/-?\d+(?:\.\d+)?/g);
+  return matches ? matches.map(Number) : [];
+}
+
+function parseLinearExpr(str){
+  if(!str) return { ok:false };
+  let s = normalizeSpokenMath(str).toLowerCase();
+  s = s.replace(/\bkeer\b|\bmaal\b/g, '');
+  s = s.replace(/,/g, '.').replace(/\s+/g, '').replace(/[*·]/g, '');
+  s = s.replace(/^[a-z]\(x\)=/, '').replace(/^y=/, '').replace(/^f=/, '');
+  if(s === '') return { ok:false };
+  s = s.replace(/(?!^)-/g, '+-');
+  const terms = s.split('+').filter(t => t.length > 0);
+  let a = 0, b = 0, ok = true, sawX = false;
+  terms.forEach(t => {
+    if(t.includes('x')){
+      sawX = true;
+      let coef = t.replace('x', '');
+      if(coef === '' || coef === '+') coef = '1';
+      else if(coef === '-') coef = '-1';
+      const v = parseFloat(coef);
+      if(isNaN(v)){ ok = false; return; }
+      a += v;
+    } else {
+      const v = parseFloat(t);
+      if(isNaN(v)){ ok = false; return; }
+      b += v;
+    }
+  });
+  if(!sawX && a === 0 && !ok){ /* pure constant, still fine */ }
+  return { a, b, ok };
+}
+
+function checkFunctieAnswer(q, userAnswer){
+  if(q.checkKind === 'number'){
+    const v = parseFlexibleNumber(userAnswer);
+    return v !== null && Math.abs(v - q.checkData.value) < 1e-6;
+  }
+  if(q.checkKind === 'linear'){
+    const r = parseLinearExpr(userAnswer);
+    return r.ok && Math.abs(r.a - q.checkData.a) < 1e-6 && Math.abs(r.b - q.checkData.b) < 1e-6;
+  }
+  if(q.checkKind === 'point'){
+    const nums = parseFlexibleNumberList(userAnswer);
+    return nums.length >= 2 && Math.abs(nums[0] - q.checkData.x) < 1e-6 && Math.abs(nums[1] - q.checkData.y) < 1e-6;
+  }
+  return false;
+}
+
+const FUNCTIE_HINTS = {
+  number: 'Typ een getal, bv. -3 of 2,5 (of spreek het in, en controleer even of het goed overkwam)',
+  linear: 'Vul aan na f(x) = , bv. 2x - 3 (of spreek het in, en controleer even of het goed overkwam)',
+  point: 'Typ het snijpunt, bv. (2, 5) (of spreek het in, en controleer even of het goed overkwam)',
+};
+const FUNCTIE_PLACEHOLDERS = {
+  number: 'Typ een getal...',
+  linear: '...',
+  point: '(x, y)',
+};
+
+/* ---- SVG graph rendering ---- */
+function chooseWindow(a, b){
+  const xz = a !== 0 ? -b / a : null;
+  const candidates = [0, b, xz].filter(v => v !== null && isFinite(v)).map(v => Math.abs(Math.ceil(v)) + 2);
+  let maxAbs = Math.max(6, ...candidates);
+  maxAbs = Math.min(maxAbs, 12);
+  return { xMin:-maxAbs, xMax:maxAbs, yMin:-maxAbs, yMax:maxAbs };
+}
+
+function svgLinearGraph(a, b){
+  const win = chooseWindow(a, b);
+  const { xMin, xMax, yMin, yMax } = win;
+  const W = 300, H = 300, pad = 26;
+  const sx = (W - 2 * pad) / (xMax - xMin);
+  const sy = (H - 2 * pad) / (yMax - yMin);
+  const px = x => pad + (x - xMin) * sx;
+  const py = y => H - pad - (y - yMin) * sy;
+  const step = (xMax - xMin) > 16 ? 2 : 1;
+
+  let grid = '';
+  for(let gx = Math.ceil(xMin / step) * step; gx <= xMax; gx += step){
+    grid += `<line x1="${px(gx)}" y1="${pad}" x2="${px(gx)}" y2="${H - pad}" stroke="var(--paper-line)" stroke-width="1"/>`;
+  }
+  for(let gy = Math.ceil(yMin / step) * step; gy <= yMax; gy += step){
+    grid += `<line x1="${pad}" y1="${py(gy)}" x2="${W - pad}" y2="${py(gy)}" stroke="var(--paper-line)" stroke-width="1"/>`;
+  }
+
+  let axes = `<line x1="${px(xMin)}" y1="${py(0)}" x2="${px(xMax)}" y2="${py(0)}" stroke="var(--ink)" stroke-width="1.5"/>`;
+  axes += `<line x1="${px(0)}" y1="${py(yMin)}" x2="${px(0)}" y2="${py(yMax)}" stroke="var(--ink)" stroke-width="1.5"/>`;
+
+  let labels = '';
+  for(let gx = Math.ceil(xMin / step) * step; gx <= xMax; gx += step){
+    if(gx === 0) continue;
+    labels += `<text x="${px(gx)}" y="${py(0) + 13}" font-size="9" text-anchor="middle" fill="var(--ink-soft)">${gx}</text>`;
+  }
+  for(let gy = Math.ceil(yMin / step) * step; gy <= yMax; gy += step){
+    if(gy === 0) continue;
+    labels += `<text x="${px(0) - 6}" y="${py(gy) + 3}" font-size="9" text-anchor="end" fill="var(--ink-soft)">${gy}</text>`;
+  }
+  labels += `<text x="${px(0) - 6}" y="${py(0) + 13}" font-size="9" text-anchor="end" fill="var(--ink-soft)">0</text>`;
+
+  let x1 = xMin, x2 = xMax, y1 = fx(a, b, xMin), y2 = fx(a, b, xMax);
+  if(a !== 0){
+    if(y1 < yMin){ x1 = (yMin - b) / a; y1 = yMin; }
+    if(y1 > yMax){ x1 = (yMax - b) / a; y1 = yMax; }
+    if(y2 < yMin){ x2 = (yMin - b) / a; y2 = yMin; }
+    if(y2 > yMax){ x2 = (yMax - b) / a; y2 = yMax; }
+  }
+  const line = `<line x1="${px(x1)}" y1="${py(y1)}" x2="${px(x2)}" y2="${py(y2)}" stroke="var(--coral)" stroke-width="2.5" stroke-linecap="round"/>`;
+
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${grid}${axes}${line}${labels}</svg>`;
+}
+
+/* ---- generic curve graph (for "is dit een functie?" grafieken) ---- */
+const SHAPE_WIN = { xMin:-6, xMax:6, yMin:-6, yMax:6 };
+
+function svgCurveGraph(segments, win){
+  const { xMin, xMax, yMin, yMax } = win;
+  const W = 300, H = 300, pad = 26;
+  const sx = (W - 2 * pad) / (xMax - xMin);
+  const sy = (H - 2 * pad) / (yMax - yMin);
+  const px = x => pad + (x - xMin) * sx;
+  const py = y => H - pad - (y - yMin) * sy;
+  const step = (xMax - xMin) > 16 ? 2 : 1;
+
+  let grid = '';
+  for(let gx = Math.ceil(xMin / step) * step; gx <= xMax; gx += step){
+    grid += `<line x1="${px(gx)}" y1="${pad}" x2="${px(gx)}" y2="${H - pad}" stroke="var(--paper-line)" stroke-width="1"/>`;
+  }
+  for(let gy = Math.ceil(yMin / step) * step; gy <= yMax; gy += step){
+    grid += `<line x1="${pad}" y1="${py(gy)}" x2="${W - pad}" y2="${py(gy)}" stroke="var(--paper-line)" stroke-width="1"/>`;
+  }
+
+  let axes = `<line x1="${px(xMin)}" y1="${py(0)}" x2="${px(xMax)}" y2="${py(0)}" stroke="var(--ink)" stroke-width="1.5"/>`;
+  axes += `<line x1="${px(0)}" y1="${py(yMin)}" x2="${px(0)}" y2="${py(yMax)}" stroke="var(--ink)" stroke-width="1.5"/>`;
+
+  let labels = '';
+  for(let gx = Math.ceil(xMin / step) * step; gx <= xMax; gx += step){
+    if(gx === 0) continue;
+    labels += `<text x="${px(gx)}" y="${py(0) + 13}" font-size="9" text-anchor="middle" fill="var(--ink-soft)">${gx}</text>`;
+  }
+  for(let gy = Math.ceil(yMin / step) * step; gy <= yMax; gy += step){
+    if(gy === 0) continue;
+    labels += `<text x="${px(0) - 6}" y="${py(gy) + 3}" font-size="9" text-anchor="end" fill="var(--ink-soft)">${gy}</text>`;
+  }
+  labels += `<text x="${px(0) - 6}" y="${py(0) + 13}" font-size="9" text-anchor="end" fill="var(--ink-soft)">0</text>`;
+
+  const paths = segments.map(seg => {
+    const d = seg.map((p, i) => (i === 0 ? 'M' : 'L') + px(p[0]).toFixed(1) + ' ' + py(p[1]).toFixed(1)).join(' ');
+    return `<path d="${d}" fill="none" stroke="var(--coral)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+  }).join('');
+
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${grid}${axes}${paths}${labels}</svg>`;
+}
+
+function sampleXY(f, x0, x1, n){
+  n = n || 60;
+  const pts = [];
+  for(let i = 0; i <= n; i++){
+    const x = x0 + (x1 - x0) * i / n;
+    const y = f(x);
+    if(isFinite(y)) pts.push([x, y]);
+  }
+  return pts;
+}
+
+function sampleYX(g, y0, y1, n){
+  n = n || 60;
+  const pts = [];
+  for(let i = 0; i <= n; i++){
+    const y = y0 + (y1 - y0) * i / n;
+    const x = g(y);
+    if(isFinite(x)) pts.push([x, y]);
+  }
+  return pts;
+}
+
+function sampleParam(f, t0, t1, n){
+  n = n || 90;
+  const pts = [];
+  for(let i = 0; i <= n; i++){
+    const t = t0 + (t1 - t0) * i / n;
+    pts.push(f(t));
+  }
+  return pts;
+}
+
+/* ---- "is dit een functie?" grafiek-vormen ---- */
+const VERTICALE_LIJN_REGEL = 'Een verticale lijn die je van links naar rechts laat opschuiven, mag de grafiek van een functie hoogstens 1 keer snijden. ';
+
+function shapeLijn(){
+  const a = randChoice([-2, -1.5, -1, -0.5, 0.5, 1, 1.5, 2]);
+  const b = randInt(-3, 3);
+  return { segments:[sampleXY(x => a * x + b, -6, 6)], isFunction:true,
+    explanation: VERTICALE_LIJN_REGEL + 'Een (niet-verticale) rechte snijdt elke verticale lijn precies 1 keer → dit is wel een functie.' };
+}
+function shapeParabool(){
+  const s = randChoice([1, -1]);
+  const h = randInt(-2, 2);
+  const k = s === 1 ? randInt(-3, 0) : randInt(0, 3);
+  return { segments:[sampleXY(x => s * 0.35 * (x - h) * (x - h) + k, -6, 6)], isFunction:true,
+    explanation: VERTICALE_LIJN_REGEL + 'Voor elke x-waarde geeft deze parabool precies 1 y-waarde → dit is wel een functie.' };
+}
+function shapeV(){
+  const s = randChoice([1, -1]);
+  const h = randInt(-2, 2);
+  const k = s === 1 ? randInt(-3, 0) : randInt(0, 3);
+  return { segments:[sampleXY(x => s * 0.9 * Math.abs(x - h) + k, -6, 6)], isFunction:true,
+    explanation: VERTICALE_LIJN_REGEL + 'Voor elke x-waarde geeft deze V-vorm precies 1 y-waarde → dit is wel een functie.' };
+}
+function shapeWortel(){
+  const s = randChoice([1, -1]);
+  const h = randInt(-4, 2);
+  const k = randInt(-2, 2);
+  return { segments:[sampleXY(x => s * 1.3 * Math.sqrt(x - h) + k, h, 6)], isFunction:true,
+    explanation: VERTICALE_LIJN_REGEL + 'Voor elke x-waarde binnen het domein geeft deze grafiek precies 1 y-waarde → dit is wel een functie.' };
+}
+function shapeDerdeGraads(){
+  const a = 0.06;
+  const h = randInt(-2, 2);
+  const k = randInt(-2, 2);
+  const m = randChoice([0, 0, 1, 1.5, 2]); // m=0 -> monotoon, m>0 -> met plooi (lokaal max/min)
+  const x0 = Math.max(-6, h - 4), x1 = Math.min(6, h + 4);
+  const f = x => a * Math.pow(x - h, 3) - 3 * a * m * m * (x - h) + k;
+  return { segments:[sampleXY(f, x0, x1)], isFunction:true,
+    explanation: VERTICALE_LIJN_REGEL + 'Voor elke x-waarde geeft deze derdegraadsfunctie precies 1 y-waarde → dit is wel een functie.' };
+}
+function shapeLog(){
+  const s = randChoice([1, -1]);
+  const h = randInt(-4, 2);
+  const k = randInt(-2, 2);
+  const a = randChoice([1.5, 2, 2.5]);
+  const f = x => s * a * Math.log(x - h) + k;
+  return { segments:[sampleXY(f, h + 0.15, 6)], isFunction:true,
+    explanation: VERTICALE_LIJN_REGEL + 'Voor elke x-waarde binnen het domein geeft deze logaritmische grafiek precies 1 y-waarde → dit is wel een functie.' };
+}
+function shapeHyperbool(){
+  const h = randInt(-1, 1);
+  const k = randInt(-1, 1);
+  const a = randChoice([1, -1]) * randChoice([1, 1.5, 2, 2.5]);
+  return { segments:[sampleXY(x => a / (x - h) + k, -6, h - 0.3), sampleXY(x => a / (x - h) + k, h + 0.3, 6)], isFunction:true,
+    explanation: VERTICALE_LIJN_REGEL + 'Deze rationale functie (van de vorm y = a/(x−h) + k, zoals y = 1/x) is niet getekend in x = ' + h + ' en bestaat dus uit 2 stukken — maar dat is geen probleem: continuïteit is geen vereiste voor een functie. Voor elke x-waarde in het domein geeft de grafiek precies 1 y-waarde → dit is wel een functie.' };
+}
+function shapeZijHyperbool(){
+  const h = randInt(-1, 1);
+  const k = randInt(-1, 1);
+  const a = randChoice([1, -1]) * randChoice([1, 1.5, 2, 2.5]);
+  // x en y van shapeHyperbool verwisseld: x = a/(y-h) + k  →  ook dit is (na herschrijven) een rationale functie y = a/(x-k) + h, dus opnieuw een functie
+  return { segments:[sampleYX(y => a / (y - h) + k, -6, h - 0.3), sampleYX(y => a / (y - h) + k, h + 0.3, 6)], isFunction:true,
+    explanation: VERTICALE_LIJN_REGEL + 'Deze kromme is de vorige rationale functie met x en y verwisseld — ze ziet er "gekanteld" en onderbroken uit, maar ook hier geeft elke x-waarde precies 1 y-waarde → dit is wel een functie. (Een rationale functie zoals y = 1/x is injectief, dus x en y verwisselen levert opnieuw een functie op, niet het tegenvoorbeeld.)' };
+}
+function shapeCirkel(){
+  const h = randInt(-2, 2), k = randInt(-2, 2);
+  const r = randChoice([1.5, 2, 2.5, 3]);
+  return { segments:[sampleParam(t => [h + r * Math.cos(t), k + r * Math.sin(t)], 0, Math.PI * 2 + 0.001)], isFunction:false,
+    explanation: VERTICALE_LIJN_REGEL + 'Bij een cirkel snijdt een verticale lijn de grafiek meestal 2 keer (boven én onder) → dit is geen functie.' };
+}
+function shapeEllips(){
+  const h = randInt(-2, 2), k = randInt(-1, 1);
+  const rx = randChoice([3, 3.5, 4]), ry = randChoice([1, 1.5, 2]);
+  return { segments:[sampleParam(t => [h + rx * Math.cos(t), k + ry * Math.sin(t)], 0, Math.PI * 2 + 0.001)], isFunction:false,
+    explanation: VERTICALE_LIJN_REGEL + 'Bij deze ovale vorm snijdt een verticale lijn de grafiek meestal 2 keer → dit is geen functie.' };
+}
+function shapeZijParabool(){
+  const s = randChoice([1, -1]);
+  const k = randInt(-2, 2);
+  const h = s === 1 ? randInt(-3, 0) : randInt(0, 3);
+  return { segments:[sampleYX(y => s * 0.35 * (y - k) * (y - k) + h, -6, 6)], isFunction:false,
+    explanation: VERTICALE_LIJN_REGEL + 'Deze parabool ligt op haar zij: voor de meeste x-waarden zijn er 2 y-waarden → dit is geen functie.' };
+}
+function shapeZijV(){
+  const s = randChoice([1, -1]);
+  const k = randInt(-2, 2);
+  const h = s === 1 ? randInt(-3, 0) : randInt(0, 3);
+  return { segments:[sampleYX(y => s * 0.9 * Math.abs(y - k) + h, -6, 6)], isFunction:false,
+    explanation: VERTICALE_LIJN_REGEL + 'Deze V-vorm ligt op haar zij: voor de meeste x-waarden zijn er 2 y-waarden → dit is geen functie.' };
+}
+function shapeVerticaleRechte(){
+  const c = randInt(-4, 4);
+  return { segments:[[[c, -6], [c, 6]]], isFunction:false,
+    explanation: VERTICALE_LIJN_REGEL + 'Deze rechte is zelf verticaal: bij die ene x-waarde horen oneindig veel y-waarden → dit is geen functie.' };
+}
+function shapeZijDerdeGraads(){
+  const a = 0.06;
+  const h = randInt(-2, 2);
+  const k = randInt(-2, 2);
+  const m = randChoice([1, 1.5, 2]); // altijd een plooi, anders zou het toch een functie zijn
+  const y0 = Math.max(-6, k - 4), y1 = Math.min(6, k + 4);
+  const g = y => a * Math.pow(y - k, 3) - 3 * a * m * m * (y - k) + h;
+  return { segments:[sampleYX(g, y0, y1)], isFunction:false,
+    explanation: VERTICALE_LIJN_REGEL + 'Deze derdegraadskromme ligt op haar zij: voor sommige x-waarden zijn er meerdere y-waarden → dit is geen functie.' };
+}
+
+const FUNCTIE_SHAPE_GENERATORS = [shapeLijn, shapeParabool, shapeV, shapeWortel, shapeDerdeGraads, shapeLog, shapeHyperbool, shapeZijHyperbool, shapeCirkel, shapeEllips, shapeZijParabool, shapeZijV, shapeZijDerdeGraads, shapeVerticaleRechte];
+
+function genIsFunctieGrafiek(){
+  const gen = randChoice(FUNCTIE_SHAPE_GENERATORS);
+  const result = gen();
+  const svg = svgCurveGraph(result.segments, SHAPE_WIN);
+  return {
+    kind:'functie', catId:'is_functie', catLabel:'Is dit een functie?',
+    promptHtml: `Stelt deze grafiek een functie voor?`,
+    svg,
+    answerType:'lang', options:['Ja','Nee'], correct: result.isFunction ? 'Ja' : 'Nee',
+    explanation: result.explanation,
+  };
+}
+
+/* ---- question generators ---- */
+function genFunctiewaarde(){
+  const a = randNonZero(-6, 6);
+  const b = randInt(-10, 10);
+  const expr = formatLinear(a, b);
+  if(Math.random() < 0.5){
+    const x0 = randInt(-6, 6);
+    const val = fx(a, b, x0);
+    return {
+      kind:'functie', catId:'functiewaarde', catLabel:'Functiewaarde',
+      promptHtml: `Gegeven f(x) = ${expr}.<br>Bereken f(${x0}).`,
+      answerType:'kort', checkKind:'number', checkData:{ value: val }, correct: String(val),
+      explanation: `f(${x0}) = ${expr.replace(/x/g, '×' + x0)} = ${val}`,
+    };
+  } else {
+    const x0 = randInt(-6, 6);
+    const target = fx(a, b, x0);
+    return {
+      kind:'functie', catId:'functiewaarde', catLabel:'Functiewaarde',
+      promptHtml: `Gegeven f(x) = ${expr}.<br>Voor welke x geldt f(x) = ${target}?`,
+      answerType:'kort', checkKind:'number', checkData:{ value: x0 }, correct: String(x0),
+      explanation: `${expr} = ${target}  →  x = ${x0}`,
+    };
+  }
+}
+
+function genNulwaardeAlgebra(){
+  const a = randNonZero(-6, 6);
+  const x0 = randInt(-8, 8);
+  const b = -a * x0;
+  const expr = formatLinear(a, b);
+  return {
+    kind:'functie', catId:'nulwaarde', catLabel:'Nulwaarde',
+    promptHtml: `Bereken de nulwaarde van f(x) = ${expr}.`,
+    answerType:'kort', checkKind:'number', checkData:{ value: x0 }, correct: String(x0),
+    explanation: `${expr} = 0  →  x = ${x0}`,
+  };
+}
+function genNulwaardeGrafiek(){
+  const aa = randChoice([-3,-2,-1,1,2,3]);
+  const x0 = randInt(-6, 6);
+  const b = -aa * x0;
+  const svg = svgLinearGraph(aa, b);
+  return {
+    kind:'functie', catId:'nulwaarde', catLabel:'Nulwaarde (grafiek)',
+    promptHtml: `Lees de nulwaarde van de grafiek af.`,
+    svg,
+    answerType:'kort', checkKind:'number', checkData:{ value: x0 }, correct: String(x0),
+    explanation: `De grafiek snijdt de x-as in x = ${x0}.`,
+  };
+}
+
+function genRicoAlgebra(){
+  const a = randNonZero(-8, 8);
+  const b = randInt(-10, 10);
+  const expr = formatLinear(a, b);
+  return {
+    kind:'functie', catId:'rico', catLabel:'Richtingscoëfficiënt',
+    promptHtml: `Wat is de richtingscoëfficiënt (a) van f(x) = ${expr}?`,
+    answerType:'kort', checkKind:'number', checkData:{ value: a }, correct: String(a),
+    explanation: `De rico is de coëfficiënt van x: a = ${a}.`,
+  };
+}
+function genRicoGrafiek(){
+  const a = randNonZero(-4, 4);
+  const b = randInt(-6, 6);
+  const svg = svgLinearGraph(a, b);
+  return {
+    kind:'functie', catId:'rico', catLabel:'Richtingscoëfficiënt (grafiek)',
+    promptHtml: `Bepaal de richtingscoëfficiënt van deze grafiek.`,
+    svg,
+    answerType:'kort', checkKind:'number', checkData:{ value: a }, correct: String(a),
+    explanation: `Voor elke stap van 1 naar rechts, verandert f(x) met ${a} (rico = ${a}).`,
+  };
+}
+
+function genDomeinBereik(){
+  const isConstant = Math.random() < 0.3;
+  const a = isConstant ? 0 : randNonZero(-6, 6);
+  const b = randInt(-10, 10);
+  const expr = formatLinear(a, b);
+  const RSET = 'ℝ';
+  const askDomain = Math.random() < 0.5;
+  let promptHtml, correct, options, explanation;
+  if(askDomain){
+    promptHtml = `Wat is het domein van f(x) = ${expr}?`;
+    correct = RSET + ' (alle reële getallen)';
+    options = shuffle([correct, RSET + '₀ (ℝ zonder 0)', '{' + b + '}', '∅ (leeg)']);
+    explanation = `Een eerstegraadsfunctie is overal gedefinieerd: dom f = ℝ.`;
+  } else {
+    promptHtml = `Wat is het bereik van f(x) = ${expr}?`;
+    if(a === 0){
+      correct = '{' + b + '}';
+      options = shuffle([RSET + ' (alle reële getallen)', correct, RSET + '₀', '{0}']);
+      explanation = `f is een constante functie (a = 0): elke x geeft f(x) = ${b}, dus bereik f = {${b}}.`;
+    } else {
+      correct = RSET + ' (alle reële getallen)';
+      options = shuffle([correct, '{' + b + '}', RSET + '₀', '∅ (leeg)']);
+      explanation = `Voor a ≠ 0 doorloopt een eerstegraadsfunctie alle reële getallen: bereik f = ℝ.`;
+    }
+  }
+  return { kind:'functie', catId:'domein_bereik', catLabel:'Domein & bereik', promptHtml, answerType:'lang', options, correct, explanation };
+}
+
+/* Stelt het functievoorschrift op met dezelfde formule als in de klas:
+   y − y1 = (y2 − y1)/(x2 − x1) · (x − x1). ricoStepLine (optioneel) toont
+   hoe a uit 2 punten berekend werd; anders wordt a als gekend beschouwd. */
+function explainVoorschriftFormule(a, b, x1, y1, ricoStepLine, fname){
+  fname = fname || 'f';
+  const lines = [];
+  if(ricoStepLine) lines.push(ricoStepLine);
+  lines.push(`Vul het punt (${x1}, ${y1}) in bij y − y1 = a(x − x1):`);
+  lines.push(`y − (${y1}) = ${a}·(x − (${x1}))`);
+  lines.push(`y = ${formatLinear(a, b)}  →  ${fname}(x) = ${formatLinear(a, b)}`);
+  return lines.join('\n');
+}
+
+function genVoorschriftGrafiek(){
+  const a = randNonZero(-6, 6);
+  const b = randInt(-8, 8);
+  const svg = svgLinearGraph(a, b);
+  const ricoStepLine = `Van de grafiek lees je af: rico a = ${a}, en de rechte gaat door het punt (0, ${b}) (snijpunt met de y-as).`;
+  return {
+    kind:'functie', catId:'voorschrift', catLabel:'Functievoorschrift (grafiek)',
+    promptHtml: `Bepaal het functievoorschrift van deze grafiek.`,
+    svg,
+    answerType:'kort', checkKind:'linear', checkData:{ a, b },
+    correct: 'f(x) = ' + formatLinear(a, b), correctExpr: formatLinear(a, b),
+    explanation: explainVoorschriftFormule(a, b, 0, b, ricoStepLine),
+  };
+}
+function genVoorschriftTabel(){
+  const a = randNonZero(-6, 6);
+  const b = randInt(-10, 10);
+  let x1 = randInt(-5, 5), x2;
+  do{ x2 = randInt(-5, 5); } while(x2 === x1);
+  const y1 = fx(a, b, x1), y2 = fx(a, b, x2);
+  const extraHtml = `<table class="functie-table"><tr><th>x</th><td>${x1}</td><td>${x2}</td></tr><tr><th>f(x)</th><td>${y1}</td><td>${y2}</td></tr></table>`;
+  const ricoStepLine = `Rico: a = (y2 − y1)/(x2 − x1) = (${y2} − (${y1})) / (${x2} − (${x1})) = ${a}`;
+  return {
+    kind:'functie', catId:'voorschrift', catLabel:'Functievoorschrift (tabel)',
+    promptHtml: `Bepaal het functievoorschrift dat bij deze tabel hoort.`,
+    extraHtml,
+    answerType:'kort', checkKind:'linear', checkData:{ a, b },
+    correct: 'f(x) = ' + formatLinear(a, b), correctExpr: formatLinear(a, b),
+    explanation: explainVoorschriftFormule(a, b, x1, y1, ricoStepLine),
+  };
+}
+
+function genGedrag(){
+  if(Math.random() < 0.5){
+    const a = Math.random() < 0.15 ? 0 : randNonZero(-6, 6);
+    const b = randInt(-8, 8);
+    const expr = formatLinear(a, b);
+    const correct = a > 0 ? 'Stijgend' : (a < 0 ? 'Dalend' : 'Constant');
+    const explanation = a > 0 ? `a = ${a} > 0  →  stijgend.` : (a < 0 ? `a = ${a} < 0  →  dalend.` : `a = 0  →  constant.`);
+    return { kind:'functie', catId:'gedrag', catLabel:'Stijgend/dalend', promptHtml:`Is f(x) = ${expr} stijgend, dalend of constant?`, answerType:'lang', options:['Stijgend','Dalend','Constant'], correct, explanation };
+  } else {
+    const throughOrigin = Math.random() < 0.5;
+    const a = randNonZero(-6, 6);
+    const b = throughOrigin ? 0 : randNonZero(-8, 8);
+    const expr = formatLinear(a, b);
+    const correct = throughOrigin ? 'Ja' : 'Nee';
+    const explanation = throughOrigin ? `b = 0, dus de grafiek gaat door de oorsprong (0,0).` : `b = ${b} ≠ 0, dus de grafiek gaat niet door de oorsprong.`;
+    return { kind:'functie', catId:'gedrag', catLabel:'Door de oorsprong?', promptHtml:`Gaat de grafiek van f(x) = ${expr} door de oorsprong?`, answerType:'lang', options:['Ja','Nee'], correct, explanation };
+  }
+}
+
+const NIET_EERSTEGRAADS_VOORBEELDEN = [
+  { expr:'x² + 2', why:'de exponent van x is 2, niet 1.' },
+  { expr:'√x', why:'x staat onder een wortel.' },
+  { expr:'5/x', why:'x staat in de noemer.' },
+  { expr:'3x² − x', why:'bevat een term met x².' },
+  { expr:'2^x', why:'x staat in de exponent (dit is een exponentiële functie).' },
+  { expr:'x³', why:'de exponent van x is 3, niet 1.' },
+];
+function genEerstegraads(){
+  const isLinear = Math.random() < 0.5;
+  if(isLinear){
+    const a = randNonZero(-6, 6), b = randInt(-8, 8);
+    const expr = formatLinear(a, b);
+    return { kind:'functie', catId:'eerstegraads', catLabel:'Eerstegraads of niet?', promptHtml:`Is f(x) = ${expr} een eerstegraadsfunctie?`, answerType:'lang', options:['Ja','Nee'], correct:'Ja', explanation:`Ja, van de vorm ax + b met a = ${a} ≠ 0 (graad 1).` };
+  } else {
+    const ex = randChoice(NIET_EERSTEGRAADS_VOORBEELDEN);
+    return { kind:'functie', catId:'eerstegraads', catLabel:'Eerstegraads of niet?', promptHtml:`Is f(x) = ${ex.expr} een eerstegraadsfunctie?`, answerType:'lang', options:['Ja','Nee'], correct:'Nee', explanation:`Nee, want ${ex.why}` };
+  }
+}
+
+function genSnijpunt(){
+  let a1, a2;
+  do{ a1 = randNonZero(-5, 5); a2 = randNonZero(-5, 5); } while(a1 === a2);
+  const x0 = randInt(-5, 5);
+  const y0 = randInt(-8, 8);
+  const b1 = y0 - a1 * x0;
+  const b2 = y0 - a2 * x0;
+  const expr1 = formatLinear(a1, b1), expr2 = formatLinear(a2, b2);
+  return {
+    kind:'functie', catId:'snijpunt', catLabel:'Snijpunt',
+    promptHtml: `Gegeven f(x) = ${expr1} en g(x) = ${expr2}.<br>Bereken het snijpunt (x, y) van beide grafieken.`,
+    answerType:'kort', checkKind:'point', checkData:{ x:x0, y:y0 }, correct: `(${x0}, ${y0})`,
+    explanation: `${expr1} = ${expr2}  →  x = ${x0}, dus y = f(${x0}) = ${y0}. Snijpunt: (${x0}, ${y0}).`,
+  };
+}
+
+function genEvenwijdigConcept(){
+  const correct = 'Dezelfde richtingscoëfficiënt (a)';
+  const options = shuffle([correct, 'Dezelfde y-intercept (b)', 'Hetzelfde snijpunt met de x-as', 'Dezelfde functiewaarde in x = 0']);
+  return {
+    kind:'functie', catId:'evenwijdig', catLabel:'Evenwijdige rechten',
+    promptHtml: 'Twee rechten lopen evenwijdig.<br>Wat hebben deze twee rechten zeker gemeen?',
+    answerType:'lang', options, correct,
+    explanation: 'Evenwijdige rechten hebben dezelfde richtingscoëfficiënt (a); enkel b (de y-intercept) kan verschillen.',
+  };
+}
+function genEvenwijdigJaNee(){
+  const a1 = randNonZero(-6, 6);
+  const b1 = randInt(-8, 8);
+  const sameA = Math.random() < 0.5;
+  let a2, b2;
+  if(sameA){
+    a2 = a1;
+    do{ b2 = randInt(-8, 8); } while(b2 === b1);
+  } else {
+    do{ a2 = randNonZero(-6, 6); } while(a2 === a1);
+    b2 = randInt(-8, 8);
+  }
+  const expr1 = formatLinear(a1, b1), expr2 = formatLinear(a2, b2);
+  const correct = sameA ? 'Ja' : 'Nee';
+  const explanation = sameA
+    ? `Beide hebben a = ${a1}, dus f en g lopen evenwijdig (b verschilt: ${b1} ≠ ${b2}, dus het zijn geen dezelfde rechten).`
+    : `a₁ = ${a1} ≠ a₂ = ${a2}, dus f en g lopen niet evenwijdig — ze snijden elkaar in precies één punt.`;
+  return {
+    kind:'functie', catId:'evenwijdig', catLabel:'Evenwijdige rechten',
+    promptHtml: `Gegeven f(x) = ${expr1} en g(x) = ${expr2}.<br>Lopen f en g evenwijdig?`,
+    answerType:'lang', options:['Ja','Nee'], correct, explanation,
+  };
+}
+function genEvenwijdigBereken(){
+  const a = randNonZero(-6, 6);
+  const b1 = randInt(-8, 8);
+  const exprF = formatLinear(a, b1);
+  const x1 = randInt(-5, 5);
+  const y1 = randInt(-10, 10);
+  const b2 = y1 - a * x1;
+  return {
+    kind:'functie', catId:'evenwijdig', catLabel:'Evenwijdige rechten (bereken)',
+    promptHtml: `f(x) = ${exprF}. De rechte g loopt evenwijdig met f en gaat door het punt (${x1}, ${y1}).<br>Bepaal g(x).`,
+    prefixLabel: 'g(x)',
+    answerType:'kort', checkKind:'linear', checkData:{ a, b:b2 },
+    correct: 'g(x) = ' + formatLinear(a, b2), correctExpr: formatLinear(a, b2),
+    explanation: explainVoorschriftFormule(a, b2, x1, y1, `Evenwijdig met f ⇒ zelfde rico: a = ${a}.`, 'g'),
+  };
+}
+
+const AFHANKELIJK_GENS = [
+  () => ({
+    verhaal: 'Een tuinbouwer onderzoekt de invloed van de hoeveelheid meststof op de groei van tomatenplanten. Hij geeft elke plant een andere hoeveelheid meststof en meet na vier weken de hoogte van elke plant.',
+    onafhankelijk: 'De hoeveelheid meststof', dependent: 'De hoogte van de plant',
+  }),
+  () => ({
+    verhaal: 'Een leerkracht onderzoekt het verband tussen het aantal uren studeren en het examencijfer van de leerlingen.',
+    onafhankelijk: 'Het aantal uren studeren', dependent: 'Het examencijfer',
+  }),
+  () => ({
+    verhaal: 'Een ijssalon houdt de dagelijkse buitentemperatuur en het aantal verkochte ijsjes bij, om te zien of temperatuur de verkoop beïnvloedt.',
+    onafhankelijk: 'De buitentemperatuur', dependent: 'Het aantal verkochte ijsjes',
+  }),
+  () => ({
+    verhaal: 'Een fietser test hoe de rijtijd verandert wanneer hij telkens een andere (constante) snelheid aanhoudt over dezelfde afstand.',
+    onafhankelijk: 'De snelheid van de fietser', dependent: 'De rijtijd',
+  }),
+  () => ({
+    verhaal: 'Een energieleverancier onderzoekt hoe het energieverbruik voor verwarming verandert bij verschillende buitentemperaturen.',
+    onafhankelijk: 'De buitentemperatuur', dependent: 'Het energieverbruik voor verwarming',
+  }),
+];
+function genAfhankelijk(){
+  const t = randChoice(AFHANKELIJK_GENS)();
+  const askOnafhankelijk = Math.random() < 0.5;
+  const correct = askOnafhankelijk ? t.onafhankelijk : t.dependent;
+  const other = askOnafhankelijk ? t.dependent : t.onafhankelijk;
+  const vraag = askOnafhankelijk ? 'Wat is de onafhankelijke veranderlijke in dit verhaal?' : 'Wat is de afhankelijke veranderlijke in dit verhaal?';
+  const explanation = askOnafhankelijk
+    ? `${t.onafhankelijk} wordt vrij gekozen/ingesteld (x); ${t.dependent} is het gevolg daarvan (y), dus die is afhankelijk.`
+    : `${t.dependent} hangt af van ${t.onafhankelijk.toLowerCase()}, dus dat is de afhankelijke veranderlijke (y).`;
+  return {
+    kind:'functie', catId:'afhankelijk', catLabel:'Afhankelijke/onafhankelijke veranderlijke',
+    promptHtml: `${t.verhaal}<br><br>${vraag}`,
+    answerType:'lang', options: shuffle([correct, other]), correct, explanation,
+  };
+}
+
+const DEFINITIE_ITEMS = [
+  { term:'Nulpunt (nulwaarde)', definitie:'De x-waarde waarvoor f(x) = 0 (het snijpunt met de x-as).' },
+  { term:'Richtingscoëfficiënt (rico)', definitie:'Het getal a in f(x) = ax + b; het geeft aan hoe snel de rechte stijgt of daalt.' },
+  { term:'Snijpunt met de y-as', definitie:'Het punt (0, b) waar de grafiek de y-as snijdt.' },
+  { term:'Functievoorschrift', definitie:'De wiskundige formule die x omzet naar f(x), bijvoorbeeld f(x) = ax + b.' },
+  { term:'Domein', definitie:'De verzameling van alle x-waarden waarvoor de functie gedefinieerd is.' },
+  { term:'Bereik', definitie:'De verzameling van alle mogelijke f(x)-waarden (y-waarden) van de functie.' },
+  { term:'Eerstegraadsfunctie', definitie:'Een functie van de vorm f(x) = ax + b met a ≠ 0.' },
+  { term:'Afhankelijke veranderlijke', definitie:'De grootheid waarvan de waarde bepaald wordt door een andere grootheid (meestal y).' },
+  { term:'Onafhankelijke veranderlijke', definitie:'De grootheid die vrij gekozen wordt en de andere grootheid beïnvloedt (meestal x).' },
+  { term:'Evenwijdige rechten', definitie:'Twee rechten met dezelfde richtingscoëfficiënt; ze snijden elkaar nooit.' },
+];
+function genDefinitie(){
+  const idx = randInt(0, DEFINITIE_ITEMS.length - 1);
+  const item = DEFINITIE_ITEMS[idx];
+  const others = shuffle(DEFINITIE_ITEMS.filter((_, i) => i !== idx)).slice(0, 3);
+  const askTerm = Math.random() < 0.5; // vraag naar de term bij een definitie, of de definitie bij een term
+  if(askTerm){
+    const options = shuffle([item.term, ...others.map(o => o.term)]);
+    return {
+      kind:'functie', catId:'definitie', catLabel:'Definities & begrippen',
+      promptHtml: `Welke term hoort bij deze omschrijving?<br>"${item.definitie}"`,
+      answerType:'lang', options, correct: item.term,
+      explanation: `${item.term}: ${item.definitie}`,
+    };
+  } else {
+    const options = shuffle([item.definitie, ...others.map(o => o.definitie)]);
+    return {
+      kind:'functie', catId:'definitie', catLabel:'Definities & begrippen',
+      promptHtml: `Wat is de juiste omschrijving van "${item.term}"?`,
+      answerType:'lang', options, correct: item.definitie,
+      explanation: `${item.term}: ${item.definitie}`,
+    };
+  }
+}
+
+const TOEPASSING_GENS = [
+  () => {
+    const vast = randInt(2, 10);
+    const perKm = randChoice([1, 1.5, 2, 2.5, 3]);
+    const km = randInt(3, 20);
+    const prijs = Math.round((vast + perKm * km) * 100) / 100;
+    return {
+      promptHtml: `Een taxibedrijf vraagt €${vast} opstapkost en €${perKm} per kilometer.<br>Hoeveel kost een rit van ${km} km?`,
+      value: prijs,
+      explanation: `P(x) = ${perKm}x + ${vast}  →  P(${km}) = ${perKm}×${km} + ${vast} = €${prijs}`,
+    };
+  },
+  () => {
+    const vast = randInt(10, 40);
+    const perUur = randChoice([20, 25, 30, 35, 40]);
+    const uren = randInt(1, 6);
+    const kost = vast + perUur * uren;
+    return {
+      promptHtml: `Een garagist vraagt een vaste kost van €${vast} en €${perUur} per uur werk.<br>Hoeveel betaal je voor ${uren} uur werk?`,
+      value: kost,
+      explanation: `K(x) = ${perUur}x + ${vast}  →  K(${uren}) = ${perUur}×${uren} + ${vast} = €${kost}`,
+    };
+  },
+  () => {
+    const snelheid = randChoice([4, 5, 6, 8, 10, 12]);
+    const tijd = randInt(1, 8);
+    const afstand = snelheid * tijd;
+    return {
+      promptHtml: `Iemand loopt aan een constante snelheid van ${snelheid} km/uur.<br>Welke afstand legt die persoon af in ${tijd} uur?`,
+      value: afstand,
+      explanation: `A(t) = ${snelheid}×t  →  A(${tijd}) = ${afstand} km`,
+    };
+  },
+  () => {
+    const x0 = randInt(5, 30);
+    const a1 = randChoice([1, 2, 3, 4]);
+    let a2;
+    do{ a2 = randChoice([1, 2, 3, 4]); } while(a2 === a1);
+    const vast1 = randInt(10, 60);
+    const vast2 = vast1 + (a1 - a2) * x0;
+    return {
+      promptHtml: `Bedrijf A rekent een vaste kost van €${vast1} plus €${a1} per stuk.<br>Bedrijf B rekent een vaste kost van €${vast2} plus €${a2} per stuk.<br>Vanaf hoeveel stuks zijn beide bedrijven even duur?`,
+      value: x0,
+      explanation: `${vast1} + ${a1}x = ${vast2} + ${a2}x  →  x = ${x0} stuks.`,
+    };
+  },
+];
+function genToepassing(){
+  const t = randChoice(TOEPASSING_GENS)();
+  return {
+    kind:'functie', catId:'toepassing', catLabel:'Toepassing',
+    promptHtml: t.promptHtml,
+    answerType:'kort', checkKind:'number', checkData:{ value: t.value }, correct: String(t.value),
+    explanation: t.explanation,
+  };
+}
+
+/* De 3 brede categorieën die de leerling kan kiezen; elke categorie is op
+   zijn beurt een pool van fijnere, ad randum gekozen vraagtypes. */
+const GRAFISCH_GENS = [genNulwaardeGrafiek, genRicoGrafiek, genVoorschriftGrafiek, genIsFunctieGrafiek];
+const REKENEN_GENS = [genFunctiewaarde, genNulwaardeAlgebra, genRicoAlgebra, genVoorschriftTabel, genSnijpunt, genEvenwijdigBereken, genEvenwijdigJaNee, genToepassing];
+const TERMEN_GENS = [genDomeinBereik, genGedrag, genEerstegraads, genEvenwijdigConcept, genAfhankelijk, genDefinitie];
+
+function generateForCategory(catId){
+  switch(catId){
+    case 'grafisch': return randChoice(GRAFISCH_GENS)();
+    case 'rekenen': return randChoice(REKENEN_GENS)();
+    case 'termen': return randChoice(TERMEN_GENS)();
+    default: return genFunctiewaarde();
+  }
+}
+
+function buildFunctieQuestion(){
+  const cats = [...functieState.categories];
+  const catId = cats.length ? randChoice(cats) : 'functiewaarde';
+  return generateForCategory(catId);
+}
+
+/* Unieke "vingerafdruk" van een vraag, gebruikt om te vermijden dat dezelfde
+   vraag 2 keer in dezelfde toets voorkomt. promptHtml alleen volstaat niet:
+   grafiek-vragen hebben een vaste, generieke prompttekst ("Bepaal de
+   richtingscoëfficiënt van deze grafiek.") maar tonen elke keer een andere
+   grafiek — dus svg/extraHtml/correct horen ook bij de vingerafdruk. */
+function functieQuestionSignature(q){
+  return JSON.stringify([q.promptHtml, q.svg || '', q.extraHtml || '', q.correct, q.options || null]);
+}
+
+function renderFunctieCatChips(){
+  const el = document.getElementById('chips-functie-cat');
+  el.innerHTML = '';
+  FUNCTIE_CATEGORIES.forEach(cat => {
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (functieState.categories.has(cat.id) ? ' active' : '');
+    chip.textContent = cat.label;
+    chip.addEventListener('click', () => {
+      if(functieState.categories.has(cat.id)){
+        if(functieState.categories.size === 1){ showToast('Kies minstens 1 soort vragen.'); return; }
+        functieState.categories.delete(cat.id);
+      } else {
+        functieState.categories.add(cat.id);
+      }
+      renderFunctieCatChips();
+      updatePoolCount();
+    });
+    el.appendChild(chip);
+  });
+}
+
+function renderFunctieAantalChips(){
+  renderSingleChips('chips-functie-aantal', FUNCTIE_AANTAL_OPTIONS.map(n => ({ code:n, label:String(n) })), functieState.aantal, (code) => {
+    functieState.aantal = code;
+    renderFunctieAantalChips();
+    updatePoolCount();
+  });
+}
+
+function refreshFunctieUI(){
+  renderFunctieCatChips();
+  renderFunctieAantalChips();
 }
 
 /* ---------- storage ---------- */
@@ -1028,6 +1913,8 @@ function renderModeChips(){
     document.getElementById('config-uitleg').style.display = gameMode === 'uitleg' ? 'block' : 'none';
     document.getElementById('config-leren').style.display = gameMode === 'leren' ? 'block' : 'none';
     document.getElementById('config-lezen').style.display = gameMode === 'lezen' ? 'block' : 'none';
+    document.getElementById('config-functies').style.display = gameMode === 'functies' ? 'block' : 'none';
+    document.getElementById('card-onderdeel').style.display = gameMode === 'functies' ? 'none' : 'block';
     updatePoolCount();
   });
 }
@@ -1100,9 +1987,16 @@ function getPlayablePool(){
 }
 
 function updatePoolCount(){
-  const pool = getPlayablePool();
   const countEl = document.getElementById('pool-count');
   const startBtn = document.getElementById('btn-start');
+  if(gameMode === 'functies'){
+    const ok = functieState.categories.size > 0;
+    countEl.innerHTML = '<b>' + functieState.aantal + '</b> willekeurig gegenereerde oefeningen';
+    startBtn.disabled = !ok;
+    startBtn.textContent = 'START';
+    return;
+  }
+  const pool = getPlayablePool();
   const minNeeded = gameMode === 'lezen' ? 1 : 4;
   countEl.innerHTML = '<b>' + pool.length + '</b> term' + (pool.length===1?'':'en') + ' beschikbaar';
   startBtn.disabled = pool.length < minNeeded;
@@ -1154,6 +2048,26 @@ function buildQuestion(term, pool){
 }
 
 function startQuiz(){
+  if(gameMode === 'functies'){
+    quiz.questions = [];
+    const usedSignatures = new Set();
+    for(let i = 0; i < functieState.aantal; i++){
+      let q, tries = 0;
+      do {
+        q = buildFunctieQuestion();
+        tries++;
+      } while(usedSignatures.has(functieQuestionSignature(q)) && tries < 30);
+      usedSignatures.add(functieQuestionSignature(q));
+      quiz.questions.push(q);
+    }
+    quiz.index = 0;
+    quiz.score = 0;
+    quiz.answers = [];
+    showScreen('quiz');
+    renderStamps();
+    renderQuestion();
+    return;
+  }
   const pool = getPlayablePool();
   if(pool.length < 4) return;
   const numQuestions = gameMode === 'leren' ? pool.length : Math.min(10, pool.length);
@@ -1187,25 +2101,49 @@ function renderStamps(){
 function renderQuestion(){
   const q = quiz.questions[quiz.index];
   const badge = document.getElementById('lang-badge');
+  const fbadge = document.getElementById('functie-badge');
   const promptEl = document.getElementById('quiz-prompt');
   const termEl = document.getElementById('quiz-term');
+  const metaEl = document.getElementById('quiz-meta');
+  const extraEl = document.getElementById('quiz-functie-extra');
 
-  if(q.kind === 'vertalen'){
-    badge.textContent = q.targetLang;
-    badge.className = 'lang-badge lang-' + q.targetLang;
-    promptEl.textContent = 'Hoe zeg je dit in ' + LANG_LABEL_IN[q.targetLang] + '?';
-    termEl.textContent = q.startText;
-    termEl.className = 'source-term';
+  if(q.kind === 'functie'){
+    badge.style.display = 'none';
+    fbadge.style.display = 'inline-flex';
+    fbadge.textContent = q.catLabel;
+    promptEl.textContent = '';
+    termEl.innerHTML = q.promptHtml;
+    termEl.className = 'source-term long-text';
+    metaEl.textContent = '';
+    if(q.svg || q.extraHtml){
+      extraEl.style.display = 'block';
+      extraEl.innerHTML = (q.svg || '') + (q.extraHtml || '');
+    } else {
+      extraEl.style.display = 'none';
+      extraEl.innerHTML = '';
+    }
   } else {
-    badge.textContent = q.lang;
-    badge.className = 'lang-badge lang-' + q.lang;
-    promptEl.textContent = q.richting === 'term-naar-uitleg'
-      ? 'Wat betekent dit, in ' + LANG_LABEL_IN[q.lang] + '?'
-      : 'Welke term hoort bij deze uitleg, in ' + LANG_LABEL_IN[q.lang] + '?';
-    termEl.textContent = q.promptText;
-    termEl.className = 'source-term' + (q.promptText.length > 38 ? ' long-text' : '');
+    fbadge.style.display = 'none';
+    badge.style.display = 'inline-flex';
+    extraEl.style.display = 'none';
+    extraEl.innerHTML = '';
+    if(q.kind === 'vertalen'){
+      badge.textContent = q.targetLang;
+      badge.className = 'lang-badge lang-' + q.targetLang;
+      promptEl.textContent = 'Hoe zeg je dit in ' + LANG_LABEL_IN[q.targetLang] + '?';
+      termEl.textContent = q.startText;
+      termEl.className = 'source-term';
+    } else {
+      badge.textContent = q.lang;
+      badge.className = 'lang-badge lang-' + q.lang;
+      promptEl.textContent = q.richting === 'term-naar-uitleg'
+        ? 'Wat betekent dit, in ' + LANG_LABEL_IN[q.lang] + '?'
+        : 'Welke term hoort bij deze uitleg, in ' + LANG_LABEL_IN[q.lang] + '?';
+      termEl.textContent = q.promptText;
+      termEl.className = 'source-term' + (q.promptText.length > 38 ? ' long-text' : '');
+    }
+    metaEl.textContent = q.term.vak + ' \u2014 ' + q.term.hoofdstuk;
   }
-  document.getElementById('quiz-meta').textContent = q.term.vak + ' \u2014 ' + q.term.hoofdstuk;
 
   const optionsGrid = document.getElementById('options-grid');
   const answerRow = document.getElementById('answer-input-row');
@@ -1214,6 +2152,10 @@ function renderQuestion(){
   const btnCheck = document.getElementById('btn-check');
   const btnShow = document.getElementById('btn-show-answer');
   const btnMic = document.getElementById('btn-mic');
+  const hintEl = document.getElementById('functie-input-hint');
+  const iosHintEl = document.getElementById('ios-mic-hint');
+  const prefixEl = document.getElementById('answer-prefix');
+  const inputWrap = document.getElementById('answer-input-wrap');
 
   if(q.answerType === 'lang'){
     optionsGrid.style.display = 'grid';
@@ -1229,6 +2171,8 @@ function renderQuestion(){
     btnCheck.style.display = 'none';
     answerActions.style.display = 'flex';
     btnShow.disabled = false;
+    hintEl.style.display = 'none';
+    iosHintEl.style.display = 'none';
   } else {
     optionsGrid.style.display = 'none';
     optionsGrid.innerHTML = '';
@@ -1240,10 +2184,27 @@ function renderQuestion(){
     input.disabled = false;
     btnCheck.disabled = false;
     btnShow.disabled = false;
-     if(isIOS){
-      btnMic.style.display = 'none';
-      document.getElementById('ios-mic-hint').style.display = 'block';
+    if(q.kind === 'functie'){
+      hintEl.style.display = 'block';
+      hintEl.textContent = FUNCTIE_HINTS[q.checkKind] || '';
+      input.placeholder = FUNCTIE_PLACEHOLDERS[q.checkKind] || 'Typ je antwoord...';
     } else {
+      hintEl.style.display = 'none';
+      input.placeholder = 'Typ je antwoord...';
+    }
+    if(q.kind === 'functie' && q.checkKind === 'linear'){
+      inputWrap.classList.add('with-prefix');
+      prefixEl.textContent = (q.prefixLabel || 'f(x)') + ' = ';
+      prefixEl.className = 'answer-prefix';
+    } else {
+      inputWrap.classList.remove('with-prefix');
+      prefixEl.textContent = '';
+    }
+    if(isIOS){
+      btnMic.style.display = 'none';
+      iosHintEl.style.display = 'block';
+    } else {
+      iosHintEl.style.display = 'none';
       btnMic.style.display = '';
       btnMic.disabled = !speechSupported;
       btnMic.title = speechSupported ? 'Spreek je antwoord in' : 'Spraakherkenning niet ondersteund in deze browser';
@@ -1271,7 +2232,11 @@ function submitAnswer(userAnswer, gaveUp){
   let correct = false;
   if(!gaveUp){
     if(q.answerType === 'kort'){
-      correct = normalizeAnswer(userAnswer) === normalizeAnswer(q.correct);
+      if(q.kind === 'functie'){
+        correct = checkFunctieAnswer(q, userAnswer);
+      } else {
+        correct = normalizeAnswer(userAnswer) === normalizeAnswer(q.correct);
+      }
     } else {
       correct = userAnswer === q.correct;
     }
@@ -1287,15 +2252,18 @@ function submitAnswer(userAnswer, gaveUp){
     });
   } else {
     const input = document.getElementById('answer-input');
+    const prefixEl = document.getElementById('answer-prefix');
+    const hasPrefix = document.getElementById('answer-input-wrap').classList.contains('with-prefix');
     input.disabled = true;
     document.getElementById('btn-check').disabled = true;
     document.getElementById('btn-mic').disabled = true;
     if(gaveUp){
-      input.value = q.correct;
+      input.value = hasPrefix && q.correctExpr !== undefined ? q.correctExpr : q.correct;
       input.className = 'gaveup';
     } else {
       input.className = correct ? 'correct' : 'wrong';
     }
+    if(hasPrefix) prefixEl.className = 'answer-prefix ' + input.className;
   }
   document.getElementById('btn-show-answer').disabled = true;
 
@@ -1310,6 +2278,8 @@ function submitAnswer(userAnswer, gaveUp){
   let uitlegText = '';
   if(q.kind === 'vertalen'){
     uitlegText = q.term['uitleg'+LANG_KEY[q.targetLang]] || q.term['uitleg'+LANG_KEY[q.startLang]] || '';
+  } else if(q.kind === 'functie'){
+    uitlegText = q.explanation || '';
   }
   document.getElementById('feedback-text').textContent = uitlegText;
 
@@ -1364,7 +2334,7 @@ function toggleMic(){
   if(!speechSupported || document.getElementById('btn-mic').disabled) return;
   if(micActive){ recognition.stop(); return; }
   const q = quiz.questions[quiz.index];
-  const lang = q.kind === 'vertalen' ? q.targetLang : q.lang;
+  const lang = q.kind === 'vertalen' ? q.targetLang : (q.kind === 'functie' ? 'NL' : q.lang);
   recognition.lang = SPEECH_LOCALE[lang] || 'nl-NL';
   micActive = true;
   updateMicButtonUI(true);
@@ -1421,7 +2391,7 @@ function showEnd(){
   quiz.answers.forEach((a,i) => {
     const mini = document.createElement('div');
     mini.className = 'mini ' + (a.correct ? 'correct' : (a.gaveUp ? 'skipped' : 'wrong'));
-    mini.textContent = a.q.kind === 'vertalen' ? a.q.targetLang : a.q.lang;
+    mini.textContent = a.q.kind === 'vertalen' ? a.q.targetLang : (a.q.kind === 'functie' ? 'ƒ' : a.q.lang);
     collection.appendChild(mini);
   });
 
@@ -1438,6 +2408,10 @@ function showEnd(){
       if(a.q.kind === 'vertalen'){
         re = a.q.term['uitleg'+LANG_KEY[a.q.targetLang]] || a.q.term['uitleg'+LANG_KEY[a.q.startLang]] || '';
         rt = a.q.startText + ' \u2192 ' + a.q.correct + ' <small>(' + a.q.startLang + ' \u2192 ' + a.q.targetLang + (a.gaveUp ? ', overgeslagen' : '') + ')</small>';
+      } else if(a.q.kind === 'functie'){
+        re = a.q.explanation || '';
+        const plainPrompt = a.q.promptHtml.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+        rt = plainPrompt + ' \u2192 ' + a.q.correct + ' <small>(' + a.q.catLabel + (a.gaveUp ? ', overgeslagen' : '') + ')</small>';
       } else {
         re = a.q.richting === 'term-naar-uitleg' ? '' : (a.q.term['uitleg'+LANG_KEY[a.q.lang]] || '');
         rt = a.q.promptText + ' \u2192 ' + a.q.correct + ' <small>(' + a.q.lang + (a.gaveUp ? ', overgeslagen' : '') + ')</small>';
@@ -1485,6 +2459,7 @@ document.getElementById('btn-home').addEventListener('click', () => showScreen('
   refreshUitlegUI();
   refreshLerenUI();
   refreshLeesUI();
+  refreshFunctieUI();
   buildFilterUI();
 })();
 </script>
