@@ -75,6 +75,7 @@
   .btn:active{ transform:translateY(0); }
   .btn-ghost{ border-color:var(--paper-line); color:var(--ink-soft); background:transparent; }
   .btn-primary{ background:var(--ink); color:var(--white); border-color:var(--ink); }
+  .btn-green{ background:var(--green); color:var(--white); border-color:var(--green); }
   .btn-stamp{
     font-family:'Fraunces', serif;
     font-weight:700;
@@ -527,6 +528,9 @@
             <div class="chips" id="chips-combi-cat"></div>
           </div>
           <div class="filter-group">
+            <button class="btn btn-green" id="btn-open-boomtool" type="button">Boom op maat tekenen</button>
+          </div>
+          <div class="filter-group">
             <label>Aantal vragen</label>
             <div class="chips" id="chips-combi-aantal"></div>
           </div>
@@ -761,6 +765,34 @@
     <div class="modal-close-row">
       <button class="btn btn-ghost" id="confirm-no">Annuleren</button>
       <button class="btn btn-primary" id="confirm-yes">Ja</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOOMSTRUCTUUR OP MAAT -->
+<div class="overlay" id="overlay-boomtool">
+  <div class="modal" style="max-width:460px;">
+    <h3>Boomstructuur op maat</h3>
+    <p class="hint">Kies n (aantal letters), p (aantal niveaus) en het type. De boom en het aantal mogelijkheden worden meteen getekend.</p>
+
+    <div class="filter-group">
+      <label>n (aantal letters)</label>
+      <div class="chips" id="chips-boomtool-n"></div>
+    </div>
+    <div class="filter-group">
+      <label>p (aantal niveaus)</label>
+      <div class="chips" id="chips-boomtool-p"></div>
+    </div>
+    <div class="filter-group">
+      <label>Type</label>
+      <div class="chips" id="chips-boomtool-type"></div>
+    </div>
+
+    <div id="boomtool-preview" style="text-align:center; margin-top:8px;"></div>
+    <p class="hint" id="boomtool-info" style="text-align:center; margin-top:10px;"></p>
+
+    <div class="modal-close-row">
+      <button class="btn btn-primary" id="btn-close-boomtool">Sluiten</button>
     </div>
   </div>
 </div>
@@ -2186,6 +2218,81 @@ function genBoomstructuur(){
   };
 }
 
+/* ==================================================================
+   BOOMSTRUCTUUR OP MAAT — losstaand van de quiz: leerkracht of
+   leerling kiest zelf n, p en type en ziet meteen de bijhorende boom
+   + het aantal mogelijkheden, via dezelfde svgKeuzeboom-tekenfunctie
+   die de quizvragen ook gebruiken. Hier geldt geen MAX_BOOM_LEAVES:
+   het is net leerzaam om te laten zien hoe snel bv. een
+   herhalingsvariatie oploopt bij grotere n/p.
+   ================================================================== */
+const BOOMTOOL_N_OPTIONS = [1, 2, 3, 4];
+const BOOMTOOL_P_OPTIONS = [1, 2, 3, 4];
+const BOOMTOOL_TYPE_OPTIONS = [
+  { code:'variatie_zonder', label:'V — Variatie' },
+  { code:'variatie_met', label:'HV — Herhalingsvariatie' },
+  { code:'combinatie_zonder', label:'C — Combinatie' },
+  { code:'combinatie_met', label:'HC — Herhalingscombinatie' },
+];
+let boomtoolState = { n:3, p:2, type:'variatie_zonder' };
+
+function boomLabelsForN(n){
+  return ['A','B','C','D'].slice(0, n);
+}
+
+function boomtoolLeafCount(type, n, p){
+  if(type === 'variatie_zonder') return nPr(n, p);
+  if(type === 'variatie_met') return nVarHerhaling(n, p);
+  if(type === 'combinatie_zonder') return nCr(n, p);
+  return nCrHerhaling(n, p); // combinatie_met
+}
+
+function renderBoomtoolNChips(){
+  renderSingleChips('chips-boomtool-n', BOOMTOOL_N_OPTIONS.map(v => ({ code:v, label:String(v) })), boomtoolState.n, (code) => {
+    boomtoolState.n = code;
+    renderBoomtoolNChips();
+    updateBoomtoolPreview();
+  });
+}
+
+function renderBoomtoolPChips(){
+  renderSingleChips('chips-boomtool-p', BOOMTOOL_P_OPTIONS.map(v => ({ code:v, label:String(v) })), boomtoolState.p, (code) => {
+    boomtoolState.p = code;
+    renderBoomtoolPChips();
+    updateBoomtoolPreview();
+  });
+}
+
+function renderBoomtoolTypeChips(){
+  renderSingleChips('chips-boomtool-type', BOOMTOOL_TYPE_OPTIONS, boomtoolState.type, (code) => {
+    boomtoolState.type = code;
+    renderBoomtoolTypeChips();
+    updateBoomtoolPreview();
+  });
+}
+
+/* p groter dan n kan niet zonder herhaling (je hebt dan te weinig
+   verschillende letters om p keer een unieke te kiezen) — bij de 2
+   "met herhaling"-types (HV/HC) is elke combinatie van n en p wel
+   geldig. */
+function updateBoomtoolPreview(){
+  const { n, p, type } = boomtoolState;
+  const preview = document.getElementById('boomtool-preview');
+  const info = document.getElementById('boomtool-info');
+  const vraagtHerhalingOmP = type === 'variatie_zonder' || type === 'combinatie_zonder';
+  if(vraagtHerhalingOmP && p > n){
+    preview.innerHTML = '';
+    info.textContent = `Niet mogelijk: je kan geen ${p} uit ${n} kiezen zonder herhaling (p mag hier niet groter zijn dan n).`;
+    return;
+  }
+  const labels = boomLabelsForN(n);
+  const leaves = boomtoolLeafCount(type, n, p);
+  preview.innerHTML = svgKeuzeboom(type, labels, p);
+  let msg = `${leaves} mogelijke ${leaves === 1 ? 'uitkomst' : 'uitkomsten'} (kiezen van ${p} uit ${n}).`;
+  if(leaves > 40) msg += ' Dat wordt dicht getekend — mooi om te tonen hoe snel dit oploopt!';
+  info.textContent = msg;
+}
+
 const TERMEN_COMBI_GENS = [genCombiTermenBegrip];
 const REKENEN_COMBI_GENS = [genFaculteitBereken, genPermutatieBereken, genCombinatieBereken, genVariatieHerhalingBereken, genCombinatieHerhalingBereken];
 const VERHAALTJES_COMBI_GENS = [genVerhaalCombinatie, genVerhaalCombinatieHerhaling, genVerhaalPermutatieVol, genVerhaalPermutatieDeel, genVerhaalVariatieHerhaling];
@@ -2536,6 +2643,12 @@ document.getElementById('btn-open-help').addEventListener('click', ()=>{
 });
 document.getElementById('btn-close-help').addEventListener('click', ()=>{
   document.getElementById('overlay-help').classList.remove('show');
+});
+document.getElementById('btn-open-boomtool').addEventListener('click', ()=>{
+  document.getElementById('overlay-boomtool').classList.add('show');
+});
+document.getElementById('btn-close-boomtool').addEventListener('click', ()=>{
+  document.getElementById('overlay-boomtool').classList.remove('show');
 });
 document.getElementById('btn-close-import').addEventListener('click', closeImportModal);
 function closeImportModal(){
@@ -3222,6 +3335,10 @@ document.getElementById('btn-home').addEventListener('click', () => showScreen('
   refreshFunctieUI();
   refreshComplexUI();
   refreshCombiUI();
+  renderBoomtoolNChips();
+  renderBoomtoolPChips();
+  renderBoomtoolTypeChips();
+  updateBoomtoolPreview();
   renderWiskundeSubChips();
   renderWiskundeTermenModeChips();
   buildFilterUI();
