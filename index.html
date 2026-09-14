@@ -487,18 +487,45 @@
   <div class="screen active" id="screen-home">
     <section class="card">
       <h2>Kies je spelmodus</h2>
-      <p class="hint">Vertalen: een term omzetten van de ene taal naar de andere. Uitleg: term en betekenis aan elkaar koppelen, binnen één taal, over een beperkt aantal vragen. Leermodus: hetzelfde als uitleg, maar dan over alle beschikbare termen. Functies oefenen: telkens opnieuw willekeurig samengestelde oefeningen over eerstegraadsfuncties (functiewaarden, nulwaarden, grafieken, functievoorschriften...), speciaal voor wiskunde.</p>
+      <p class="hint">Vertalen: een term omzetten van de ene taal naar de andere. Uitleg: term en betekenis aan elkaar koppelen, binnen één taal, over een beperkt aantal vragen. Leermodus: hetzelfde als uitleg, maar dan over alle beschikbare termen. Wiskunde: aparte oefeningen speciaal voor wiskunde &mdash; functies, complexe getallen of algemene wiskundetermen.</p>
       <div class="chips" id="chips-mode" style="margin-bottom:18px;"></div>
 
-      <div id="config-functies" style="display:none;">
-        <p class="hint">Vragen worden telkens opnieuw willekeurig samengesteld, dus ze komen niet steeds terug. Kies welke soorten je wil oefenen.</p>
+      <div id="config-wiskunde" style="display:none;">
         <div class="filter-group">
-          <label>Soorten vragen</label>
-          <div class="chips" id="chips-functie-cat"></div>
+          <label>Onderdeel</label>
+          <div class="chips" id="chips-wiskunde-sub"></div>
         </div>
-        <div class="filter-group">
-          <label>Aantal vragen</label>
-          <div class="chips" id="chips-functie-aantal"></div>
+
+        <div id="wiskunde-config-functies">
+          <p class="hint">Vragen worden telkens opnieuw willekeurig samengesteld, dus ze komen niet steeds terug. Kies welke soorten je wil oefenen.</p>
+          <div class="filter-group">
+            <label>Soorten vragen</label>
+            <div class="chips" id="chips-functie-cat"></div>
+          </div>
+          <div class="filter-group">
+            <label>Aantal vragen</label>
+            <div class="chips" id="chips-functie-aantal"></div>
+          </div>
+        </div>
+
+        <div id="wiskunde-config-complex" style="display:none;">
+          <p class="hint">Vragen worden telkens opnieuw willekeurig samengesteld, dus ze komen niet steeds terug. Kies welke soorten je wil oefenen.</p>
+          <div class="filter-group">
+            <label>Soorten vragen</label>
+            <div class="chips" id="chips-complex-cat"></div>
+          </div>
+          <div class="filter-group">
+            <label>Aantal vragen</label>
+            <div class="chips" id="chips-complex-aantal"></div>
+          </div>
+        </div>
+
+        <div id="wiskunde-config-termen" style="display:none;">
+          <p class="hint">Dezelfde termenbank als hierboven, nu automatisch beperkt tot het vak Wiskunde. Kies hieronder je spelmodus &mdash; het onderdeel hieronder blijft aanpasbaar.</p>
+          <div class="filter-group">
+            <label>Spelmodus</label>
+            <div class="chips" id="chips-wiskunde-termen-mode"></div>
+          </div>
         </div>
       </div>
 
@@ -658,7 +685,7 @@
     <p class="hint">Voor leerlingen én leerkrachten &mdash; sluit dit venster gewoon om verder te gaan.</p>
 
     <p style="font-weight:600; margin-bottom:4px;">Voor leerlingen</p>
-    <p class="hint">Kies bovenaan je spelmodus, taal (of talen) en het vak, hoofdstuk en graad waarover je wil oefenen, en klik op start. Kies je <b>"Functies oefenen"</b>, dan krijg je willekeurig samengestelde wiskunde-oefeningen over eerstegraadsfuncties &mdash; die worden niet uit een lijst gehaald maar telkens opnieuw berekend, dus ze komen niet steeds terug. Staat de lijst van jouw leerkracht of vak er nog niet tussen? Vraag het CSV-bestand aan je leerkracht (bv. via Smartschool) en klik zelf op <b>"Lijst importeren"</b> hierboven om het toe te voegen &mdash; dat moet maar eenmalig, per toestel of browser. Je kan gerust na elkaar lijsten van verschillende leerkrachten of vakken importeren; ze worden gewoon samengevoegd, niets gaat verloren.</p>
+    <p class="hint">Kies bovenaan je spelmodus, taal (of talen) en het vak, hoofdstuk en graad waarover je wil oefenen, en klik op start. Kies je <b>"Wiskunde"</b>, dan kan je verder kiezen tussen <b>"Functies"</b> en <b>"Complexe getallen"</b> &mdash; dat zijn willekeurig samengestelde oefeningen (functies: functiewaarden, nulwaarden, grafieken, functievoorschriften...; complexe getallen: termen &amp; begrippen, som, vermenigvuldiging, macht) die niet uit een lijst gehaald worden maar telkens opnieuw berekend, dus ze komen niet steeds terug. Kies je binnen Wiskunde voor <b>"Termen algemeen"</b>, dan oefen je gewoon de vaktermen van het vak Wiskunde uit de termenbank, net zoals bij de andere vakken. Staat de lijst van jouw leerkracht of vak er nog niet tussen? Vraag het CSV-bestand aan je leerkracht (bv. via Smartschool) en klik zelf op <b>"Lijst importeren"</b> hierboven om het toe te voegen &mdash; dat moet maar eenmalig, per toestel of browser. Je kan gerust na elkaar lijsten van verschillende leerkrachten of vakken importeren; ze worden gewoon samengevoegd, niets gaat verloren.</p>
 
     <p style="font-weight:600; margin:16px 0 4px;">Voor leerkrachten: een lijst opstellen</p>
     <p class="hint">Maak een CSV-bestand (puntkomma-gescheiden) volgens dit schema:</p>
@@ -745,7 +772,18 @@ const MODE_OPTIONS = [
   { code:'uitleg', label:'Uitleg' },
   { code:'leren', label:'Leermodus' },
   { code:'lezen', label:'Leesmodus' },
-  { code:'functies', label:'Functies oefenen' },
+  { code:'wiskunde', label:'Wiskunde' },
+];
+const WISKUNDE_SUB_OPTIONS = [
+  { code:'functies', label:'Functies' },
+  { code:'complex', label:'Complexe getallen' },
+  { code:'termen', label:'Termen algemeen' },
+];
+const WISKUNDE_TERMEN_MODE_OPTIONS = [
+  { code:'vertalen', label:'Vertalen' },
+  { code:'uitleg', label:'Uitleg' },
+  { code:'leren', label:'Leermodus' },
+  { code:'lezen', label:'Leesmodus' },
 ];
 const RICHTING_OPTIONS = [
   { code:'term-naar-uitleg', label:'Term \u2192 uitleg' },
@@ -754,7 +792,10 @@ const RICHTING_OPTIONS = [
 
 let termbank = [];
 let filters = { vak:new Set(), hoofdstuk:new Set(), graad:new Set() };
+let topMode = 'vertalen';
 let gameMode = 'vertalen';
+let wiskundeSub = 'functies';
+let wiskundeTermenMode = 'vertalen';
 let langState = { start:'NL', target:'EN' };
 let uitlegState = { lang:'NL', richting:'term-naar-uitleg' };
 let lerenState = { lang:'NL' };
@@ -770,6 +811,17 @@ const FUNCTIE_CATEGORIES = [
 ];
 const FUNCTIE_AANTAL_OPTIONS = [5, 10, 15, 20];
 let functieState = { categories: new Set(FUNCTIE_CATEGORIES.map(c=>c.id)), aantal: 10 };
+
+/* Zelfde opzet als functieState hierboven, maar dan voor complexe getallen. */
+const COMPLEX_CATEGORIES = [
+  { id:'termen', label:'Termen & begrippen' },
+  { id:'som', label:'Som' },
+  { id:'vermenigvuldiging', label:'Vermenigvuldiging' },
+  { id:'macht', label:'Macht' },
+];
+const COMPLEX_AANTAL_OPTIONS = [5, 10, 15, 20];
+let complexState = { categories: new Set(COMPLEX_CATEGORIES.map(c=>c.id)), aantal: 10 };
+
 let quiz = { questions:[], index:0, score:0, answers:[] };
 let pendingImportRows = null;
 let pendingImportLabel = '';
@@ -910,6 +962,10 @@ function checkFunctieAnswer(q, userAnswer){
     const nums = parseFlexibleNumberList(userAnswer);
     return nums.length >= 2 && Math.abs(nums[0] - q.checkData.x) < 1e-6 && Math.abs(nums[1] - q.checkData.y) < 1e-6;
   }
+  if(q.checkKind === 'complex'){
+    const r = parseComplex(userAnswer);
+    return r.ok && Math.abs(r.re - q.checkData.re) < 1e-6 && Math.abs(r.im - q.checkData.im) < 1e-6;
+  }
   return false;
 }
 
@@ -917,12 +973,54 @@ const FUNCTIE_HINTS = {
   number: 'Typ een getal, bv. -3 of 2,5 (of spreek het in, en controleer even of het goed overkwam)',
   linear: 'Vul aan na f(x) = , bv. 2x - 3 (of spreek het in, en controleer even of het goed overkwam)',
   point: 'Typ het snijpunt, bv. (2, 5) (of spreek het in, en controleer even of het goed overkwam)',
+  complex: 'Typ een complex getal, bv. 3+4i of -2-i (of spreek het in, en controleer even of het goed overkwam)',
 };
 const FUNCTIE_PLACEHOLDERS = {
   number: 'Typ een getal...',
   linear: '...',
   point: '(x, y)',
+  complex: 'bv. 3+4i',
 };
+
+/* ---- complexe getallen: parsing & formattering (a + bi) ---- */
+function parseComplex(str){
+  if(str === null || str === undefined) return { ok:false };
+  let s = normalizeSpokenMath(str).toLowerCase().replace(/\s+/g, '');
+  s = s.replace(/,/g, '.');
+  if(s === '') return { ok:false };
+  s = s.replace(/(?!^)-/g, '+-');
+  const terms = s.split('+').filter(t => t.length > 0);
+  if(terms.length === 0) return { ok:false };
+  let re = 0, im = 0, ok = true;
+  terms.forEach(t => {
+    if(t.includes('i')){
+      let coef = t.replace('i', '');
+      if(coef === '' || coef === '+') coef = '1';
+      else if(coef === '-') coef = '-1';
+      const v = parseFloat(coef);
+      if(isNaN(v)){ ok = false; return; }
+      im += v;
+    } else {
+      const v = parseFloat(t);
+      if(isNaN(v)){ ok = false; return; }
+      re += v;
+    }
+  });
+  return { re, im, ok };
+}
+
+function formatComplex(re, im){
+  let s = '';
+  if(re !== 0) s = String(re);
+  if(im !== 0){
+    const absPart = Math.abs(im) === 1 ? 'i' : Math.abs(im) + 'i';
+    if(s === '') s = (im < 0 ? '-' : '') + absPart;
+    else s += (im > 0 ? ' + ' + absPart : ' - ' + absPart);
+  } else if(s === ''){
+    s = '0';
+  }
+  return s;
+}
 
 /* ---- SVG graph rendering ---- */
 function chooseWindow(a, b){
@@ -1587,6 +1685,173 @@ function functieQuestionSignature(q){
   return JSON.stringify([q.promptHtml, q.svg || '', q.extraHtml || '', q.correct, q.options || null]);
 }
 
+/* ==================================================================
+   COMPLEXE GETALLEN-OEFENMODULE
+   Zelfde opzet als de functies-module hierboven: elke vraag krijgt
+   kind:'functie' mee zodat ze hetzelfde weergave-, nakijk- en
+   overzichtstraject volgt (badge, toetsenbord-invoer, review-scherm...).
+   ================================================================== */
+const PYTHAGOREAN_TRIPLES = [[3,4,5],[6,8,10],[5,12,13],[8,15,17],[9,12,15],[7,24,25],[20,21,29],[12,16,20]];
+
+function genComplexReeelDeel(){
+  const re = randNonZero(-9, 9);
+  const im = randNonZero(-9, 9);
+  return {
+    kind:'functie', catId:'complex_termen', catLabel:'Termen & begrippen',
+    promptHtml: `Gegeven z = ${formatComplex(re, im)}.<br>Wat is het reële deel van z?`,
+    answerType:'kort', checkKind:'number', checkData:{ value: re }, correct: String(re),
+    explanation: `Het reële deel van z = ${formatComplex(re, im)} is het getal zonder i: Re(z) = ${re}.`,
+  };
+}
+
+function genComplexImaginairDeel(){
+  const re = randNonZero(-9, 9);
+  const im = randNonZero(-9, 9);
+  return {
+    kind:'functie', catId:'complex_termen', catLabel:'Termen & begrippen',
+    promptHtml: `Gegeven z = ${formatComplex(re, im)}.<br>Wat is het imaginaire deel van z?`,
+    answerType:'kort', checkKind:'number', checkData:{ value: im }, correct: String(im),
+    explanation: `Het imaginaire deel van z = ${formatComplex(re, im)} is de coëfficiënt van i, zonder de i zelf: Im(z) = ${im}.`,
+  };
+}
+
+function genComplexGeconjugeerde(){
+  const re = randNonZero(-9, 9);
+  const im = randNonZero(-9, 9);
+  const conj = formatComplex(re, -im);
+  return {
+    kind:'functie', catId:'complex_termen', catLabel:'Termen & begrippen',
+    promptHtml: `Gegeven z = ${formatComplex(re, im)}.<br>Wat is de toegevoegde (geconjugeerde) van z?`,
+    answerType:'kort', checkKind:'complex', checkData:{ re, im:-im }, correct: conj,
+    explanation: `Bij de geconjugeerde keer je het teken van het imaginaire deel om: uit ${formatComplex(re, im)} wordt ${conj}.`,
+  };
+}
+
+function genComplexModulus(){
+  const [a, b, c] = randChoice(PYTHAGOREAN_TRIPLES);
+  let re = a, im = b;
+  if(Math.random() < 0.5){ const t = re; re = im; im = t; }
+  if(Math.random() < 0.5) re = -re;
+  if(Math.random() < 0.5) im = -im;
+  return {
+    kind:'functie', catId:'complex_termen', catLabel:'Termen & begrippen',
+    promptHtml: `Gegeven z = ${formatComplex(re, im)}.<br>Bereken de modulus |z|.`,
+    answerType:'kort', checkKind:'number', checkData:{ value: c }, correct: String(c),
+    explanation: `|z| = √(${re}² + ${im}²) = √(${re*re} + ${im*im}) = √${re*re + im*im} = ${c}.`,
+  };
+}
+
+function genComplexIMachten(){
+  const items = [
+    { promptHtml:'Wat is i² (i tot de macht 2)?', correct:'-1', options:['-1','1','i','-i'],
+      explanation:'Per definitie geldt i² = -1.' },
+    { promptHtml:'Wat is i³ (i tot de macht 3)?', correct:'-i', options:['-1','1','i','-i'],
+      explanation:'i³ = i²·i = (-1)·i = -i.' },
+    { promptHtml:'Wat is i⁴ (i tot de macht 4)?', correct:'1', options:['-1','1','i','-i'],
+      explanation:'i⁴ = (i²)² = (-1)² = 1.' },
+    { promptHtml:'Wat is de definitie van de imaginaire eenheid i?', correct:'i² = -1', options:['i² = -1','i² = 1','i = -1','i = 2'],
+      explanation:'De imaginaire eenheid i is per definitie een getal waarvoor i² = -1.' },
+  ];
+  const item = randChoice(items);
+  return {
+    kind:'functie', catId:'complex_termen', catLabel:'Termen & begrippen',
+    promptHtml: item.promptHtml,
+    answerType:'lang', options: shuffle(item.options), correct: item.correct,
+    explanation: item.explanation,
+  };
+}
+
+function opTerm(op, val){
+  const neg = val < 0;
+  const abs = Math.abs(val);
+  if(op === '+') return neg ? `− ${abs}` : `+ ${abs}`;
+  return neg ? `+ ${abs}` : `− ${abs}`;
+}
+
+function genComplexOptellen(){
+  const re1 = randInt(-9, 9), im1 = randInt(-9, 9);
+  const re2 = randInt(-9, 9), im2 = randInt(-9, 9);
+  const isSom = Math.random() < 0.5;
+  const re = isSom ? re1 + re2 : re1 - re2;
+  const im = isSom ? im1 + im2 : im1 - im2;
+  const op = isSom ? '+' : '−';
+  return {
+    kind:'functie', catId:'complex_som', catLabel:'Som',
+    promptHtml: `Bereken (${formatComplex(re1, im1)}) ${op} (${formatComplex(re2, im2)}).`,
+    answerType:'kort', checkKind:'complex', checkData:{ re, im }, correct: formatComplex(re, im),
+    explanation: `Tel (of trek af) de reële delen apart van de imaginaire delen:\n(${re1} ${opTerm(op, re2)}) + (${im1} ${opTerm(op, im2)})i = ${formatComplex(re, im)}.`,
+  };
+}
+
+function genComplexVermenigvuldigen(){
+  const re1 = randNonZero(-6, 6), im1 = randInt(-6, 6);
+  const re2 = randNonZero(-6, 6), im2 = randInt(-6, 6);
+  const re = re1 * re2 - im1 * im2;
+  const im = re1 * im2 + im1 * re2;
+  return {
+    kind:'functie', catId:'complex_vermenigvuldiging', catLabel:'Vermenigvuldiging',
+    promptHtml: `Bereken (${formatComplex(re1, im1)}) × (${formatComplex(re2, im2)}).`,
+    answerType:'kort', checkKind:'complex', checkData:{ re, im }, correct: formatComplex(re, im),
+    explanation: `(a+bi)(c+di) = ac + adi + bci + bdi² = (ac − bd) + (ad + bc)i.\nHier: a=${re1}, b=${im1}, c=${re2}, d=${im2} → (${re1*re2} − (${im1*im2})) + (${re1*im2} + ${im1*re2})i = ${formatComplex(re, im)}.`,
+  };
+}
+
+function genComplexKeerI(){
+  const re1 = randNonZero(-8, 8), im1 = randInt(-8, 8);
+  const re = -im1, im = re1;
+  return {
+    kind:'functie', catId:'complex_vermenigvuldiging', catLabel:'Vermenigvuldiging',
+    promptHtml: `Bereken i × (${formatComplex(re1, im1)}).`,
+    answerType:'kort', checkKind:'complex', checkData:{ re, im }, correct: formatComplex(re, im),
+    explanation: `Vermenigvuldigen met i draait het complexe getal 90° in het complexe vlak (want i² = -1): i × (${formatComplex(re1, im1)}) = ${formatComplex(re, im)}.`,
+  };
+}
+
+function genComplexKwadraat(){
+  const re1 = randNonZero(-6, 6), im1 = randNonZero(-6, 6);
+  const re = re1 * re1 - im1 * im1;
+  const im = 2 * re1 * im1;
+  return {
+    kind:'functie', catId:'complex_macht', catLabel:'Macht',
+    promptHtml: `Bereken (${formatComplex(re1, im1)})².`,
+    answerType:'kort', checkKind:'complex', checkData:{ re, im }, correct: formatComplex(re, im),
+    explanation: `(a+bi)² = a² − b² + 2abi.\nHier: a=${re1}, b=${im1} → (${re1*re1} − ${im1*im1}) + (2·${re1}·${im1})i = ${formatComplex(re, im)}.`,
+  };
+}
+
+function genComplexDerdeMacht(){
+  const re1 = randNonZero(-3, 3), im1 = randNonZero(-3, 3);
+  const re = re1*re1*re1 - 3*re1*im1*im1;
+  const im = 3*re1*re1*im1 - im1*im1*im1;
+  return {
+    kind:'functie', catId:'complex_macht', catLabel:'Macht',
+    promptHtml: `Bereken (${formatComplex(re1, im1)})³.`,
+    answerType:'kort', checkKind:'complex', checkData:{ re, im }, correct: formatComplex(re, im),
+    explanation: `(a+bi)³ = a³ − 3ab² + (3a²b − b³)i.\nHier: a=${re1}, b=${im1} → (${re1**3} − 3·${re1}·${im1**2}) + (3·${re1**2}·${im1} − ${im1**3})i = ${formatComplex(re, im)}.`,
+  };
+}
+
+const TERMEN_COMPLEX_GENS = [genComplexReeelDeel, genComplexImaginairDeel, genComplexGeconjugeerde, genComplexModulus, genComplexIMachten];
+const SOM_COMPLEX_GENS = [genComplexOptellen];
+const VERMENIGVULDIGING_COMPLEX_GENS = [genComplexVermenigvuldigen, genComplexKeerI];
+const MACHT_COMPLEX_GENS = [genComplexKwadraat, genComplexDerdeMacht];
+
+function generateForComplexCategory(catId){
+  switch(catId){
+    case 'termen': return randChoice(TERMEN_COMPLEX_GENS)();
+    case 'som': return randChoice(SOM_COMPLEX_GENS)();
+    case 'vermenigvuldiging': return randChoice(VERMENIGVULDIGING_COMPLEX_GENS)();
+    case 'macht': return randChoice(MACHT_COMPLEX_GENS)();
+    default: return genComplexOptellen();
+  }
+}
+
+function buildComplexQuestion(){
+  const cats = [...complexState.categories];
+  const catId = cats.length ? randChoice(cats) : 'som';
+  return generateForComplexCategory(catId);
+}
+
 function renderFunctieCatChips(){
   const el = document.getElementById('chips-functie-cat');
   el.innerHTML = '';
@@ -1619,6 +1884,92 @@ function renderFunctieAantalChips(){
 function refreshFunctieUI(){
   renderFunctieCatChips();
   renderFunctieAantalChips();
+}
+
+function renderComplexCatChips(){
+  const el = document.getElementById('chips-complex-cat');
+  el.innerHTML = '';
+  COMPLEX_CATEGORIES.forEach(cat => {
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (complexState.categories.has(cat.id) ? ' active' : '');
+    chip.textContent = cat.label;
+    chip.addEventListener('click', () => {
+      if(complexState.categories.has(cat.id)){
+        if(complexState.categories.size === 1){ showToast('Kies minstens 1 soort vragen.'); return; }
+        complexState.categories.delete(cat.id);
+      } else {
+        complexState.categories.add(cat.id);
+      }
+      renderComplexCatChips();
+      updatePoolCount();
+    });
+    el.appendChild(chip);
+  });
+}
+
+function renderComplexAantalChips(){
+  renderSingleChips('chips-complex-aantal', COMPLEX_AANTAL_OPTIONS.map(n => ({ code:n, label:String(n) })), complexState.aantal, (code) => {
+    complexState.aantal = code;
+    renderComplexAantalChips();
+    updatePoolCount();
+  });
+}
+
+function refreshComplexUI(){
+  renderComplexCatChips();
+  renderComplexAantalChips();
+}
+
+function renderWiskundeSubChips(){
+  renderSingleChips('chips-wiskunde-sub', WISKUNDE_SUB_OPTIONS, wiskundeSub, (code) => {
+    const entering = wiskundeSub !== code;
+    wiskundeSub = code;
+    renderWiskundeSubChips();
+    if(code === 'termen' && entering){
+      const vakOptions = unique(termbank.map(t => t.vak));
+      if(vakOptions.includes('Wiskunde')) filters.vak = new Set(['Wiskunde']);
+      buildFilterUI();
+    }
+    syncGameMode();
+    updateConfigVisibility();
+    updatePoolCount();
+  });
+}
+
+function renderWiskundeTermenModeChips(){
+  renderSingleChips('chips-wiskunde-termen-mode', WISKUNDE_TERMEN_MODE_OPTIONS, wiskundeTermenMode, (code) => {
+    wiskundeTermenMode = code;
+    renderWiskundeTermenModeChips();
+    syncGameMode();
+    updateConfigVisibility();
+    updatePoolCount();
+  });
+}
+
+function syncGameMode(){
+  if(topMode !== 'wiskunde'){
+    gameMode = topMode;
+  } else if(wiskundeSub === 'termen'){
+    gameMode = wiskundeTermenMode;
+  } else {
+    gameMode = wiskundeSub; // 'functies' of 'complex'
+  }
+}
+
+function updateConfigVisibility(){
+  const inWiskunde = topMode === 'wiskunde';
+  document.getElementById('config-wiskunde').style.display = inWiskunde ? 'block' : 'none';
+  document.getElementById('wiskunde-config-functies').style.display = (inWiskunde && wiskundeSub === 'functies') ? 'block' : 'none';
+  document.getElementById('wiskunde-config-complex').style.display = (inWiskunde && wiskundeSub === 'complex') ? 'block' : 'none';
+  document.getElementById('wiskunde-config-termen').style.display = (inWiskunde && wiskundeSub === 'termen') ? 'block' : 'none';
+
+  document.getElementById('config-vertalen').style.display = gameMode === 'vertalen' ? 'block' : 'none';
+  document.getElementById('config-uitleg').style.display = gameMode === 'uitleg' ? 'block' : 'none';
+  document.getElementById('config-leren').style.display = gameMode === 'leren' ? 'block' : 'none';
+  document.getElementById('config-lezen').style.display = gameMode === 'lezen' ? 'block' : 'none';
+
+  const needsOnderdeel = gameMode === 'vertalen' || gameMode === 'uitleg' || gameMode === 'leren' || gameMode === 'lezen';
+  document.getElementById('card-onderdeel').style.display = needsOnderdeel ? 'block' : 'none';
 }
 
 /* ---------- storage ---------- */
@@ -1906,15 +2257,11 @@ function refreshLeesUI(){
 }
 
 function renderModeChips(){
-  renderSingleChips('chips-mode', MODE_OPTIONS, gameMode, (code) => {
-    gameMode = code;
+  renderSingleChips('chips-mode', MODE_OPTIONS, topMode, (code) => {
+    topMode = code;
     renderModeChips();
-    document.getElementById('config-vertalen').style.display = gameMode === 'vertalen' ? 'block' : 'none';
-    document.getElementById('config-uitleg').style.display = gameMode === 'uitleg' ? 'block' : 'none';
-    document.getElementById('config-leren').style.display = gameMode === 'leren' ? 'block' : 'none';
-    document.getElementById('config-lezen').style.display = gameMode === 'lezen' ? 'block' : 'none';
-    document.getElementById('config-functies').style.display = gameMode === 'functies' ? 'block' : 'none';
-    document.getElementById('card-onderdeel').style.display = gameMode === 'functies' ? 'none' : 'block';
+    syncGameMode();
+    updateConfigVisibility();
     updatePoolCount();
   });
 }
@@ -1989,9 +2336,10 @@ function getPlayablePool(){
 function updatePoolCount(){
   const countEl = document.getElementById('pool-count');
   const startBtn = document.getElementById('btn-start');
-  if(gameMode === 'functies'){
-    const ok = functieState.categories.size > 0;
-    countEl.innerHTML = '<b>' + functieState.aantal + '</b> willekeurig gegenereerde oefeningen';
+  if(gameMode === 'functies' || gameMode === 'complex'){
+    const st = gameMode === 'functies' ? functieState : complexState;
+    const ok = st.categories.size > 0;
+    countEl.innerHTML = '<b>' + st.aantal + '</b> willekeurig gegenereerde oefeningen';
     startBtn.disabled = !ok;
     startBtn.textContent = 'START';
     return;
@@ -2048,13 +2396,15 @@ function buildQuestion(term, pool){
 }
 
 function startQuiz(){
-  if(gameMode === 'functies'){
+  if(gameMode === 'functies' || gameMode === 'complex'){
+    const st = gameMode === 'functies' ? functieState : complexState;
+    const buildFn = gameMode === 'functies' ? buildFunctieQuestion : buildComplexQuestion;
     quiz.questions = [];
     const usedSignatures = new Set();
-    for(let i = 0; i < functieState.aantal; i++){
+    for(let i = 0; i < st.aantal; i++){
       let q, tries = 0;
       do {
-        q = buildFunctieQuestion();
+        q = buildFn();
         tries++;
       } while(usedSignatures.has(functieQuestionSignature(q)) && tries < 30);
       usedSignatures.add(functieQuestionSignature(q));
@@ -2460,7 +2810,11 @@ document.getElementById('btn-home').addEventListener('click', () => showScreen('
   refreshLerenUI();
   refreshLeesUI();
   refreshFunctieUI();
+  refreshComplexUI();
+  renderWiskundeSubChips();
+  renderWiskundeTermenModeChips();
   buildFilterUI();
+  updateConfigVisibility();
 })();
 </script>
 </body>
