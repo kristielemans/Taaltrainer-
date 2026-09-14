@@ -487,7 +487,7 @@
   <div class="screen active" id="screen-home">
     <section class="card">
       <h2>Kies je spelmodus</h2>
-      <p class="hint">Vertalen: een term omzetten van de ene taal naar de andere. Uitleg: term en betekenis aan elkaar koppelen, binnen één taal, over een beperkt aantal vragen. Leermodus: hetzelfde als uitleg, maar dan over alle beschikbare termen. Wiskunde: aparte oefeningen speciaal voor wiskunde &mdash; functies, complexe getallen of algemene wiskundetermen.</p>
+      <p class="hint">Vertalen: een term omzetten van de ene taal naar de andere. Uitleg: term en betekenis aan elkaar koppelen, binnen één taal, over een beperkt aantal vragen. Leermodus: hetzelfde als uitleg, maar dan over alle beschikbare termen. Wiskunde: aparte oefeningen speciaal voor wiskunde &mdash; functies, complexe getallen, combinatieleer of algemene wiskundetermen.</p>
       <div class="chips" id="chips-mode" style="margin-bottom:18px;"></div>
 
       <div id="config-wiskunde" style="display:none;">
@@ -517,6 +517,18 @@
           <div class="filter-group">
             <label>Aantal vragen</label>
             <div class="chips" id="chips-complex-aantal"></div>
+          </div>
+        </div>
+
+        <div id="wiskunde-config-combinatoriek" style="display:none;">
+          <p class="hint">Vragen worden telkens opnieuw willekeurig samengesteld, dus ze komen niet steeds terug. Kies welke soorten je wil oefenen.</p>
+          <div class="filter-group">
+            <label>Soorten vragen</label>
+            <div class="chips" id="chips-combi-cat"></div>
+          </div>
+          <div class="filter-group">
+            <label>Aantal vragen</label>
+            <div class="chips" id="chips-combi-aantal"></div>
           </div>
         </div>
 
@@ -685,7 +697,7 @@
     <p class="hint">Voor leerlingen én leerkrachten &mdash; sluit dit venster gewoon om verder te gaan.</p>
 
     <p style="font-weight:600; margin-bottom:4px;">Voor leerlingen</p>
-    <p class="hint">Kies bovenaan je spelmodus, taal (of talen) en het vak, hoofdstuk en graad waarover je wil oefenen, en klik op start. Kies je <b>"Wiskunde"</b>, dan kan je verder kiezen tussen <b>"Functies"</b> en <b>"Complexe getallen"</b> &mdash; dat zijn willekeurig samengestelde oefeningen (functies: functiewaarden, nulwaarden, grafieken, functievoorschriften...; complexe getallen: termen &amp; begrippen, som, vermenigvuldiging, macht) die niet uit een lijst gehaald worden maar telkens opnieuw berekend, dus ze komen niet steeds terug. Kies je binnen Wiskunde voor <b>"Termen algemeen"</b>, dan oefen je gewoon de vaktermen van het vak Wiskunde uit de termenbank, net zoals bij de andere vakken. Staat de lijst van jouw leerkracht of vak er nog niet tussen? Vraag het CSV-bestand aan je leerkracht (bv. via Smartschool) en klik zelf op <b>"Lijst importeren"</b> hierboven om het toe te voegen &mdash; dat moet maar eenmalig, per toestel of browser. Je kan gerust na elkaar lijsten van verschillende leerkrachten of vakken importeren; ze worden gewoon samengevoegd, niets gaat verloren.</p>
+    <p class="hint">Kies bovenaan je spelmodus, taal (of talen) en het vak, hoofdstuk en graad waarover je wil oefenen, en klik op start. Kies je <b>"Wiskunde"</b>, dan kan je verder kiezen tussen <b>"Functies"</b>, <b>"Complexe getallen"</b> en <b>"Combinatieleer"</b> &mdash; dat zijn willekeurig samengestelde oefeningen (functies: functiewaarden, nulwaarden, grafieken, functievoorschriften...; complexe getallen: termen &amp; begrippen, som, vermenigvuldiging, macht; combinatieleer: termen &amp; begrippen, rekenen, woordproblemen, "welk telprobleem is dit?" en boomstructuren) die niet uit een lijst gehaald worden maar telkens opnieuw berekend, dus ze komen niet steeds terug. Kies je binnen Wiskunde voor <b>"Termen algemeen"</b>, dan oefen je gewoon de vaktermen van het vak Wiskunde uit de termenbank, net zoals bij de andere vakken. Staat de lijst van jouw leerkracht of vak er nog niet tussen? Vraag het CSV-bestand aan je leerkracht (bv. via Smartschool) en klik zelf op <b>"Lijst importeren"</b> hierboven om het toe te voegen &mdash; dat moet maar eenmalig, per toestel of browser. Je kan gerust na elkaar lijsten van verschillende leerkrachten of vakken importeren; ze worden gewoon samengevoegd, niets gaat verloren.</p>
 
     <p style="font-weight:600; margin:16px 0 4px;">Voor leerkrachten: een lijst opstellen</p>
     <p class="hint">Maak een CSV-bestand (puntkomma-gescheiden) volgens dit schema:</p>
@@ -777,6 +789,7 @@ const MODE_OPTIONS = [
 const WISKUNDE_SUB_OPTIONS = [
   { code:'functies', label:'Functies' },
   { code:'complex', label:'Complexe getallen' },
+  { code:'combinatoriek', label:'Combinatieleer' },
   { code:'termen', label:'Termen algemeen' },
 ];
 const WISKUNDE_TERMEN_MODE_OPTIONS = [
@@ -1852,6 +1865,299 @@ function buildComplexQuestion(){
   return generateForComplexCategory(catId);
 }
 
+/* ==================================================================
+   COMBINATIELEER-OEFENMODULE
+   Zelfde opzet als de functies- en complexe-getallen-modules hierboven.
+   Antwoorden zijn hier bijna altijd gewone gehele getallen, dus de
+   bestaande checkKind:'number' volstaat — er is geen nieuwe parser
+   nodig zoals bij complexe getallen.
+   ================================================================== */
+function factorial(n){ let r = 1; for(let i = 2; i <= n; i++) r *= i; return r; }
+function nPr(n, r){ return factorial(n) / factorial(n - r); }
+function nCr(n, r){ return factorial(n) / (factorial(r) * factorial(n - r)); }
+function nCrHerhaling(n, r){ return nCr(n + r - 1, r); }
+function nVarHerhaling(n, r){ return Math.pow(n, r); }
+
+function genCombiTermenBegrip(){
+  const items = [
+    { promptHtml:'Bij een <b>combinatie</b>: speelt de volgorde van de gekozen elementen een rol?', correct:'Nee', options:['Ja','Nee'],
+      explanation:'Bij een combinatie maakt de volgorde niet uit — {A,B} is dezelfde combinatie als {B,A}.' },
+    { promptHtml:'Bij een <b>variatie</b>: speelt de volgorde van de gekozen elementen een rol?', correct:'Ja', options:['Ja','Nee'],
+      explanation:'Bij een variatie is de volgorde net wel belangrijk — AB en BA zijn verschillend.' },
+    { promptHtml:'Wat is de formule voor het aantal permutaties van n verschillende elementen?', correct:'n!', options:['n!','n²','n×(n-1)','2n'],
+      explanation:'Het aantal manieren om n verschillende elementen te rangschikken is n! (n faculteit).' },
+    { promptHtml:'Wat is de formule voor nPr (variatie zonder herhaling van r uit n)?', correct:'n! / (n−r)!', options:['n! / (n−r)!','n! / (r!·(n−r)!)','n^r','r!'],
+      explanation:'nPr = n! / (n−r)! telt het aantal geordende keuzes van r uit n, zonder herhaling.' },
+    { promptHtml:'Wat is de formule voor nCr (combinatie zonder herhaling van r uit n)?', correct:'n! / (r!·(n−r)!)', options:['n! / (n−r)!','n! / (r!·(n−r)!)','n^r','n×r'],
+      explanation:'nCr = n! / (r!·(n−r)!) telt het aantal keuzes van r uit n waarbij de volgorde niet telt.' },
+    { promptHtml:'Bij een variatie óf combinatie <b>met herhaling</b>: mag eenzelfde element meerdere keren gekozen worden?', correct:'Ja', options:['Ja','Nee'],
+      explanation:'"Met herhaling" betekent net dat je hetzelfde element meer dan één keer mag kiezen.' },
+    { promptHtml:'Wat betekent 0! (0 faculteit)?', correct:'1', options:['0','1','Niet gedefinieerd','-1'],
+      explanation:'Per afspraak is 0! = 1 (een lege rangschikking kan op precies 1 manier).' },
+  ];
+  const item = randChoice(items);
+  return {
+    kind:'functie', catId:'combi_termen', catLabel:'Termen & begrippen',
+    promptHtml: item.promptHtml,
+    answerType:'lang', options: shuffle(item.options), correct: item.correct,
+    explanation: item.explanation,
+  };
+}
+
+function genFaculteitBereken(){
+  const n = randInt(3, 8);
+  return {
+    kind:'functie', catId:'combi_rekenen', catLabel:'Rekenen',
+    promptHtml: `Bereken ${n}! (${n} faculteit).`,
+    answerType:'kort', checkKind:'number', checkData:{ value: factorial(n) }, correct: String(factorial(n)),
+    explanation: `${n}! = ${Array.from({length:n}, (_,i)=>n-i).join(' × ')} = ${factorial(n)}.`,
+  };
+}
+
+function genPermutatieBereken(){
+  const n = randInt(5, 10);
+  const r = randInt(2, Math.min(4, n - 1));
+  return {
+    kind:'functie', catId:'combi_rekenen', catLabel:'Rekenen',
+    promptHtml: `Bereken het aantal variaties zonder herhaling van ${r} uit ${n} (notatie: ${n}P${r}).`,
+    answerType:'kort', checkKind:'number', checkData:{ value: nPr(n, r) }, correct: String(nPr(n, r)),
+    explanation: `${n}P${r} = ${n}! / (${n}−${r})! = ${factorial(n)} / ${factorial(n - r)} = ${nPr(n, r)}.`,
+  };
+}
+
+function genCombinatieBereken(){
+  const n = randInt(5, 15);
+  const r = randInt(2, Math.min(6, n - 1));
+  return {
+    kind:'functie', catId:'combi_rekenen', catLabel:'Rekenen',
+    promptHtml: `Bereken het aantal combinaties zonder herhaling van ${r} uit ${n} (notatie: ${n}C${r}).`,
+    answerType:'kort', checkKind:'number', checkData:{ value: nCr(n, r) }, correct: String(nCr(n, r)),
+    explanation: `${n}C${r} = ${n}! / (${r}! · (${n}−${r})!) = ${nCr(n, r)}.`,
+  };
+}
+
+function genVariatieHerhalingBereken(){
+  const n = randInt(2, 8);
+  const r = randInt(2, 4);
+  return {
+    kind:'functie', catId:'combi_rekenen', catLabel:'Rekenen',
+    promptHtml: `Bereken het aantal variaties MET herhaling van ${r} uit ${n} (dus ${n}^${r}).`,
+    answerType:'kort', checkKind:'number', checkData:{ value: nVarHerhaling(n, r) }, correct: String(nVarHerhaling(n, r)),
+    explanation: `Bij een variatie met herhaling mag elk van de ${r} plaatsen om het even welke van de ${n} mogelijkheden zijn: ${n}^${r} = ${nVarHerhaling(n, r)}.`,
+  };
+}
+
+function genCombinatieHerhalingBereken(){
+  const n = randInt(2, 5);
+  const r = randInt(2, 6);
+  const val = nCrHerhaling(n, r);
+  return {
+    kind:'functie', catId:'combi_rekenen', catLabel:'Rekenen',
+    promptHtml: `Bereken de herhalingscombinatie (combinatie MET herhaling) van ${r} uit ${n} soorten.`,
+    answerType:'kort', checkKind:'number', checkData:{ value: val }, correct: String(val),
+    explanation: `Een herhalingscombinatie van ${r} uit ${n} soorten reken je als (${n}+${r}−1)C${r} = ${n + r - 1}C${r} = ${val}.`,
+  };
+}
+
+function genVerhaalCombinatie(){
+  const templates = [
+    (n, r) => `Je selecteert ${r} personen uit een groep van ${n} voor een projectteam (de volgorde van selectie maakt niet uit).`,
+    (n, r) => `Uit een klas van ${n} leerlingen worden er ${r} gekozen voor een quiz (geen specifieke rol per leerling).`,
+    (n, r) => `Je trekt ${r} kaarten uit een stapel van ${n} verschillende kaarten, zonder op de volgorde te letten.`,
+  ];
+  const n = randInt(8, 40);
+  const r = randInt(2, Math.min(6, n - 1));
+  const tpl = randChoice(templates);
+  const val = nCr(n, r);
+  return {
+    kind:'functie', catId:'combi_verhaal', catLabel:'Woordprobleem',
+    promptHtml: `${tpl(n, r)}<br>Op hoeveel manieren kan dat?`,
+    answerType:'kort', checkKind:'number', checkData:{ value: val }, correct: String(val),
+    explanation: `Volgorde maakt hier niet uit en herhaling kan niet → combinatie zonder herhaling: ${n}C${r} = ${val}.`,
+  };
+}
+
+function genVerhaalCombinatieHerhaling(){
+  const templates = [
+    (n, r) => `Je kiest ${r} koffiekoeken bij de bakker, die ${n} soorten koeken heeft. Je mag meerdere koeken van dezelfde soort kiezen, en de volgorde waarin je ze kiest maakt niet uit.`,
+    (n, r) => `Je kiest ${r} bolletjes ijs uit ${n} smaken, waarbij je gerust meerdere keren dezelfde smaak mag nemen (volgorde niet belangrijk).`,
+  ];
+  const n = randInt(2, 5);
+  const r = randInt(3, 8);
+  const tpl = randChoice(templates);
+  const val = nCrHerhaling(n, r);
+  return {
+    kind:'functie', catId:'combi_verhaal', catLabel:'Woordprobleem',
+    promptHtml: `${tpl(n, r)}<br>Op hoeveel manieren kan dat?`,
+    answerType:'kort', checkKind:'number', checkData:{ value: val }, correct: String(val),
+    explanation: `Volgorde maakt niet uit, maar herhaling kan wel → combinatie met herhaling van ${r} uit ${n}: (${n}+${r}−1)C${r} = ${val}.`,
+  };
+}
+
+function genVerhaalPermutatieVol(){
+  const n = randInt(4, 12);
+  return {
+    kind:'functie', catId:'combi_verhaal', catLabel:'Woordprobleem',
+    promptHtml: `Op hoeveel manieren kunnen ${n} renners over de meet komen (geen twee renners eindigen gelijk)?`,
+    answerType:'kort', checkKind:'number', checkData:{ value: factorial(n) }, correct: String(factorial(n)),
+    explanation: `Alle ${n} renners krijgen elk een unieke plaats → dit is een volledige rangschikking: ${n}! = ${factorial(n)}.`,
+  };
+}
+
+function genVerhaalPermutatieDeel(){
+  const n = randInt(6, 15);
+  const r = randInt(2, 4);
+  return {
+    kind:'functie', catId:'combi_verhaal', catLabel:'Woordprobleem',
+    promptHtml: `Bij een wedstrijd met ${n} deelnemers worden de eerste ${r} plaatsen bepaald (elke plaats is anders, niemand kan twee plaatsen tegelijk hebben).<br>Op hoeveel manieren kan dat?`,
+    answerType:'kort', checkKind:'number', checkData:{ value: nPr(n, r) }, correct: String(nPr(n, r)),
+    explanation: `De volgorde is belangrijk (1e ≠ 2e) en herhaling kan niet → variatie zonder herhaling: ${n}P${r} = ${nPr(n, r)}.`,
+  };
+}
+
+function genVerhaalVariatieHerhaling(){
+  const isDigits = Math.random() < 0.5;
+  const n = isDigits ? 10 : 26;
+  const r = isDigits ? randInt(3, 5) : randInt(2, 3);
+  const promptHtml = isDigits
+    ? `Een pincode bestaat uit ${r} cijfers (0 t.e.m. 9), waarbij een cijfer meerdere keren mag voorkomen en de volgorde telt.<br>Hoeveel verschillende pincodes zijn er?`
+    : `Een code bestaat uit ${r} letters (A t.e.m. Z), waarbij een letter meerdere keren mag voorkomen en de volgorde telt.<br>Hoeveel verschillende codes zijn er?`;
+  const val = nVarHerhaling(n, r);
+  return {
+    kind:'functie', catId:'combi_verhaal', catLabel:'Woordprobleem',
+    promptHtml,
+    answerType:'kort', checkKind:'number', checkData:{ value: val }, correct: String(val),
+    explanation: `Volgorde telt en herhaling mag → variatie met herhaling: ${n}^${r} = ${val}.`,
+  };
+}
+
+const CLASSIFICATIE_TYPE_LABELS = ['Variatie zonder herhaling', 'Variatie met herhaling', 'Combinatie zonder herhaling', 'Combinatie met herhaling'];
+const CLASSIFICATIE_SCENARIOS = [
+  { promptHtml:'Lotto: je kiest 6 nummers uit 45 (de volgorde waarin je ze aanduidt maakt niet uit, en elk nummer kan maar één keer gekozen worden).', correct:'Combinatie zonder herhaling' },
+  { promptHtml:'Je trekt een hand van 5 kaarten uit een kaartspel van 52 kaarten (de volgorde van de kaarten in je hand maakt niet uit).', correct:'Combinatie zonder herhaling' },
+  { promptHtml:'Een bankkaart heeft een pincode van 4 cijfers (0-9). Cijfers mogen herhaald worden en de volgorde is belangrijk.', correct:'Variatie met herhaling' },
+  { promptHtml:'Een telefoonnummer bestaat uit een vaste reeks cijfers waarbij een cijfer meerdere keren mag voorkomen en de volgorde uiteraard telt.', correct:'Variatie met herhaling' },
+  { promptHtml:'Bij een wedstrijd worden de eerste 3 plaatsen (goud, zilver, brons) verdeeld onder de deelnemers. Niemand kan twee medailles winnen en de volgorde (wie is 1e, 2e, 3e) is belangrijk.', correct:'Variatie zonder herhaling' },
+  { promptHtml:'Je kiest 3 bolletjes ijs uit 6 smaken. Je mag meerdere bolletjes van dezelfde smaak nemen, en de volgorde waarin ze op het hoorntje staan maakt voor jou niet uit.', correct:'Combinatie met herhaling' },
+  { promptHtml:'Een wachtwoord bestaat uit 6 letters, waarbij een letter meerdere keren mag voorkomen en de volgorde van de letters telt.', correct:'Variatie met herhaling' },
+  { promptHtml:'Een comité van 4 personen wordt samengesteld uit een klas van 25 leerlingen. Er is geen specifieke rol per persoon, en niemand kan twee keer gekozen worden.', correct:'Combinatie zonder herhaling' },
+  { promptHtml:'Je stelt een boeket samen van 6 bloemen uit 4 beschikbare soorten. Je mag meerdere bloemen van dezelfde soort kiezen, en de volgorde in het boeket maakt niet uit.', correct:'Combinatie met herhaling' },
+  { promptHtml:'Bij een fietswedstrijd komen alle 15 renners één voor één over de meet, zonder ex aequo. Je wil weten op hoeveel manieren de volledige uitslag (van 1e tot 15e) kan verlopen.', correct:'Variatie zonder herhaling' },
+];
+
+function genClassificatie(){
+  const item = randChoice(CLASSIFICATIE_SCENARIOS);
+  return {
+    kind:'functie', catId:'combi_classificatie', catLabel:'Welk telprobleem?',
+    promptHtml: item.promptHtml + '<br>Welk type telprobleem is dit?',
+    answerType:'lang', options: shuffle(CLASSIFICATIE_TYPE_LABELS), correct: item.correct,
+    explanation: `Dit is een voorbeeld van: ${item.correct}.`,
+  };
+}
+
+/* ---- boomstructuur (keuzeboom) als SVG ----
+   Alle 4 types worden getekend als een boom van 2 niveaus over dezelfde
+   letters. Bij "zonder herhaling" mag een tak niet terugkeren naar zijn
+   eigen letter; bij "combinatie" (volgorde telt niet) wordt enkel
+   vooruit vertakt (in alfabetische volgorde) zodat elke combinatie
+   maar één keer als tak voorkomt — een gangbare manier om ook
+   combinaties in een boomstructuur te tonen. */
+function keuzeboomChildren(type, labels, l1){
+  if(type === 'variatie_zonder') return labels.filter(l2 => l2 !== l1);
+  if(type === 'variatie_met') return labels.slice();
+  if(type === 'combinatie_zonder') return labels.filter(l2 => l2 > l1);
+  return labels.filter(l2 => l2 >= l1); // combinatie_met
+}
+
+function svgKeuzeboom(type, labels){
+  const groups = labels
+    .map(l1 => ({ l1, children: keuzeboomChildren(type, labels, l1) }))
+    .filter(g => g.children.length > 0);
+  const leafCount = groups.reduce((s, g) => s + g.children.length, 0) || 1;
+  const W = Math.max(260, leafCount * 54 + 40);
+  const H = 190;
+  const rootY = 30, l1Y = 92, l2Y = 156;
+  const leafSpacing = (W - 40) / leafCount;
+  const rootX = W / 2;
+
+  let svg = `<circle cx="${rootX}" cy="${rootY}" r="4" fill="var(--ink)"/>`;
+  let x = 20 + leafSpacing / 2;
+  groups.forEach(g => {
+    const childXs = g.children.map(() => { const cx = x; x += leafSpacing; return cx; });
+    const groupX = childXs.reduce((a, b) => a + b, 0) / childXs.length;
+    svg += `<line x1="${rootX}" y1="${rootY}" x2="${groupX}" y2="${l1Y}" stroke="var(--paper-line)" stroke-width="1.5"/>`;
+    svg += `<circle cx="${groupX}" cy="${l1Y}" r="14" fill="var(--white)" stroke="var(--ink)" stroke-width="1.5"/>`;
+    svg += `<text x="${groupX}" y="${l1Y+5}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--ink)">${g.l1}</text>`;
+    g.children.forEach((l2, i) => {
+      const cx = childXs[i];
+      svg += `<line x1="${groupX}" y1="${l1Y}" x2="${cx}" y2="${l2Y}" stroke="var(--paper-line)" stroke-width="1.5"/>`;
+      svg += `<circle cx="${cx}" cy="${l2Y}" r="14" fill="var(--white)" stroke="var(--ink)" stroke-width="1.5"/>`;
+      svg += `<text x="${cx}" y="${l2Y+5}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--ink)">${l2}</text>`;
+    });
+  });
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:340px;">${svg}</svg>`;
+}
+
+function explainBoomstructuur(id){
+  switch(id){
+    case 'variatie_zonder': return 'De volgorde telt (AB ≠ BA) en een letter mag niet herhaald worden → variatie zonder herhaling.';
+    case 'variatie_met': return 'De volgorde telt (AB ≠ BA) en een letter mag wel herhaald worden (bv. AA komt voor) → variatie met herhaling.';
+    case 'combinatie_zonder': return 'De volgorde telt niet (AB en BA zijn dezelfde keuze, dus die tak komt maar één keer voor) en een letter mag niet herhaald worden → combinatie zonder herhaling.';
+    default: return 'De volgorde telt niet (AB en BA zijn dezelfde keuze) en een letter mag wel herhaald worden (bv. AA komt voor) → combinatie met herhaling.';
+  }
+}
+
+function genBoomstructuur(){
+  const types = [
+    { id:'variatie_zonder', label:'Variatie zonder herhaling' },
+    { id:'variatie_met', label:'Variatie met herhaling' },
+    { id:'combinatie_zonder', label:'Combinatie zonder herhaling' },
+    { id:'combinatie_met', label:'Combinatie met herhaling' },
+  ];
+  const chosen = randChoice(types);
+  const labelSets = [['A','B','C'], ['R','S','T'], ['X','Y','Z']];
+  const labels = randChoice(labelSets);
+  const svg = svgKeuzeboom(chosen.id, labels);
+  return {
+    kind:'functie', catId:'combi_boom', catLabel:'Boomstructuur',
+    promptHtml: `Bekijk deze boomstructuur voor het kiezen van 2 letters uit {${labels.join(', ')}}.<br>Welk soort telprobleem stelt ze voor?`,
+    svg,
+    answerType:'lang', options: shuffle(types.map(t => t.label)), correct: chosen.label,
+    explanation: explainBoomstructuur(chosen.id),
+  };
+}
+
+const TERMEN_COMBI_GENS = [genCombiTermenBegrip];
+const REKENEN_COMBI_GENS = [genFaculteitBereken, genPermutatieBereken, genCombinatieBereken, genVariatieHerhalingBereken, genCombinatieHerhalingBereken];
+const VERHAALTJES_COMBI_GENS = [genVerhaalCombinatie, genVerhaalCombinatieHerhaling, genVerhaalPermutatieVol, genVerhaalPermutatieDeel, genVerhaalVariatieHerhaling];
+
+const COMBI_CATEGORIES = [
+  { id:'termen', label:'Termen & begrippen' },
+  { id:'rekenen', label:'Rekenen' },
+  { id:'verhaaltjes', label:'Woordproblemen' },
+  { id:'classificatie', label:'Welk telprobleem?' },
+  { id:'boom', label:'Boomstructuur' },
+];
+const COMBI_AANTAL_OPTIONS = [5, 10, 15, 20];
+let combinatoriekState = { categories: new Set(COMBI_CATEGORIES.map(c=>c.id)), aantal: 10 };
+
+function generateForCombiCategory(catId){
+  switch(catId){
+    case 'termen': return randChoice(TERMEN_COMBI_GENS)();
+    case 'rekenen': return randChoice(REKENEN_COMBI_GENS)();
+    case 'verhaaltjes': return randChoice(VERHAALTJES_COMBI_GENS)();
+    case 'classificatie': return genClassificatie();
+    case 'boom': return genBoomstructuur();
+    default: return randChoice(REKENEN_COMBI_GENS)();
+  }
+}
+
+function buildCombinatoriekQuestion(){
+  const cats = [...combinatoriekState.categories];
+  const catId = cats.length ? randChoice(cats) : 'rekenen';
+  return generateForCombiCategory(catId);
+}
+
 function renderFunctieCatChips(){
   const el = document.getElementById('chips-functie-cat');
   el.innerHTML = '';
@@ -1920,6 +2226,40 @@ function refreshComplexUI(){
   renderComplexAantalChips();
 }
 
+function renderCombiCatChips(){
+  const el = document.getElementById('chips-combi-cat');
+  el.innerHTML = '';
+  COMBI_CATEGORIES.forEach(cat => {
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (combinatoriekState.categories.has(cat.id) ? ' active' : '');
+    chip.textContent = cat.label;
+    chip.addEventListener('click', () => {
+      if(combinatoriekState.categories.has(cat.id)){
+        if(combinatoriekState.categories.size === 1){ showToast('Kies minstens 1 soort vragen.'); return; }
+        combinatoriekState.categories.delete(cat.id);
+      } else {
+        combinatoriekState.categories.add(cat.id);
+      }
+      renderCombiCatChips();
+      updatePoolCount();
+    });
+    el.appendChild(chip);
+  });
+}
+
+function renderCombiAantalChips(){
+  renderSingleChips('chips-combi-aantal', COMBI_AANTAL_OPTIONS.map(n => ({ code:n, label:String(n) })), combinatoriekState.aantal, (code) => {
+    combinatoriekState.aantal = code;
+    renderCombiAantalChips();
+    updatePoolCount();
+  });
+}
+
+function refreshCombiUI(){
+  renderCombiCatChips();
+  renderCombiAantalChips();
+}
+
 function renderWiskundeSubChips(){
   renderSingleChips('chips-wiskunde-sub', WISKUNDE_SUB_OPTIONS, wiskundeSub, (code) => {
     const entering = wiskundeSub !== code;
@@ -1961,6 +2301,7 @@ function updateConfigVisibility(){
   document.getElementById('config-wiskunde').style.display = inWiskunde ? 'block' : 'none';
   document.getElementById('wiskunde-config-functies').style.display = (inWiskunde && wiskundeSub === 'functies') ? 'block' : 'none';
   document.getElementById('wiskunde-config-complex').style.display = (inWiskunde && wiskundeSub === 'complex') ? 'block' : 'none';
+  document.getElementById('wiskunde-config-combinatoriek').style.display = (inWiskunde && wiskundeSub === 'combinatoriek') ? 'block' : 'none';
   document.getElementById('wiskunde-config-termen').style.display = (inWiskunde && wiskundeSub === 'termen') ? 'block' : 'none';
 
   document.getElementById('config-vertalen').style.display = gameMode === 'vertalen' ? 'block' : 'none';
@@ -2333,13 +2674,24 @@ function getPlayablePool(){
   }
 }
 
+/* Eén plek die elke "gegenereerde" wiskunde-submodus (geen termenbank,
+   maar telkens opnieuw berekende oefeningen) koppelt aan zijn state en
+   build-functie. Een nieuwe module toevoegen (bv. later nog een 4e)
+   betekent alleen een nieuwe regel hier, niet opnieuw if/else-ketens
+   aanpassen in updatePoolCount()/startQuiz(). */
+const GENERATED_MODES = {
+  functies: { state: functieState, build: buildFunctieQuestion },
+  complex: { state: complexState, build: buildComplexQuestion },
+  combinatoriek: { state: combinatoriekState, build: buildCombinatoriekQuestion },
+};
+
 function updatePoolCount(){
   const countEl = document.getElementById('pool-count');
   const startBtn = document.getElementById('btn-start');
-  if(gameMode === 'functies' || gameMode === 'complex'){
-    const st = gameMode === 'functies' ? functieState : complexState;
-    const ok = st.categories.size > 0;
-    countEl.innerHTML = '<b>' + st.aantal + '</b> willekeurig gegenereerde oefeningen';
+  const gen = GENERATED_MODES[gameMode];
+  if(gen){
+    const ok = gen.state.categories.size > 0;
+    countEl.innerHTML = '<b>' + gen.state.aantal + '</b> willekeurig gegenereerde oefeningen';
     startBtn.disabled = !ok;
     startBtn.textContent = 'START';
     return;
@@ -2396,15 +2748,14 @@ function buildQuestion(term, pool){
 }
 
 function startQuiz(){
-  if(gameMode === 'functies' || gameMode === 'complex'){
-    const st = gameMode === 'functies' ? functieState : complexState;
-    const buildFn = gameMode === 'functies' ? buildFunctieQuestion : buildComplexQuestion;
+  const gen = GENERATED_MODES[gameMode];
+  if(gen){
     quiz.questions = [];
     const usedSignatures = new Set();
-    for(let i = 0; i < st.aantal; i++){
+    for(let i = 0; i < gen.state.aantal; i++){
       let q, tries = 0;
       do {
-        q = buildFn();
+        q = gen.build();
         tries++;
       } while(usedSignatures.has(functieQuestionSignature(q)) && tries < 30);
       usedSignatures.add(functieQuestionSignature(q));
@@ -2811,6 +3162,7 @@ document.getElementById('btn-home').addEventListener('click', () => showScreen('
   refreshLeesUI();
   refreshFunctieUI();
   refreshComplexUI();
+  refreshCombiUI();
   renderWiskundeSubChips();
   renderWiskundeTermenModeChips();
   buildFilterUI();
