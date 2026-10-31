@@ -1,9 +1,5 @@
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gymnasion Taaltrainer</title>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Gymnasion Trainer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
@@ -18,6 +14,8 @@
     --coral:#E8613C;
     --green:#2F7A4D;
     --white:#FFFDF8;
+    --toets:#5B3FA6;
+    --toets-licht:#F3EFFA;
     --radius:14px;
     --shadow: 0 2px 0 rgba(28,37,65,0.06), 0 8px 24px rgba(28,37,65,0.06);
   }
@@ -371,10 +369,50 @@
   .functie-table{ border-collapse:collapse; margin:6px auto; font-family:'IBM Plex Mono', monospace; font-size:0.92rem; }
   .functie-table td, .functie-table th{ border:1px solid var(--paper-line); padding:7px 16px; }
   .functie-table th{ background:var(--paper); }
+  .functie-table.compact td, .functie-table.compact th{ padding:6px 7px; }
   .functie-sub{ display:block; color:var(--ink-soft); font-size:0.72rem; font-weight:400; margin-top:6px; }
   .functie-input-hint{ color:var(--ink-soft); font-size:0.78rem; margin:6px 0 0; display:none; }
   .mic-ios-hint{ display:none; color:var(--ink-soft); font-size:0.78rem; margin:6px 0 0; }
 
+  .theorie h3{ font-family:'Fraunces', serif; font-size:1.08rem; margin:18px 0 6px; }
+  .theorie p{ margin:0 0 10px; line-height:1.5; }
+  .theorie .formule{ font-family:'IBM Plex Mono', monospace; font-size:0.86rem; background:var(--paper); border:1px solid var(--paper-line); border-radius:8px; padding:8px 12px; margin:0 0 10px; overflow-x:auto; }
+  .theorie-svg{ text-align:center; margin:4px 0 10px; }
+  .theorie-svg svg{ max-width:100%; height:auto; }
+  .btn-toets{ background:var(--toets); color:var(--white); border-color:var(--toets); }
+  #btn-toets{ margin-top:6px; padding:12px 28px; font-weight:700; letter-spacing:0.08em; }
+  .toets-label{ display:inline-block; background:var(--toets); color:var(--white); font-family:'IBM Plex Mono', monospace; font-weight:700; letter-spacing:0.25em; padding:5px 16px; border-radius:6px; }
+  section.card.toets-kaart{ border:3px solid var(--toets); background:var(--toets-licht); }
+  .toets-naam{ text-align:center; font-family:'Fraunces', serif; font-size:1.25rem; font-weight:700; margin:4px 0 6px; }
+  .toets-status{ text-align:center; font-weight:600; margin:0 0 14px; }
+  .toets-status.ok{ color:var(--green); }
+  .toets-status.bad{ color:var(--coral); }
+  .toets-info{ margin:0 auto 6px; border-collapse:collapse; font-size:0.92rem; }
+  .toets-info th{ text-align:left; color:var(--ink-soft); font-weight:500; padding:4px 14px 4px 0; }
+  .toets-info td{ font-family:'IBM Plex Mono', monospace; padding:4px 0; }
+  .toets-klok{ font-weight:700; color:var(--toets); }
+  .toets-vrijgeven{ text-align:center; margin-top:18px; }
+  #tr-verbetering{ margin-top:16px; }
+  #btn-verbetering.gezien{ background:#E8862A; border-color:#E8862A; }
+  .vb-item{ background:var(--white); border:1px solid var(--paper-line); border-left:5px solid var(--green); border-radius:10px; padding:12px 14px; margin-bottom:10px; }
+  .vb-item.bad{ border-left-color:var(--coral); }
+  .vb-kop{ font-family:'IBM Plex Mono', monospace; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-soft); display:flex; justify-content:space-between; margin-bottom:4px; }
+  .vb-item.ok .vb-kop span{ color:var(--green); font-weight:700; }
+  .vb-item.bad .vb-kop span{ color:var(--coral); font-weight:700; }
+  .vb-vraag{ font-weight:600; margin-bottom:6px; }
+  .vb-extra{ text-align:center; overflow-x:auto; margin-bottom:6px; }
+  .vb-extra svg{ max-width:100%; height:auto; }
+  .vb-antw{ font-size:0.92rem; }
+  .vb-uitleg{ font-size:0.85rem; color:var(--ink-soft); white-space:pre-line; margin-top:6px; }
+  .toets-vrijgeven #btn-vrijgeven-open{ font-size:0.75rem; padding:6px 12px; }
+  #vrijgeven-form{ margin-top:10px; gap:8px; justify-content:center; }
+  #vrijgeven-form input, .toets-veld input{ font-family:'IBM Plex Sans', sans-serif; font-size:1rem; padding:10px 12px; border-radius:10px; border:1.5px solid var(--paper-line); background:var(--white); color:var(--ink); }
+  .toets-veld{ display:flex; flex-direction:column; gap:4px; margin-bottom:12px; }
+  .toets-veld label{ font-size:0.8rem; color:var(--ink-soft); }
+  .toets-modus #screen-quiz section.card{ border:3px solid var(--toets); background:var(--toets-licht); }
+  .toets-modus #screen-quiz section.card::before{ content:'TOETS'; display:block; width:max-content; margin:0 auto 10px; background:var(--toets); color:var(--white); font-family:'IBM Plex Mono', monospace; font-weight:700; letter-spacing:0.25em; padding:4px 14px; border-radius:6px; }
+  .toets-modus #btn-stop, .toets-modus #score-badge{ display:none; }
+  .toets-modus .stamp-dot.correct, .toets-modus .stamp-dot.wrong, .toets-modus .stamp-dot.skipped{ background:var(--toets); border-color:var(--toets); }
   .lijst-item{ padding:13px 0; border-bottom:1px solid var(--paper-line); }
   .lijst-item:last-child{ border-bottom:none; }
   .lijst-item .lt{ font-family:'Fraunces', serif; font-weight:700; font-size:1.08rem; margin-bottom:2px; }
@@ -469,13 +507,11 @@
     font-family:'IBM Plex Mono', monospace; font-size:0.72rem; letter-spacing:0.03em;
   }
 </style>
-</head>
-<body>
 <div class="wrap">
 
   <header class="app-header">
     <div class="brand">
-      <h1>Gymnasion Taaltrainer</h1>
+      <h1>Gymnasion Trainer</h1>
       <p>Vaktermen oefenen in 4 talen &mdash; NL &middot; EN &middot; FR &middot; DE</p>
     </div>
     <div style="display:flex; gap:8px; align-items:flex-start;">
@@ -487,9 +523,9 @@
   <!-- HOME -->
   <div class="screen active" id="screen-home">
     <section class="card">
-      <h2>Kies je spelmodus</h2>
-      <p class="hint">Vertalen: een term omzetten van de ene taal naar de andere. Uitleg: term en betekenis aan elkaar koppelen, binnen één taal, over een beperkt aantal vragen. Leermodus: hetzelfde als uitleg, maar dan over alle beschikbare termen. Wiskunde: aparte oefeningen speciaal voor wiskunde &mdash; functies, complexe getallen, combinatieleer of algemene wiskundetermen.</p>
-      <div class="chips" id="chips-mode" style="margin-bottom:18px;"></div>
+      <h2>Kies je vak</h2>
+      <p class="hint">Taaltrainer: de vaktermen van alle vakken oefenen in 4 talen. Wiskunde en Economie: aparte oefeningen die telkens opnieuw berekend worden.</p>
+      <div class="chips" id="chips-vak-top" style="margin-bottom:18px;"></div>
 
       <div id="config-wiskunde" style="display:none;">
         <div class="filter-group">
@@ -536,13 +572,33 @@
           </div>
         </div>
 
-        <div id="wiskunde-config-termen" style="display:none;">
-          <p class="hint">Dezelfde termenbank als hierboven, nu automatisch beperkt tot het vak Wiskunde. Kies hieronder je spelmodus &mdash; het onderdeel hieronder blijft aanpasbaar.</p>
-          <div class="filter-group">
-            <label>Spelmodus</label>
-            <div class="chips" id="chips-wiskunde-termen-mode"></div>
-          </div>
+      </div>
+
+      <div id="config-economie" style="display:none;">
+        <div class="filter-group">
+          <label>Onderdeel</label>
+          <div class="chips" id="chips-economie-sub"></div>
         </div>
+        <p class="hint">Vragen worden telkens opnieuw willekeurig samengesteld, dus ze komen niet steeds terug. Kies welke soorten je wil oefenen.</p>
+        <div class="filter-group">
+          <label>Soorten vragen</label>
+          <div class="chips" id="chips-economie-cat"></div>
+        </div>
+        <div class="filter-group">
+          <button class="btn btn-green" id="btn-economie-uitleg" type="button">Eerst wat uitleg</button>
+        </div>
+        <div class="filter-group">
+          <label>Aantal vragen</label>
+          <div class="chips" id="chips-economie-aantal"></div>
+        </div>
+      </div>
+
+      <div id="config-termmode">
+        <div class="filter-group">
+          <label>Spelmodus</label>
+          <div class="chips" id="chips-mode"></div>
+        </div>
+        <p class="hint">Vertalen: een term omzetten van de ene taal naar de andere. Uitleg: term en betekenis aan elkaar koppelen, binnen één taal, over een beperkt aantal vragen. Leermodus: hetzelfde als uitleg, maar dan over alle beschikbare termen. Leesmodus: de lijst rustig doorlezen.</p>
       </div>
 
       <div id="config-vertalen">
@@ -610,6 +666,7 @@
     <div style="text-align:center;">
       <button class="btn-stamp" id="btn-start">START</button>
       <p class="pool-count" id="pool-count"></p>
+      <button class="btn btn-toets" id="btn-toets" type="button" style="display:none;">TOETS</button>
     </div>
   </div>
 
@@ -680,6 +737,51 @@
     </section>
   </div>
 
+  <!-- THEORIE -->
+  <div class="screen" id="screen-theorie">
+    <section class="card theorie">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h2 style="margin:0;" id="theorie-titel"></h2>
+        <button class="btn btn-ghost" id="btn-theorie-terug">Terug</button>
+      </div>
+      <div id="theorie-inhoud"></div>
+      <div style="text-align:center; margin-top:18px;">
+        <button class="btn btn-primary" id="btn-theorie-start">Start de oefeningen</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- TOETSRESULTAAT -->
+  <div class="screen" id="screen-toets">
+    <section class="card toets-kaart">
+      <div style="text-align:center;"><span class="toets-label">TOETS</span></div>
+      <h2 id="tr-onderdeel" style="text-align:center; margin-top:12px;"></h2>
+      <p class="result-sub" id="tr-detail" style="margin-bottom:8px;"></p>
+      <div class="toets-naam" id="tr-naam"></div>
+      <div class="result-score" id="tr-score"></div>
+      <p class="result-sub" id="tr-pct"></p>
+      <p class="toets-status" id="tr-status"></p>
+      <table class="toets-info">
+        <tr><th>Gestart</th><td id="tr-start"></td></tr>
+        <tr><th>Beëindigd</th><td id="tr-einde"></td></tr>
+        <tr><th>Duur</th><td id="tr-duur"></td></tr>
+        <tr><th>Nu</th><td id="tr-nu" class="toets-klok"></td></tr>
+      </table>
+      <div class="end-actions">
+        <button class="btn btn-toets" id="btn-verbetering" type="button" style="display:none;">Verbetering bekijken</button>
+        <button class="btn btn-ghost" id="btn-toets-terug">Terug naar start</button>
+      </div>
+      <div id="tr-verbetering" style="display:none;"></div>
+      <div class="toets-vrijgeven">
+        <button class="btn btn-ghost" id="btn-vrijgeven-open" type="button">Leerkracht: toets vrijgeven</button>
+        <div id="vrijgeven-form" style="display:none;">
+          <input type="password" id="vrijgeven-code" placeholder="Code leerkracht" autocomplete="off">
+          <button class="btn btn-toets" id="btn-vrijgeven" type="button">Vrijgeven</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
   <!-- LEESLIJST -->
   <div class="screen" id="screen-lijst">
     <section class="card">
@@ -701,7 +803,10 @@
     <p class="hint">Voor leerlingen én leerkrachten &mdash; sluit dit venster gewoon om verder te gaan.</p>
 
     <p style="font-weight:600; margin-bottom:4px;">Voor leerlingen</p>
-    <p class="hint">Kies bovenaan je spelmodus, taal (of talen) en het vak, hoofdstuk en graad waarover je wil oefenen, en klik op start. Kies je <b>"Wiskunde"</b>, dan kan je verder kiezen tussen <b>"Functies"</b>, <b>"Complexe getallen"</b> en <b>"Combinatieleer"</b> &mdash; dat zijn willekeurig samengestelde oefeningen (functies: functiewaarden, nulwaarden, grafieken, functievoorschriften...; complexe getallen: termen &amp; begrippen, som, vermenigvuldiging, macht; combinatieleer: termen &amp; begrippen, rekenen, woordproblemen, "welk telprobleem is dit?" en boomstructuren) die niet uit een lijst gehaald worden maar telkens opnieuw berekend, dus ze komen niet steeds terug. Kies je binnen Wiskunde voor <b>"Termen algemeen"</b>, dan oefen je gewoon de vaktermen van het vak Wiskunde uit de termenbank, net zoals bij de andere vakken. Staat de lijst van jouw leerkracht of vak er nog niet tussen? Vraag het CSV-bestand aan je leerkracht (bv. via Smartschool) en klik zelf op <b>"Lijst importeren"</b> hierboven om het toe te voegen &mdash; dat moet maar eenmalig, per toestel of browser. Je kan gerust na elkaar lijsten van verschillende leerkrachten of vakken importeren; ze worden gewoon samengevoegd, niets gaat verloren.</p>
+    <p class="hint">Kies bovenaan eerst <b>"Taaltrainer"</b>, <b>"Wiskunde"</b> of <b>"Economie"</b>. In de Taaltrainer kies je je spelmodus, taal (of talen) en het vak, hoofdstuk en graad waarover je wil oefenen, en klik je op start. Kies je <b>"Economie"</b>, dan kan je oefenen op <b>"Gini-coëfficiënt"</b>, <b>"Volkomen concurrentie"</b> en <b>"Monopolie"</b>. Kies je <b>"Wiskunde"</b>, dan kan je verder kiezen tussen <b>"Functies"</b>, <b>"Complexe getallen"</b> en <b>"Combinatieleer"</b> &mdash; dat zijn willekeurig samengestelde oefeningen (functies: functiewaarden, nulwaarden, grafieken, functievoorschriften...; complexe getallen: termen &amp; begrippen, som, vermenigvuldiging, macht; combinatieleer: termen &amp; begrippen, rekenen, woordproblemen, "welk telprobleem is dit?" en boomstructuren) die niet uit een lijst gehaald worden maar telkens opnieuw berekend, dus ze komen niet steeds terug. Staat de lijst van jouw leerkracht of vak er nog niet tussen? Vraag het CSV-bestand aan je leerkracht (bv. via Smartschool) en klik zelf op <b>"Lijst importeren"</b> hierboven om het toe te voegen &mdash; dat moet maar eenmalig, per toestel of browser. Je kan gerust na elkaar lijsten van verschillende leerkrachten of vakken importeren; ze worden gewoon samengevoegd, niets gaat verloren.</p>
+
+    <p style="font-weight:600; margin:16px 0 4px;">Toets</p>
+    <p class="hint">Onder START staat een paarse knop <b>TOETS</b>. Bij Wiskunde en Economie: 10 vragen over het gekozen onderdeel. In de Taaltrainer (Vertalen of Uitleg): maximaal 10 termen uit precies één gekozen vak en hoofdstuk. Er is geen hulp of verbetering tussendoor, en je kan elke toets maar één keer starten en moet ze helemaal afwerken. Toon daarna het paarse resultaatscherm aan je leerkracht.</p>
 
     <p style="font-weight:600; margin:16px 0 4px;">Voor leerkrachten: een lijst opstellen</p>
     <p class="hint">Maak een CSV-bestand (puntkomma-gescheiden) volgens dit schema:</p>
@@ -716,6 +821,22 @@
 
     <div class="modal-close-row">
       <button class="btn btn-primary" id="btn-close-help">Sluiten</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOETS STARTEN -->
+<div class="overlay" id="overlay-toets">
+  <div class="modal toets-modal">
+    <span class="toets-label">TOETS</span>
+    <h3 id="toets-titel" style="margin-top:10px;"></h3>
+    <p class="hint" id="toets-detail" style="margin-bottom:6px;"></p>
+    <p class="hint"><span id="toets-aantal">10</span> vragen. Je kan deze toets maar <b>één keer</b> starten en je moet ze helemaal afwerken: de pagina verlaten of herladen beëindigt de toets. Tussendoor krijg je geen hulp of verbetering; je score zie je aan het einde. Toon dat resultaat aan je leerkracht.</p>
+    <div class="toets-veld"><label for="toets-naam">Naam</label><input type="text" id="toets-naam" autocomplete="off"></div>
+    <div class="toets-veld"><label for="toets-klas">Klas</label><input type="text" id="toets-klas" autocomplete="off"></div>
+    <div class="modal-close-row">
+      <button class="btn btn-ghost" id="btn-toets-annuleer" type="button">Annuleren</button>
+      <button class="btn btn-toets" id="btn-toets-start" type="button">Start de toets</button>
     </div>
   </div>
 </div>
@@ -816,19 +937,18 @@ const MODE_OPTIONS = [
   { code:'uitleg', label:'Uitleg' },
   { code:'leren', label:'Leermodus' },
   { code:'lezen', label:'Leesmodus' },
+];
+/* Hoofdmenu. Alle vaktermen lopen via de Taaltrainer; een vak krijgt
+   hier pas een eigen knop als het aparte oefenonderdelen heeft. */
+const VAK_OPTIONS = [
+  { code:'taaltrainer', label:'Taaltrainer' },
   { code:'wiskunde', label:'Wiskunde' },
+  { code:'economie', label:'Economie' },
 ];
 const WISKUNDE_SUB_OPTIONS = [
   { code:'functies', label:'Functies' },
   { code:'complex', label:'Complexe getallen' },
   { code:'combinatoriek', label:'Combinatieleer' },
-  { code:'termen', label:'Termen algemeen' },
-];
-const WISKUNDE_TERMEN_MODE_OPTIONS = [
-  { code:'vertalen', label:'Vertalen' },
-  { code:'uitleg', label:'Uitleg' },
-  { code:'leren', label:'Leermodus' },
-  { code:'lezen', label:'Leesmodus' },
 ];
 const RICHTING_OPTIONS = [
   { code:'term-naar-uitleg', label:'Term \u2192 uitleg' },
@@ -837,10 +957,11 @@ const RICHTING_OPTIONS = [
 
 let termbank = [];
 let filters = { vak:new Set(), hoofdstuk:new Set(), graad:new Set() };
+let topVak = 'taaltrainer';
 let topMode = 'vertalen';
 let gameMode = 'vertalen';
 let wiskundeSub = 'functies';
-let wiskundeTermenMode = 'vertalen';
+let economieSub = 'gini';
 let langState = { start:'NL', target:'EN' };
 let uitlegState = { lang:'NL', richting:'term-naar-uitleg' };
 let lerenState = { lang:'NL' };
@@ -996,8 +1117,10 @@ function parseLinearExpr(str){
 
 function checkFunctieAnswer(q, userAnswer){
   if(q.checkKind === 'number'){
-    const v = parseFlexibleNumber(userAnswer);
-    return v !== null && Math.abs(v - q.checkData.value) < 1e-6;
+    let v = parseFlexibleNumber(userAnswer);
+    // Gini mag ook als index/percentage (30 i.p.v. 0,30)
+    if(v !== null && q.checkData.procentOk && Math.abs(v) > 1) v /= 100;
+    return v !== null && Math.abs(v - q.checkData.value) <= (q.checkData.tol || 1e-6);
   }
   if(q.checkKind === 'linear'){
     const r = parseLinearExpr(userAnswer);
@@ -1727,7 +1850,7 @@ function buildFunctieQuestion(){
    richtingscoëfficiënt van deze grafiek.") maar tonen elke keer een andere
    grafiek — dus svg/extraHtml/correct horen ook bij de vingerafdruk. */
 function functieQuestionSignature(q){
-  return JSON.stringify([q.promptHtml, q.svg || '', q.extraHtml || '', q.correct, q.options || null]);
+  return JSON.stringify([q.promptHtml, q.svg || '', q.extraHtml || '', q.correct]);
 }
 
 /* ==================================================================
@@ -2324,6 +2447,591 @@ function buildCombinatoriekQuestion(){
   return generateForCombiCategory(catId);
 }
 
+/* ==================================================================
+   ECONOMIE-OEFENMODULES
+   Gini-coëfficiënt, winstmaximalisatie bij volkomen concurrentie en
+   winstmaximalisatie bij een monopolist. Zelfde vraagformaat als de
+   wiskundemodules (kind:'functie'), dus zelfde weergave en nakijken.
+   ================================================================== */
+const ECONOMIE_SUB_OPTIONS = [
+  { code:'gini', label:'Gini-coëfficiënt' },
+  { code:'vc', label:'Volkomen concurrentie' },
+  { code:'monopolie', label:'Monopolie' },
+];
+/* Soorten vragen per onderdeel; standaardAan:false = enkel op aanvraag
+   (integralen kennen niet alle leerlingen). */
+const ECONOMIE_CATEGORIES = {
+  gini: [
+    { id:'rekenen', label:'Rekenen' },
+    { id:'integralen', label:'Met integralen', standaardAan:false },
+    { id:'begrippen', label:'Begrippen' },
+  ],
+  vc: [{ id:'rekenen', label:'Rekenen' }, { id:'begrippen', label:'Begrippen' }],
+  monopolie: [{ id:'rekenen', label:'Rekenen' }, { id:'begrippen', label:'Begrippen' }],
+};
+const ECONOMIE_AANTAL_OPTIONS = [5, 10, 15, 20];
+const economieStates = {};
+ECONOMIE_SUB_OPTIONS.forEach(o => {
+  economieStates[o.code] = {
+    categories: new Set(ECONOMIE_CATEGORIES[o.code].filter(c => c.standaardAan !== false).map(c => c.id)),
+    aantal: 10,
+  };
+});
+
+function fmtNum(v, dec){
+  const r = dec === undefined ? Math.round(v * 100) / 100 : v.toFixed(dec);
+  return String(r).replace('.', ',').replace('-', '−');
+}
+function fmtEuro(v){ return '€ ' + fmtNum(v); }
+function fmtCoef(k, v){ return (k === 1 ? '' : k) + v; }
+/* a·q² + b·q + c met niet-negatieve coëfficiënten */
+function fmtKwadratisch(a, b, c){
+  const parts = [];
+  if(a) parts.push(fmtCoef(a, 'q²'));
+  if(b) parts.push(fmtCoef(b, 'q'));
+  if(c || !parts.length) parts.push(String(c));
+  return parts.join(' + ');
+}
+
+function ecoGetal(catId, catLabel, promptHtml, value, correct, explanation, extra){
+  return Object.assign({
+    kind:'functie', catId, catLabel, promptHtml,
+    answerType:'kort', checkKind:'number', checkData:{ value }, correct, explanation,
+  }, extra || {});
+}
+function ecoMeerkeuze(catId, catLabel, item){
+  return {
+    kind:'functie', catId, catLabel, promptHtml: item.vraag,
+    answerType:'lang', options: shuffle([item.juist, ...item.fout]), correct: item.juist,
+    explanation: item.uitleg || item.juist,
+  };
+}
+
+/* ---------- Gini-coëfficiënt ---------- */
+function randomKwintielAandelen(){
+  for(;;){
+    const s = [randInt(2, 10)];
+    for(let k = 1; k < 4; k++) s.push(s[k - 1] + randInt(2, 10));
+    const last = 100 - s.reduce((x, y) => x + y, 0);
+    if(last > s[3] + 2){ s.push(last); return s; }
+  }
+}
+function cumulatief(aandelen){
+  const c = [0];
+  aandelen.forEach(a => c.push(c[c.length - 1] + a));
+  return c; // in procent, 6 punten: 0, 20%, 40%, ... 100%
+}
+function giniUitAandelen(aandelen){
+  const Y = cumulatief(aandelen).map(v => v / 100);
+  let B = 0;
+  for(let k = 1; k <= 5; k++) B += 0.2 * (Y[k - 1] + Y[k]) / 2;
+  return { B, G: 1 - 2 * B, Y };
+}
+function kwintielTabel(aandelen){
+  return '<table class="functie-table compact"><tr><th>Kwintiel</th>' +
+    aandelen.map((_, i) => `<td>${i + 1}e</td>`).join('') +
+    '</tr><tr><th>Aandeel</th>' + aandelen.map(a => `<td>${a}%</td>`).join('') + '</tr></table>';
+}
+function svgLorenz(aandelen){
+  const W = 240, H = 240, pad = 34, L = W - pad - 12;
+  const px = p => pad + p / 100 * L;
+  const py = p => H - pad - p / 100 * L;
+  const cum = cumulatief(aandelen);
+  let grid = '';
+  for(let p = 20; p <= 100; p += 20){
+    grid += `<line x1="${px(p)}" y1="${py(0)}" x2="${px(p)}" y2="${py(100)}" stroke="var(--paper-line)" stroke-width="1"/>`;
+    grid += `<line x1="${px(0)}" y1="${py(p)}" x2="${px(100)}" y2="${py(p)}" stroke="var(--paper-line)" stroke-width="1"/>`;
+    grid += `<text x="${px(p)}" y="${py(0) + 13}" font-size="9" text-anchor="middle" fill="var(--ink-soft)">${p}</text>`;
+    grid += `<text x="${px(0) - 5}" y="${py(p) + 3}" font-size="9" text-anchor="end" fill="var(--ink-soft)">${p}</text>`;
+  }
+  const axes = `<line x1="${px(0)}" y1="${py(0)}" x2="${px(100)}" y2="${py(0)}" stroke="var(--ink)" stroke-width="1.5"/>` +
+    `<line x1="${px(0)}" y1="${py(0)}" x2="${px(0)}" y2="${py(100)}" stroke="var(--ink)" stroke-width="1.5"/>`;
+  const diag = `<line x1="${px(0)}" y1="${py(0)}" x2="${px(100)}" y2="${py(100)}" stroke="var(--ink-soft)" stroke-width="1.2" stroke-dasharray="4 3"/>`;
+  const pts = cum.map((c, i) => `${px(i * 20)},${py(c)}`).join(' ');
+  const curve = `<polyline points="${pts}" fill="none" stroke="var(--coral)" stroke-width="2.5" stroke-linejoin="round"/>` +
+    cum.map((c, i) => `<circle cx="${px(i * 20)}" cy="${py(c)}" r="2.8" fill="var(--coral)"/>`).join('');
+  const labels = `<text x="${px(50)}" y="${H - 6}" font-size="9.5" text-anchor="middle" fill="var(--ink-soft)">% bevolking (cumulatief)</text>` +
+    `<text x="10" y="${py(50)}" font-size="9.5" text-anchor="middle" fill="var(--ink-soft)" transform="rotate(-90 10 ${py(50)})">% inkomen (cumulatief)</text>`;
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${grid}${axes}${diag}${curve}${labels}</svg>`;
+}
+
+/* Lorenzcurve met de oppervlaktes A (tussen gelijkheidslijn en curve) en
+   B (onder de curve) ingekleurd. Zonder f: y = x^k met G = (k − 1) / (k + 1). */
+function svgLorenzAB(G, f){
+  const W = 240, H = 240, pad = 34, L = W - pad - 12;
+  const px = x => pad + x * L, py = y => H - pad - y * L;
+  const k = (1 + G) / (1 - G);
+  const L_ = f || (x => Math.pow(x, k));
+  const pts = [];
+  for(let i = 0; i <= 40; i++){ const x = i / 40; pts.push(`${px(x)},${py(L_(x))}`); }
+  const curve = pts.join(' ');
+  const areaA = `<polygon points="${px(0)},${py(0)} ${px(1)},${py(1)} ${pts.slice().reverse().join(' ')}" fill="var(--coral)" fill-opacity="0.18"/>`;
+  const areaB = `<polygon points="${curve} ${px(1)},${py(0)}" fill="var(--ink)" fill-opacity="0.08"/>`;
+  const xm = 0.62, ym = L_(xm);
+  const labels = `<text x="${px(xm) - 10}" y="${py((xm + ym) / 2) + 4}" font-size="15" font-weight="700" fill="var(--coral)">A</text>` +
+    `<text x="${px(0.78)}" y="${py(L_(0.78) / 2) + 4}" font-size="15" font-weight="700" fill="var(--ink)">B</text>` +
+    `<text x="${px(0.5)}" y="${H - 8}" font-size="9.5" text-anchor="middle" fill="var(--ink-soft)">% bevolking (cumulatief)</text>` +
+    `<text x="10" y="${py(0.5)}" font-size="9.5" text-anchor="middle" fill="var(--ink-soft)" transform="rotate(-90 10 ${py(0.5)})">% inkomen (cumulatief)</text>`;
+  const axes = `<line x1="${px(0)}" y1="${py(0)}" x2="${px(1)}" y2="${py(0)}" stroke="var(--ink)" stroke-width="1.5"/>` +
+    `<line x1="${px(0)}" y1="${py(0)}" x2="${px(0)}" y2="${py(1)}" stroke="var(--ink)" stroke-width="1.5"/>` +
+    `<line x1="${px(0)}" y1="${py(0)}" x2="${px(1)}" y2="${py(1)}" stroke="var(--ink-soft)" stroke-width="1.2" stroke-dasharray="4 3"/>`;
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${areaA}${areaB}${axes}<polyline points="${curve}" fill="none" stroke="var(--coral)" stroke-width="2.5"/>${labels}</svg>`;
+}
+
+/* Prijs-hoeveelheidsdiagram met rechte lijnen y = m·q + n (geknipt op 0..yMax).
+   lines: [{ m, n, label, color, dash }]; mark: optioneel optimum { q, y, P } met hulplijnen. */
+function svgPQ(xMax, yMax, lines, mark){
+  const W = 300, H = 256, padL = 40, padB = 36, padT = 12, padR = 44;
+  const px = q => padL + q / xMax * (W - padL - padR);
+  const py = v => H - padB - v / yMax * (H - padB - padT);
+  const step = v => { const raw = v / 5; const pow = Math.pow(10, Math.floor(Math.log10(raw))); return [1, 2, 5, 10].map(x => x * pow).find(x => x >= raw); };
+  const sx = step(xMax), sy = step(yMax);
+  let grid = '';
+  for(let q = sx; q <= xMax; q += sx){
+    grid += `<line x1="${px(q)}" y1="${py(0)}" x2="${px(q)}" y2="${py(yMax)}" stroke="var(--paper-line)"/>` +
+      `<text x="${px(q)}" y="${py(0) + 13}" font-size="9" text-anchor="middle" fill="var(--ink-soft)">${q}</text>`;
+  }
+  for(let v = sy; v <= yMax; v += sy){
+    grid += `<line x1="${px(0)}" y1="${py(v)}" x2="${px(xMax)}" y2="${py(v)}" stroke="var(--paper-line)"/>` +
+      `<text x="${px(0) - 5}" y="${py(v) + 3}" font-size="9" text-anchor="end" fill="var(--ink-soft)">${v}</text>`;
+  }
+  const axes = `<line x1="${px(0)}" y1="${py(0)}" x2="${px(xMax)}" y2="${py(0)}" stroke="var(--ink)" stroke-width="1.5"/>` +
+    `<line x1="${px(0)}" y1="${py(0)}" x2="${px(0)}" y2="${py(yMax)}" stroke="var(--ink)" stroke-width="1.5"/>` +
+    `<text x="${px(xMax)}" y="${py(0) + 27}" font-size="10" text-anchor="middle" fill="var(--ink-soft)">q</text>` +
+    `<text x="${px(0)}" y="${padT - 2}" font-size="10" text-anchor="middle" fill="var(--ink-soft)">€</text>`;
+  let body = '';
+  lines.forEach(l => {
+    // knip de lijn op het venster 0 ≤ q ≤ xMax, 0 ≤ y ≤ yMax
+    let q0 = 0, q1 = xMax;
+    if(l.m !== 0){
+      const qa = (0 - l.n) / l.m, qb = (yMax - l.n) / l.m;
+      q0 = Math.max(q0, Math.min(qa, qb)); q1 = Math.min(q1, Math.max(qa, qb));
+    }
+    if(q1 <= q0) return;
+    const y0 = l.m * q0 + l.n, y1 = l.m * q1 + l.n;
+    body += `<line x1="${px(q0)}" y1="${py(y0)}" x2="${px(q1)}" y2="${py(y1)}" stroke="${l.color}" stroke-width="2.3" stroke-linecap="round"${l.dash ? ' stroke-dasharray="6 4"' : ''}/>` +
+      `<text x="${px(q1) + 4}" y="${py(y1) + (l.m > 0 ? 4 : -2)}" font-size="10.5" font-weight="700" fill="${l.color}">${l.label}</text>`;
+  });
+  if(mark){
+    body += `<line x1="${px(mark.q)}" y1="${py(0)}" x2="${px(mark.q)}" y2="${py(Math.max(mark.y, mark.P || 0))}" stroke="var(--ink-soft)" stroke-dasharray="3 3"/>` +
+      `<line x1="${px(0)}" y1="${py(mark.P || mark.y)}" x2="${px(mark.q)}" y2="${py(mark.P || mark.y)}" stroke="var(--ink-soft)" stroke-dasharray="3 3"/>` +
+      `<circle cx="${px(mark.q)}" cy="${py(mark.y)}" r="4" fill="var(--ink)"/>` +
+      (mark.P ? `<circle cx="${px(mark.q)}" cy="${py(mark.P)}" r="4" fill="var(--ink)"/>` : '');
+  }
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${grid}${axes}${body}</svg>`;
+}
+const KLEUR_VRAAG = 'var(--ink)', KLEUR_MO = 'var(--coral)', KLEUR_MK = 'var(--green)';
+
+function svgVc(p, mark){
+  const xMax = Math.ceil(p.q * 1.6);
+  const yMax = Math.ceil((2 * p.a * xMax + p.b) * 1.05);
+  return svgPQ(xMax, yMax, [
+    { m:0, n:p.P, label:'P = MO', color:KLEUR_MO },
+    { m:2 * p.a, n:p.b, label:'MK', color:KLEUR_MK },
+  ], mark ? { q:p.q, y:p.P } : null);
+}
+function svgMono(a, b, c, d, mark){
+  const xMax = Math.ceil(a / b);
+  return svgPQ(xMax, Math.ceil(a * 1.05), [
+    { m:-b, n:a, label:'vraag', color:KLEUR_VRAAG },
+    { m:-2 * b, n:a, label:'MO', color:KLEUR_MO, dash:true },
+    { m:2 * d, n:c, label:'MK', color:KLEUR_MK },
+  ], mark || null);
+}
+
+function genGiniCumulatief(){
+  const aandelen = randomKwintielAandelen();
+  const cum = cumulatief(aandelen);
+  const k = randInt(1, 4);
+  const armste = Math.random() < 0.5;
+  const value = armste ? cum[k] : 100 - cum[5 - k];
+  const groep = (armste ? 'armste ' : 'rijkste ') + (k * 20) + '%';
+  const delen = armste ? aandelen.slice(0, k) : aandelen.slice(5 - k);
+  return ecoGetal('gini_rekenen', 'Gini – rekenen',
+    `De inkomensverdeling van een land per kwintiel (20% van de bevolking, van arm naar rijk):<br>Welk percentage van het totale inkomen ontvangt de ${groep} van de bevolking?`,
+    value, value + '%',
+    `De ${groep} zijn ${k} kwintiel${k > 1 ? 'en' : ''}: ${delen.join('% + ')}% = ${value}%.`,
+    { extraHtml: kwintielTabel(aandelen), svg: svgLorenz(aandelen) });
+}
+
+function genGiniTabel(){
+  const aandelen = randomKwintielAandelen();
+  const { B, G, Y } = giniUitAandelen(aandelen);
+  const termen = [];
+  for(let k = 1; k <= 5; k++) termen.push(`0,2 × (${fmtNum(Y[k - 1])} + ${fmtNum(Y[k])}) / 2`);
+  return ecoGetal('gini_rekenen', 'Gini – rekenen',
+    'Hieronder staan de inkomensaandelen per kwintiel en de bijbehorende Lorenzcurve.<br>Bereken de Gini-coëfficiënt (een getal tussen 0 en 1, afgerond op 2 decimalen).',
+    G, fmtNum(G, 2),
+    `Cumulatieve inkomensaandelen: ${cumulatief(aandelen).join('% → ')}%.\n` +
+    `Oppervlakte onder de Lorenzcurve: B = ${termen.join(' + ')} = ${fmtNum(B, 4)}.\n` +
+    `Gini = (0,5 − B) / 0,5 = 1 − 2B = 1 − 2 × ${fmtNum(B, 4)} ≈ ${fmtNum(G, 2)}.`,
+    { checkData:{ value: G, tol: 0.0051, procentOk: true }, extraHtml: kwintielTabel(aandelen), svg: svgLorenz(aandelen) });
+}
+
+function genGiniOppervlakte(){
+  const A = randInt(5, 30) / 100;
+  const B = Math.round((0.5 - A) * 100) / 100;
+  const G = Math.round(A / 0.5 * 100) / 100;
+  return ecoGetal('gini_rekenen', 'Gini – rekenen',
+    `De oppervlakte tussen de gelijkheidslijn en de Lorenzcurve is A = ${fmtNum(A)}. De oppervlakte onder de Lorenzcurve is B = ${fmtNum(B)}.<br>Bereken de Gini-coëfficiënt.`,
+    G, fmtNum(G, 2),
+    `Gini = A / (A + B) = ${fmtNum(A)} / ${fmtNum(A + B)} = ${fmtNum(G, 2)}.`,
+    { checkData:{ value: G, procentOk: true }, svg: svgLorenzAB(G) });
+}
+
+const GINI_BEGRIPPEN = [
+  { vraag:'Wat betekent een Gini-coëfficiënt van 0?',
+    juist:'Perfecte gelijkheid: iedereen heeft hetzelfde inkomen.',
+    fout:['Maximale ongelijkheid: één persoon ontvangt al het inkomen.', 'Het land heeft geen economische groei.', 'De helft van de bevolking heeft geen inkomen.'] },
+  { vraag:'Wat betekent een Gini-coëfficiënt van 1?',
+    juist:'Maximale ongelijkheid: één persoon ontvangt al het inkomen.',
+    fout:['Perfecte gelijkheid: iedereen heeft hetzelfde inkomen.', 'Elk kwintiel ontvangt 20% van het inkomen.', 'Het gemiddelde inkomen is 1 euro.'] },
+  { vraag:'Wat zet je uit op een Lorenzcurve?',
+    juist:'Het cumulatieve aandeel van het inkomen tegenover het cumulatieve aandeel van de bevolking.',
+    fout:['Het inkomen per persoon tegenover de leeftijd.', 'De prijs tegenover de gevraagde hoeveelheid.', 'De groei van het bbp tegenover de tijd.'] },
+  { vraag:'Hoe verder de Lorenzcurve van de gelijkheidslijn (de diagonaal) ligt, …',
+    juist:'hoe groter de ongelijkheid en hoe hoger de Gini-coëfficiënt.',
+    fout:['hoe kleiner de ongelijkheid en hoe lager de Gini-coëfficiënt.', 'hoe hoger het gemiddelde inkomen.', 'hoe kleiner de bevolking.'] },
+  { vraag:'Wat stelt de gelijkheidslijn (diagonaal) in een Lorenzdiagram voor?',
+    juist:'Een situatie waarin elke x% van de bevolking ook x% van het inkomen ontvangt.',
+    fout:['Een situatie waarin de rijkste 20% de helft van het inkomen ontvangt.', 'De gemiddelde inkomensverdeling van de EU.', 'De Lorenzcurve van het vorige jaar.'] },
+  { vraag:'Hoe bereken je de Gini-coëfficiënt uit de oppervlaktes A (tussen gelijkheidslijn en Lorenzcurve) en B (onder de Lorenzcurve)?',
+    juist:'Gini = A / (A + B)',
+    fout:['Gini = B / (A + B)', 'Gini = A × B', 'Gini = A + B'] },
+];
+function genGiniVergelijk(){
+  const landen = ['Land A', 'Land B', 'Land C'];
+  const ginis = shuffle([randInt(22, 29), randInt(31, 39), randInt(42, 60)]).map(g => g / 100);
+  const meestGelijk = Math.random() < 0.5;
+  const idx = ginis.indexOf(meestGelijk ? Math.min(...ginis) : Math.max(...ginis));
+  const lijst = landen.map((l, i) => `${l}: ${fmtNum(ginis[i], 2)}`).join(', ');
+  return {
+    kind:'functie', catId:'gini_begrippen', catLabel:'Gini – begrippen',
+    promptHtml: `Gini-coëfficiënten: ${lijst}.<br>Welk land heeft de ${meestGelijk ? 'meest gelijke' : 'meest ongelijke'} inkomensverdeling?`,
+    answerType:'lang', options: [...landen], correct: landen[idx],
+    explanation: `Hoe ${meestGelijk ? 'lager' : 'hoger'} de Gini-coëfficiënt, hoe ${meestGelijk ? 'gelijker' : 'ongelijker'} de verdeling: ${landen[idx]} (${fmtNum(ginis[idx], 2)}).`,
+  };
+}
+
+/* ---------- Volkomen concurrentie ---------- */
+const VC_BEGRIPPEN = [
+  { vraag:'Wat is de voorwaarde voor winstmaximalisatie?',
+    juist:'Marginale opbrengst = marginale kosten (MO = MK)',
+    fout:['Totale opbrengst = totale kosten (TO = TK)', 'Prijs = gemiddelde kosten (P = GK)', 'Marginale kosten zijn minimaal'] },
+  { vraag:'Waarom is bij volkomen concurrentie de marginale opbrengst gelijk aan de prijs (MO = P)?',
+    juist:'De onderneming is prijsnemer: elke extra eenheid verkoopt ze aan dezelfde marktprijs.',
+    fout:['De onderneming bepaalt zelf haar prijs.', 'De vraag naar het product daalt als de onderneming meer verkoopt.', 'De overheid legt de marginale opbrengst vast.'] },
+  { vraag:'Welke reeks bevat enkel kenmerken van volkomen concurrentie?',
+    juist:'Veel vragers en aanbieders, homogeen product, vrije toe- en uittreding, volledige doorzichtigheid.',
+    fout:['Eén aanbieder, toetredingsdrempels, prijszetter.', 'Enkele grote aanbieders die op elkaar reageren.', 'Veel aanbieders met elk een eigen merk en reclame.'] },
+  { vraag:'Wat gebeurt er op lange termijn als ondernemingen in volkomen concurrentie bovennormale winst maken?',
+    juist:'Nieuwe ondernemingen treden toe, de prijs daalt tot de economische winst nul is.',
+    fout:['De winst blijft altijd even hoog.', 'De prijs stijgt omdat er meer aanbieders zijn.', 'Bestaande ondernemingen verlaten de markt.'] },
+  { vraag:'Hoe ziet de vraagcurve eruit waarmee één onderneming in volkomen concurrentie geconfronteerd wordt?',
+    juist:'Horizontaal (volkomen elastisch) op het niveau van de marktprijs.',
+    fout:['Dalend, zoals de marktvraag.', 'Verticaal (volkomen inelastisch).', 'Stijgend, zoals de aanbodcurve.'] },
+  { vraag:'Wanneer stopt een onderneming in volkomen concurrentie op korte termijn met produceren?',
+    juist:'Als de prijs lager is dan het minimum van de gemiddelde variabele kosten.',
+    fout:['Zodra ze verlies maakt.', 'Als de prijs lager is dan de marginale kosten.', 'Als de vaste kosten stijgen.'] },
+];
+
+function vcParams(){
+  const a = randChoice([1, 2, 3]);
+  const b = randInt(2, 20);
+  const q = randInt(3, 15);
+  const P = 2 * a * q + b;
+  const c = randInt(1, Math.floor(a * q * q / 10) + 4) * 10;
+  return { a, b, c, q, P, winst: a * q * q - c };
+}
+function vcGegevens(p){
+  return `Een onderneming in volkomen concurrentie heeft als totale kosten TK = ${fmtKwadratisch(p.a, p.b, p.c)}. De marktprijs is ${fmtEuro(p.P)}.`;
+}
+function vcUitlegQ(p){
+  return `Bij volkomen concurrentie is MO = P = ${p.P}. MK = TK' = ${fmtCoef(2 * p.a, 'q')} + ${p.b}.\n` +
+    `MO = MK: ${p.P} = ${fmtCoef(2 * p.a, 'q')} + ${p.b} → q = (${p.P} − ${p.b}) / ${2 * p.a} = ${p.q}.`;
+}
+function genVcHoeveelheid(){
+  const p = vcParams();
+  return ecoGetal('vc_rekenen', 'Volk. concurrentie – rekenen',
+    vcGegevens(p) + '<br>Bij welke hoeveelheid q is de winst maximaal?', p.q, String(p.q), vcUitlegQ(p),
+    { svg: svgVc(p) });
+}
+function genVcWinst(){
+  const p = vcParams();
+  const TO = p.P * p.q, TK = p.a * p.q * p.q + p.b * p.q + p.c;
+  return ecoGetal('vc_rekenen', 'Volk. concurrentie – rekenen',
+    vcGegevens(p) + '<br>Hoeveel bedraagt de maximale winst (in euro; een verlies is negatief)?',
+    p.winst, fmtEuro(p.winst),
+    vcUitlegQ(p) + `\nTO = ${p.P} × ${p.q} = ${TO}; TK = ${TK}; winst = TO − TK = ${fmtNum(p.winst)}.`,
+    { svg: svgVc(p) });
+}
+function genVcTabel(){
+  const a = randChoice([1, 2]);
+  const b = randInt(0, 10);
+  const c = randInt(2, 6) * 10;
+  const qOpt = randInt(2, 5);
+  const P = b + 2 * a * qOpt; // geeft precies één discreet winstmaximum in qOpt
+  const qs = [0, 1, 2, 3, 4, 5, 6, 7];
+  const tk = qs.map(q => a * q * q + b * q + c);
+  const winst = qs.map((q, i) => P * q - tk[i]);
+  const table = '<table class="functie-table"><tr><th>q</th><th>TK</th></tr>' +
+    qs.map((q, i) => `<tr><td>${q}</td><td>${tk[i]}</td></tr>`).join('') + '</table>';
+  return ecoGetal('vc_rekenen', 'Volk. concurrentie – rekenen',
+    `Een onderneming in volkomen concurrentie verkoopt aan een marktprijs van ${fmtEuro(P)}. De totale kosten staan in de tabel.<br>Bij welke hoeveelheid is de winst maximaal?`,
+    qOpt, String(qOpt),
+    `Winst = TO − TK = ${P}·q − TK: ` + qs.map((q, i) => `q=${q}: ${fmtNum(winst[i])}`).join('; ') + `.\nDe winst is maximaal bij q = ${qOpt}.`,
+    { extraHtml: table });
+}
+
+/* ---------- Monopolie ---------- */
+const MONO_BEGRIPPEN = [
+  { vraag:'Waarom ligt bij een monopolist de marginale opbrengst onder de prijs (MO < P)?',
+    juist:'Om een extra eenheid te verkopen, moet hij de prijs verlagen voor alle eenheden.',
+    fout:['Omdat de overheid een maximumprijs oplegt.', 'Omdat zijn marginale kosten dalen.', 'Omdat hij prijsnemer is.'] },
+  { vraag:'Wat geldt in het winstmaximum van een monopolist?',
+    juist:'MO = MK, en de prijs ligt hoger dan de marginale kosten (P > MK).',
+    fout:['P = MK, net zoals bij volkomen concurrentie.', 'MO = 0, de totale opbrengst is maximaal.', 'P = GK, de winst is nul.'] },
+  { vraag:'De vraagfunctie is P = a − bq. Wat is dan de marginale opbrengst?',
+    juist:'MO = a − 2bq',
+    fout:['MO = a − bq', 'MO = a − bq²', 'MO = 2a − bq'] },
+  { vraag:'Hoe verhoudt een monopolie zich tot volkomen concurrentie (bij dezelfde kosten en vraag)?',
+    juist:'Hogere prijs, kleinere hoeveelheid en een welvaartsverlies.',
+    fout:['Lagere prijs en grotere hoeveelheid.', 'Dezelfde prijs, maar een kleinere hoeveelheid.', 'Hogere prijs en grotere hoeveelheid.'] },
+  { vraag:'Welke reeks bevat enkel kenmerken van een monopolie?',
+    juist:'Eén aanbieder, geen goede substituten, toetredingsdrempels, prijszetter.',
+    fout:['Veel aanbieders, homogeen product, vrije toetreding.', 'Enkele aanbieders die op elkaar reageren.', 'Veel aanbieders met elk een eigen merk.'] },
+  { vraag:'Hoe bepaalt een monopolist de prijs, nadat hij de optimale hoeveelheid kent?',
+    juist:'Hij leest de prijs af op de vraagcurve bij die hoeveelheid.',
+    fout:['Hij kiest de prijs gelijk aan de marginale kosten.', 'Hij kiest de prijs gelijk aan de marginale opbrengst.', 'De markt legt de prijs op.'] },
+];
+
+function monoParams(){
+  const b = randChoice([1, 2, 3]);
+  const d = randChoice([0, 0, 1, 2]);
+  const q = randInt(3, 12);
+  const c = randInt(2, 20);
+  const a = c + 2 * (b + d) * q;
+  const P = a - b * q;
+  const maxW = (b + d) * q * q;
+  const F = randInt(0, Math.floor(maxW / 10)) * 10;
+  return { a, b, c, d, q, P, F, winst: maxW - F };
+}
+function monoGegevens(p){
+  return `Een monopolist heeft als vraagfunctie P = ${p.a} − ${fmtCoef(p.b, 'q')} en als totale kosten TK = ${fmtKwadratisch(p.d, p.c, p.F)}.`;
+}
+function monoUitlegQ(p){
+  const mk = p.d ? `${fmtCoef(2 * p.d, 'q')} + ${p.c}` : String(p.c);
+  return `TO = P·q = ${p.a}q − ${fmtCoef(p.b, 'q²')} → MO = ${p.a} − ${fmtCoef(2 * p.b, 'q')}. MK = TK' = ${mk}.\n` +
+    `MO = MK: ${p.a} − ${fmtCoef(2 * p.b, 'q')} = ${mk} → q = (${p.a} − ${p.c}) / ${2 * p.b + 2 * p.d} = ${p.q}.`;
+}
+function genMonoHoeveelheid(){
+  const p = monoParams();
+  return ecoGetal('mono_rekenen', 'Monopolie – rekenen',
+    monoGegevens(p) + '<br>Bij welke hoeveelheid q is de winst maximaal?', p.q, String(p.q), monoUitlegQ(p),
+    { svg: svgMono(p.a, p.b, p.c, p.d) });
+}
+function genMonoPrijs(){
+  const p = monoParams();
+  return ecoGetal('mono_rekenen', 'Monopolie – rekenen',
+    monoGegevens(p) + '<br>Welke prijs vraagt de monopolist om zijn winst te maximaliseren?', p.P, fmtEuro(p.P),
+    monoUitlegQ(p) + `\nPrijs uit de vraagfunctie: P = ${p.a} − ${p.b} × ${p.q} = ${p.P}.`,
+    { svg: svgMono(p.a, p.b, p.c, p.d) });
+}
+function genMonoWinst(){
+  const p = monoParams();
+  const TO = p.P * p.q, TK = p.d * p.q * p.q + p.c * p.q + p.F;
+  return ecoGetal('mono_rekenen', 'Monopolie – rekenen',
+    monoGegevens(p) + '<br>Hoeveel bedraagt de maximale winst (in euro)?', p.winst, fmtEuro(p.winst),
+    monoUitlegQ(p) + `\nP = ${p.a} − ${p.b} × ${p.q} = ${p.P}; TO = ${p.P} × ${p.q} = ${TO}; TK = ${TK}; winst = TO − TK = ${p.winst}.`,
+    { svg: svgMono(p.a, p.b, p.c, p.d) });
+}
+function genMonoMO(){
+  const a = randInt(40, 120), b = randChoice([1, 2, 3, 4]), q = randInt(2, Math.min(15, Math.floor((a - 1) / b)));
+  const mo = a - 2 * b * q;
+  return ecoGetal('mono_rekenen', 'Monopolie – rekenen',
+    `De vraagfunctie van een monopolist is P = ${a} − ${fmtCoef(b, 'q')}.<br>Bereken de marginale opbrengst bij q = ${q}.`,
+    mo, fmtNum(mo),
+    `TO = ${a}q − ${fmtCoef(b, 'q²')} → MO = ${a} − ${fmtCoef(2 * b, 'q')} = ${a} − ${2 * b} × ${q} = ${fmtNum(mo)}.`,
+    { svg: svgPQ(Math.ceil(a / b), Math.ceil(a * 1.05), [
+      { m:-b, n:a, label:'vraag', color:KLEUR_VRAAG },
+      { m:-2 * b, n:a, label:'MO', color:KLEUR_MO, dash:true },
+    ]) });
+}
+
+/* ---------- Gini met integralen: B = ∫₀¹ L(x) dx, Gini = 1 − 2B ---------- */
+const SUP = { 2:'²', 3:'³', 4:'⁴', 5:'⁵', 6:'⁶' };
+function lorenzMetIntegraal(){
+  const type = randChoice(['macht', 'mix', 'mix2']);
+  if(type === 'macht'){
+    const n = randInt(2, 5);
+    return {
+      html: `L(x) = x${SUP[n]}`, f: x => Math.pow(x, n), B: 1 / (n + 1),
+      uitlegB: `B = ∫₀¹ x${SUP[n]} dx = [x${SUP[n + 1]} / ${n + 1}]₀¹ = 1/${n + 1}`,
+    };
+  }
+  /* p·x^m + (1 − p)·x^n: L(0) = 0, L(1) = 1, stijgend en convex */
+  const p = randChoice([0.2, 0.4, 0.5, 0.6, 0.8]);
+  const m = type === 'mix' ? 1 : randInt(2, 3);
+  const n = randInt(m + 1, 4);
+  const coefA = fmtNum(p), coefB = fmtNum(1 - p);
+  const xm = m === 1 ? 'x' : 'x' + SUP[m];
+  const primM = `x${SUP[m + 1]}/${m + 1}`, primN = `x${SUP[n + 1]}/${n + 1}`;
+  return {
+    html: `L(x) = ${coefA}${xm} + ${coefB}x${SUP[n]}`,
+    f: x => p * Math.pow(x, m) + (1 - p) * Math.pow(x, n),
+    B: p / (m + 1) + (1 - p) / (n + 1),
+    uitlegB: `B = ∫₀¹ (${coefA}${xm} + ${coefB}x${SUP[n]}) dx = [${coefA} · ${primM} + ${coefB} · ${primN}]₀¹ = ${coefA}/${m + 1} + ${coefB}/${n + 1}`,
+  };
+}
+function genGiniIntegraal(){
+  const L = lorenzMetIntegraal();
+  const G = 1 - 2 * L.B;
+  const vraagB = Math.random() < 0.3;
+  const prompt = `De Lorenzcurve van een land wordt gegeven door ${L.html} (0 ≤ x ≤ 1).<br>` +
+    (vraagB ? 'Bereken de oppervlakte B onder de Lorenzcurve (afgerond op 2 decimalen).'
+            : 'Bereken de Gini-coëfficiënt (afgerond op 2 decimalen).');
+  const value = vraagB ? L.B : G;
+  return ecoGetal('gini_integralen', 'Gini – integralen', prompt, value, fmtNum(value, 2),
+    `${L.uitlegB} ≈ ${fmtNum(L.B, 4)}.` + (vraagB ? '' : `\nGini = 1 − 2B = 1 − 2 × ${fmtNum(L.B, 4)} ≈ ${fmtNum(G, 2)}.`),
+    { checkData:{ value, tol: 0.0051, procentOk: !vraagB }, svg: svgLorenzAB(G, L.f) });
+}
+
+const ECONOMIE_GENS = {
+  gini: { rekenen: [genGiniCumulatief, genGiniTabel, genGiniOppervlakte],
+          integralen: [genGiniIntegraal],
+          begrippen: [() => ecoMeerkeuze('gini_begrippen', 'Gini – begrippen', randChoice(GINI_BEGRIPPEN)), genGiniVergelijk] },
+  vc: { rekenen: [genVcHoeveelheid, genVcWinst, genVcTabel],
+        begrippen: [() => ecoMeerkeuze('vc_begrippen', 'Volk. concurrentie – begrippen', randChoice(VC_BEGRIPPEN))] },
+  monopolie: { rekenen: [genMonoHoeveelheid, genMonoPrijs, genMonoWinst, genMonoMO],
+               begrippen: [() => ecoMeerkeuze('mono_begrippen', 'Monopolie – begrippen', randChoice(MONO_BEGRIPPEN))] },
+};
+
+function buildEconomieQuestion(sub){
+  const catId = randChoice([...economieStates[sub].categories]);
+  return randChoice(ECONOMIE_GENS[sub][catId])();
+}
+
+function renderEconomieSubChips(){
+  renderSingleChips('chips-economie-sub', ECONOMIE_SUB_OPTIONS, economieSub, (code) => {
+    economieSub = code;
+    refreshEconomieUI();
+    syncGameMode();
+    updateConfigVisibility();
+    updatePoolCount();
+  });
+}
+
+function renderEconomieCatChips(){
+  const state = economieStates[economieSub];
+  const el = document.getElementById('chips-economie-cat');
+  el.innerHTML = '';
+  ECONOMIE_CATEGORIES[economieSub].forEach(cat => {
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (state.categories.has(cat.id) ? ' active' : '');
+    chip.textContent = cat.label;
+    chip.addEventListener('click', () => {
+      if(state.categories.has(cat.id)){
+        if(state.categories.size === 1){ showToast('Kies minstens 1 soort vragen.'); return; }
+        state.categories.delete(cat.id);
+      } else {
+        state.categories.add(cat.id);
+      }
+      renderEconomieCatChips();
+      updatePoolCount();
+    });
+    el.appendChild(chip);
+  });
+}
+
+function renderEconomieAantalChips(){
+  const state = economieStates[economieSub];
+  renderSingleChips('chips-economie-aantal', ECONOMIE_AANTAL_OPTIONS.map(n => ({ code:n, label:String(n) })), state.aantal, (code) => {
+    state.aantal = code;
+    renderEconomieAantalChips();
+    updatePoolCount();
+  });
+}
+
+function refreshEconomieUI(){
+  renderEconomieSubChips();
+  renderEconomieCatChips();
+  renderEconomieAantalChips();
+}
+
+/* ---------- "Eerst wat uitleg": theorie per onderdeel ---------- */
+const ECONOMIE_THEORIE = {
+  gini: () => `
+    <h3>De Lorenzcurve</h3>
+    <p>Rangschik de bevolking van arm naar rijk. Op de x-as zet je het <b>cumulatieve percentage van de bevolking</b>, op de y-as het <b>cumulatieve percentage van het inkomen</b> dat die groep samen ontvangt.</p>
+    <p>De diagonaal is de <b>gelijkheidslijn</b>: elke x% van de bevolking krijgt ook x% van het inkomen. Hoe verder de Lorenzcurve onder die lijn doorhangt, hoe ongelijker de verdeling.</p>
+    <div class="theorie-svg">${svgLorenzAB(0.38)}</div>
+    <h3>De Gini-coëfficiënt</h3>
+    <p>A is de oppervlakte tussen de gelijkheidslijn en de Lorenzcurve, B de oppervlakte onder de Lorenzcurve. Samen is dat de halve driehoek: A + B = 0,5.</p>
+    <div class="formule">Gini = A / (A + B) = 2A = 1 − 2B</div>
+    <p>Gini = 0: perfecte gelijkheid. Gini = 1: maximale ongelijkheid (één persoon heeft alles).</p>
+    <h3>Rekenen met kwintielen</h3>
+    <p>Een kwintiel is 20% van de bevolking. Tel de inkomensaandelen eerst <b>cumulatief</b> op. B bestaat dan uit 5 trapezia met breedte 0,2:</p>
+    <div class="formule">B = 0,2 × (Y₀ + Y₁)/2 + 0,2 × (Y₁ + Y₂)/2 + … + 0,2 × (Y₄ + Y₅)/2</div>
+    <p><b>Voorbeeld.</b> Aandelen per kwintiel: 5%, 10%, 15%, 25%, 45%.</p>
+    ${kwintielTabel([5, 10, 15, 25, 45])}
+    <p>Cumulatief: 0 → 0,05 → 0,15 → 0,30 → 0,55 → 1.<br>
+    B = 0,1 × (0,05 + 0,20 + 0,45 + 0,85 + 1,55) = 0,1 × 3,10 = 0,31.<br>
+    Gini = 1 − 2 × 0,31 = <b>0,38</b>.</p>
+    <p>Vraag naar de armste 40%? Tel de eerste twee kwintielen op: 5% + 10% = 15%. De rijkste 20% is het laatste kwintiel: 45%.</p>
+    <h3>Met integralen</h3>
+    <p>Is de Lorenzcurve gegeven als functie L(x) op [0, 1], dan is B de oppervlakte onder die curve:</p>
+    <div class="formule">B = ∫₀¹ L(x) dx &nbsp;&nbsp; Gini = 1 − 2 ∫₀¹ L(x) dx</div>
+    <p><b>Voorbeeld.</b> L(x) = x²: B = ∫₀¹ x² dx = [x³/3]₀¹ = 1/3, dus Gini = 1 − 2/3 = 1/3 ≈ <b>0,33</b>.<br>
+    Algemeen voor L(x) = xⁿ: B = 1/(n + 1) en Gini = (n − 1)/(n + 1).</p>
+    <p>De trapeziummethode met kwintielen is trouwens ook een integraal: daar is L(x) een gebroken lijn door de 6 punten, en de integraal van een gebroken lijn is precies de som van de trapezia.</p>`,
+
+  vc: () => `
+    <h3>Kenmerken</h3>
+    <p>Veel vragers en aanbieders, een homogeen product, vrije toe- en uittreding en volledige doorzichtigheid. Eén onderneming kan de prijs niet beïnvloeden: ze is <b>prijsnemer</b>.</p>
+    <h3>Opbrengsten en kosten</h3>
+    <div class="formule">TO = P · q &nbsp;&nbsp; MO = P</div>
+    <p>Elke extra eenheid levert de marktprijs op, dus de marginale opbrengst is gelijk aan de prijs.</p>
+    <div class="formule">MK = afgeleide van TK &nbsp;&nbsp; (bv. TK = aq² + bq + c → MK = 2aq + b)</div>
+    <h3>Winstmaximalisatie</h3>
+    <div class="formule">MO = MK &nbsp;→&nbsp; P = MK</div>
+    <div class="formule">winst = TO − TK</div>
+    <p><b>Voorbeeld.</b> TK = q² + 4q + 50 en P = € 24.<br>
+    MK = 2q + 4. P = MK: 24 = 2q + 4 → <b>q = 10</b>.<br>
+    TO = 24 × 10 = 240; TK = 100 + 40 + 50 = 190; winst = 240 − 190 = <b>€ 50</b>.</p>
+    <div class="theorie-svg">${svgVc({ a:1, b:4, P:24, q:10 }, true)}</div>
+    <p>Het optimum ligt waar de horizontale prijslijn de MK-curve snijdt.</p>
+    <p>Werk je met een tabel: bereken voor elke q de winst TO − TK en kies de grootste.</p>
+    <h3>Korte en lange termijn</h3>
+    <p>Korte termijn: produceren zolang P ≥ het minimum van de gemiddelde variabele kosten; daaronder stopt de onderneming (sluitingspunt). Lange termijn: bovennormale winst lokt nieuwe aanbieders, tot de economische winst nul is.</p>`,
+
+  monopolie: () => `
+    <h3>Kenmerken</h3>
+    <p>Eén aanbieder, geen goede substituten en toetredingsdrempels. De monopolist is <b>prijszetter</b>: hij kiest zelf zijn prijs, maar moet rekening houden met de vraagcurve.</p>
+    <h3>Opbrengsten</h3>
+    <div class="formule">vraag: P = a − bq</div>
+    <div class="formule">TO = P · q = aq − bq² &nbsp;→&nbsp; MO = a − 2bq</div>
+    <p>De MO-lijn begint bij dezelfde a, maar daalt dubbel zo steil als de vraaglijn. Om meer te verkopen moet de monopolist de prijs immers voor <b>alle</b> eenheden verlagen, dus MO &lt; P.</p>
+    <h3>Winstmaximalisatie in 3 stappen</h3>
+    <div class="formule">1. MO = MK → q &nbsp;&nbsp; 2. P aflezen op de vraagcurve &nbsp;&nbsp; 3. winst = TO − TK</div>
+    <p><b>Voorbeeld.</b> P = 100 − 2q en TK = q² + 10q + 100.<br>
+    MO = 100 − 4q en MK = 2q + 10.<br>
+    MO = MK: 100 − 4q = 2q + 10 → 6q = 90 → <b>q = 15</b>.<br>
+    P = 100 − 2 × 15 = <b>€ 70</b>.<br>
+    TO = 70 × 15 = 1050; TK = 225 + 150 + 100 = 475; winst = <b>€ 575</b>.</p>
+    <div class="theorie-svg">${svgMono(100, 2, 10, 1, { q:15, y:40, P:70 })}</div>
+    <p>Het snijpunt van MO en MK geeft q; recht daarboven lees je de prijs af op de vraagcurve. In het optimum is P &gt; MK.</p>
+    <h3>Vergelijking met volkomen concurrentie</h3>
+    <p>Bij volkomen concurrentie zou P = MK gelden: 100 − 2q = 2q + 10 → q = 22,5 en P = € 55. De monopolist produceert dus <b>minder</b> tegen een <b>hogere prijs</b>; dat veroorzaakt een welvaartsverlies.</p>`,
+};
+
+function showEconomieTheorie(){
+  const opt = ECONOMIE_SUB_OPTIONS.find(o => o.code === economieSub);
+  document.getElementById('theorie-titel').textContent = opt.label;
+  document.getElementById('theorie-inhoud').innerHTML = ECONOMIE_THEORIE[economieSub]();
+  showScreen('theorie');
+  window.scrollTo(0, 0);
+}
+
 function renderFunctieCatChips(){
   const el = document.getElementById('chips-functie-cat');
   el.innerHTML = '';
@@ -2428,24 +3136,8 @@ function refreshCombiUI(){
 
 function renderWiskundeSubChips(){
   renderSingleChips('chips-wiskunde-sub', WISKUNDE_SUB_OPTIONS, wiskundeSub, (code) => {
-    const entering = wiskundeSub !== code;
     wiskundeSub = code;
     renderWiskundeSubChips();
-    if(code === 'termen' && entering){
-      const vakOptions = unique(termbank.map(t => t.vak));
-      if(vakOptions.includes('Wiskunde')) filters.vak = new Set(['Wiskunde']);
-      buildFilterUI();
-    }
-    syncGameMode();
-    updateConfigVisibility();
-    updatePoolCount();
-  });
-}
-
-function renderWiskundeTermenModeChips(){
-  renderSingleChips('chips-wiskunde-termen-mode', WISKUNDE_TERMEN_MODE_OPTIONS, wiskundeTermenMode, (code) => {
-    wiskundeTermenMode = code;
-    renderWiskundeTermenModeChips();
     syncGameMode();
     updateConfigVisibility();
     updatePoolCount();
@@ -2453,22 +3145,19 @@ function renderWiskundeTermenModeChips(){
 }
 
 function syncGameMode(){
-  if(topMode !== 'wiskunde'){
-    gameMode = topMode;
-  } else if(wiskundeSub === 'termen'){
-    gameMode = wiskundeTermenMode;
-  } else {
-    gameMode = wiskundeSub; // 'functies' of 'complex'
-  }
+  if(topVak === 'wiskunde') gameMode = wiskundeSub;
+  else if(topVak === 'economie') gameMode = economieSub;
+  else gameMode = topMode;
 }
 
 function updateConfigVisibility(){
-  const inWiskunde = topMode === 'wiskunde';
+  const inWiskunde = topVak === 'wiskunde';
   document.getElementById('config-wiskunde').style.display = inWiskunde ? 'block' : 'none';
+  document.getElementById('config-economie').style.display = topVak === 'economie' ? 'block' : 'none';
+  document.getElementById('config-termmode').style.display = topVak === 'taaltrainer' ? 'block' : 'none';
   document.getElementById('wiskunde-config-functies').style.display = (inWiskunde && wiskundeSub === 'functies') ? 'block' : 'none';
   document.getElementById('wiskunde-config-complex').style.display = (inWiskunde && wiskundeSub === 'complex') ? 'block' : 'none';
   document.getElementById('wiskunde-config-combinatoriek').style.display = (inWiskunde && wiskundeSub === 'combinatoriek') ? 'block' : 'none';
-  document.getElementById('wiskunde-config-termen').style.display = (inWiskunde && wiskundeSub === 'termen') ? 'block' : 'none';
 
   document.getElementById('config-vertalen').style.display = gameMode === 'vertalen' ? 'block' : 'none';
   document.getElementById('config-uitleg').style.display = gameMode === 'uitleg' ? 'block' : 'none';
@@ -2769,6 +3458,16 @@ function refreshLeesUI(){
   updatePoolCount();
 }
 
+function renderVakTopChips(){
+  renderSingleChips('chips-vak-top', VAK_OPTIONS, topVak, (code) => {
+    topVak = code;
+    renderVakTopChips();
+    syncGameMode();
+    updateConfigVisibility();
+    updatePoolCount();
+  });
+}
+
 function renderModeChips(){
   renderSingleChips('chips-mode', MODE_OPTIONS, topMode, (code) => {
     topMode = code;
@@ -2855,11 +3554,330 @@ const GENERATED_MODES = {
   functies: { state: functieState, build: buildFunctieQuestion },
   complex: { state: complexState, build: buildComplexQuestion },
   combinatoriek: { state: combinatoriekState, build: buildCombinatoriekQuestion },
+  gini: { state: economieStates.gini, build: () => buildEconomieQuestion('gini') },
+  vc: { state: economieStates.vc, build: () => buildEconomieQuestion('vc') },
+  monopolie: { state: economieStates.monopolie, build: () => buildEconomieQuestion('monopolie') },
 };
+
+/* ==================================================================
+   TOETSMODUS
+   Per onderdeel met gegenereerde oefeningen één toets van 10 vragen met
+   vaste soorten vragen. In de Taaltrainer één toets per vak + hoofdstuk +
+   spelmodus (Vertalen of Uitleg), over de gekozen termen. Kan per toestel maar één keer gestart worden en
+   moet helemaal afgewerkt worden; geen hulp of verbetering tussendoor.
+   De leerling toont het (paarse) resultaatscherm aan de leerkracht.
+   ================================================================== */
+const TOETS_AANTAL = 10;
+const TOETS_PREFIX = 'gymnasion-toets-';
+/* Na deze tijd (vanaf de start) vervalt een toetsresultaat en wordt de
+   knop weer gewoon "TOETS". */
+const TOETS_GELDIG_MS = 24 * 60 * 60 * 1000;
+/* Code waarmee de leerkracht een toets op een toestel opnieuw vrijgeeft. */
+const LEERKRACHT_CODE = 'gymnasion';
+
+let toets = null;          // lopende toets, of null
+let toetsKlokTimer = null;
+let toetsGetoond = null;    // onderdeel van het getoonde resultaat
+
+function toetsCategorieen(mode){
+  switch(mode){
+    case 'functies': return FUNCTIE_CATEGORIES.map(c => c.id);
+    case 'complex': return COMPLEX_CATEGORIES.map(c => c.id);
+    case 'combinatoriek': return COMBI_CATEGORIES.map(c => c.id);
+    default: return ECONOMIE_CATEGORIES[mode].filter(c => c.standaardAan !== false).map(c => c.id);
+  }
+}
+
+const TOETS_TAAL_MODES = ['vertalen', 'uitleg'];
+
+function isTaalToets(){ return topVak === 'taaltrainer'; }
+
+/* Sleutel waaronder de toets op dit toestel bewaard wordt. */
+function toetsSleutel(){
+  if(!isTaalToets()) return gameMode;
+  return ['taal', [...filters.vak][0], [...filters.hoofdstuk][0], gameMode].join('|');
+}
+
+/* Waarom een Taaltrainer-toets (nog) niet kan, of null. */
+function taalToetsProbleem(){
+  if(filters.vak.size !== 1 || filters.hoofdstuk.size !== 1) return 'Kies voor een toets precies één vak en één hoofdstuk.';
+  if(getPlayablePool().length < 4) return 'Te weinig termen voor een toets (minstens 4 nodig).';
+  return null;
+}
+
+function taalToetsDetail(){
+  if(gameMode === 'vertalen'){
+    return 'Vertalen: ' + LANGS.find(l => l.code === langState.start).label + ' → ' + LANGS.find(l => l.code === langState.target).label;
+  }
+  const richting = RICHTING_OPTIONS.find(r => r.code === uitlegState.richting).label;
+  return 'Uitleg (' + LANGS.find(l => l.code === uitlegState.lang).label + '): ' + richting;
+}
+
+function toetsOnderdeelLabel(mode){
+  if(isTaalToets()) return 'Taaltrainer – ' + [...filters.vak][0] + ' – ' + [...filters.hoofdstuk][0];
+  const wisk = WISKUNDE_SUB_OPTIONS.find(o => o.code === mode);
+  if(wisk) return 'Wiskunde – ' + wisk.label;
+  const eco = ECONOMIE_SUB_OPTIONS.find(o => o.code === mode);
+  return 'Economie – ' + (eco ? eco.label : mode);
+}
+
+function toetsLees(sleutel){
+  try{
+    const raw = localStorage.getItem(TOETS_PREFIX + sleutel);
+    if(!raw) return null;
+    const rec = JSON.parse(raw);
+    if(Date.now() - rec.start > TOETS_GELDIG_MS){
+      localStorage.removeItem(TOETS_PREFIX + sleutel);
+      return null;
+    }
+    rec.sleutel = sleutel; // ook voor resultaten uit de eerste toetsversie
+    return rec;
+  }catch(e){ return null; }
+}
+function toetsBewaar(rec){
+  try{ localStorage.setItem(TOETS_PREFIX + rec.sleutel, JSON.stringify(rec)); }catch(e){}
+}
+function toetsWis(sleutel){
+  try{ localStorage.removeItem(TOETS_PREFIX + sleutel); }catch(e){}
+}
+
+/* Een toets die nog "bezig" is bij het laden van de app, werd verlaten. */
+function markeerOnderbrokenToetsen(){
+  let sleutels = [];
+  try{
+    sleutels = Object.keys(localStorage).filter(k => k.startsWith(TOETS_PREFIX)).map(k => k.slice(TOETS_PREFIX.length));
+  }catch(e){}
+  sleutels.forEach(sleutel => {
+    const rec = toetsLees(sleutel);
+    if(rec && rec.status === 'bezig'){
+      rec.status = 'onderbroken';
+      toetsBewaar(rec);
+    }
+  });
+}
+
+function maakTaalToetsVragen(){
+  const pool = getPlayablePool();
+  return shuffle(pool).slice(0, Math.min(TOETS_AANTAL, pool.length)).map(t => buildQuestion(t, pool));
+}
+
+function maakToetsVragen(mode){
+  const gen = GENERATED_MODES[mode];
+  const bewaard = gen.state.categories;
+  gen.state.categories = new Set(toetsCategorieen(mode));
+  try{
+    const vragen = [];
+    const gebruikt = new Set();
+    for(let i = 0; i < TOETS_AANTAL; i++){
+      let q, tries = 0;
+      do { q = gen.build(); tries++; }
+      while(gebruikt.has(functieQuestionSignature(q)) && tries < 30);
+      gebruikt.add(functieQuestionSignature(q));
+      vragen.push(q);
+    }
+    return vragen;
+  } finally {
+    gen.state.categories = bewaard;
+  }
+}
+
+function updateToetsKnop(){
+  const btn = document.getElementById('btn-toets');
+  const mogelijk = isTaalToets() ? TOETS_TAAL_MODES.includes(gameMode) : !!GENERATED_MODES[gameMode];
+  if(!mogelijk){ btn.style.display = 'none'; return; }
+  btn.style.display = 'inline-block';
+  const klaar = (!isTaalToets() || !taalToetsProbleem()) && toetsLees(toetsSleutel());
+  btn.textContent = klaar ? 'Toetsresultaat bekijken' : 'TOETS';
+}
+
+function openToets(){
+  if(isTaalToets()){
+    const probleem = taalToetsProbleem();
+    if(probleem){ showToast(probleem); return; }
+  }
+  const rec = toetsLees(toetsSleutel());
+  if(rec){ toonToetsResultaat(rec); return; }
+  document.getElementById('toets-titel').textContent = toetsOnderdeelLabel(gameMode);
+  document.getElementById('toets-detail').textContent = isTaalToets() ? taalToetsDetail() : '';
+  document.getElementById('toets-aantal').textContent = isTaalToets() ? Math.min(TOETS_AANTAL, getPlayablePool().length) : TOETS_AANTAL;
+  document.getElementById('overlay-toets').classList.add('show');
+}
+
+function startToets(){
+  const naam = document.getElementById('toets-naam').value.trim();
+  const klas = document.getElementById('toets-klas').value.trim();
+  if(!naam || !klas){ showToast('Vul eerst je naam en klas in.'); return; }
+  const mode = gameMode;
+  const sleutel = toetsSleutel();
+  document.getElementById('overlay-toets').classList.remove('show');
+  if(toetsLees(sleutel)){ toonToetsResultaat(toetsLees(sleutel)); return; }
+
+  quiz.questions = isTaalToets() ? maakTaalToetsVragen() : maakToetsVragen(mode);
+  quiz.index = 0;
+  quiz.score = 0;
+  quiz.answers = [];
+  toets = {
+    sleutel, onderdeel: toetsOnderdeelLabel(mode), detail: isTaalToets() ? taalToetsDetail() : '', naam, klas,
+    start: Date.now(), einde: null, status: 'bezig',
+    score: 0, beantwoord: 0, totaal: quiz.questions.length,
+  };
+  toetsBewaar(toets);
+  document.body.classList.add('toets-modus');
+  document.getElementById('btn-show-answer').textContent = 'Weet ik niet';
+  showScreen('quiz');
+  renderStamps();
+  renderQuestion();
+}
+
+/* Wat er van één beantwoorde vraag bewaard wordt voor de verbetering. */
+function toetsAntwoord(a){
+  const q = a.q;
+  let vraag, uitleg = '';
+  if(q.kind === 'vertalen'){
+    vraag = `${q.startText} (${q.startLang} → ${q.targetLang})`;
+    uitleg = q.term['uitleg' + LANG_KEY[q.targetLang]] || '';
+  } else if(q.kind === 'uitleg'){
+    vraag = q.promptText;
+  } else {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = q.promptHtml.replace(/<br\s*\/?>/g, ' ');
+    vraag = tmp.textContent.trim();
+    uitleg = q.explanation || '';
+  }
+  return {
+    vraag, svg: q.svg || '', extraHtml: q.extraHtml || '',
+    gegeven: a.gaveUp ? null : a.chosen, juist: q.correct, ok: a.correct, uitleg,
+  };
+}
+
+/* In toetsmodus: geen feedback, meteen door naar de volgende vraag. */
+function volgendeToetsVraag(){
+  toets.antwoorden = quiz.answers.map(toetsAntwoord);
+  toets.score = quiz.score;
+  toets.beantwoord = quiz.answers.length;
+  quiz.index++;
+  if(quiz.index >= quiz.questions.length){
+    toets.status = 'afgewerkt';
+    toets.einde = Date.now();
+  }
+  toetsBewaar(toets);
+  if(toets.status === 'afgewerkt'){
+    const rec = toets;
+    toets = null;
+    document.body.classList.remove('toets-modus');
+    document.getElementById('btn-show-answer').textContent = 'Toon antwoord';
+    toonToetsResultaat(rec);
+  } else {
+    renderQuestion();
+  }
+}
+
+function fmtTijdstip(ms){
+  const d = new Date(ms);
+  return d.toLocaleDateString('nl-BE') + ' ' + d.toLocaleTimeString('nl-BE');
+}
+function fmtDuur(ms){
+  const s = Math.round(ms / 1000);
+  return Math.floor(s / 60) + ' min ' + String(s % 60).padStart(2, '0') + ' s';
+}
+
+function toonToetsResultaat(rec){
+  toetsGetoond = rec.sleutel;
+  document.getElementById('tr-onderdeel').textContent = rec.onderdeel;
+  document.getElementById('tr-detail').textContent = rec.detail || '';
+  document.getElementById('tr-naam').textContent = rec.naam + ' — ' + rec.klas;
+  document.getElementById('tr-score').textContent = rec.score + '/' + rec.totaal;
+  document.getElementById('tr-pct').textContent = Math.round(rec.score / rec.totaal * 100) + '%';
+  const status = document.getElementById('tr-status');
+  if(rec.status === 'afgewerkt'){
+    status.textContent = 'Volledig afgewerkt';
+    status.className = 'toets-status ok';
+  } else {
+    status.textContent = `Onderbroken na ${rec.beantwoord} van ${rec.totaal} vragen — niet-beantwoorde vragen tellen als fout`;
+    status.className = 'toets-status bad';
+  }
+  document.getElementById('tr-start').textContent = fmtTijdstip(rec.start);
+  document.getElementById('tr-einde').textContent = rec.einde ? fmtTijdstip(rec.einde) : '—';
+  document.getElementById('tr-duur').textContent = rec.einde ? fmtDuur(rec.einde - rec.start) : '—';
+  const heeftVerbetering = Array.isArray(rec.antwoorden) && rec.antwoorden.length > 0;
+  document.getElementById('btn-verbetering').style.display = heeftVerbetering ? 'inline-block' : 'none';
+  toonVerbeteringGezien(rec);
+  document.getElementById('tr-verbetering').style.display = 'none';
+  document.getElementById('tr-verbetering').innerHTML = heeftVerbetering ? renderVerbetering(rec.antwoorden) : '';
+  document.getElementById('vrijgeven-form').style.display = 'none';
+  document.getElementById('vrijgeven-code').value = '';
+  const klok = document.getElementById('tr-nu');
+  const tik = () => { klok.textContent = new Date().toLocaleTimeString('nl-BE'); };
+  tik();
+  clearInterval(toetsKlokTimer);
+  toetsKlokTimer = setInterval(tik, 1000);
+  showScreen('toets');
+  window.scrollTo(0, 0);
+}
+
+function escHtml(str){
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function renderVerbetering(antwoorden){
+  return antwoorden.map((a, i) => `
+    <div class="vb-item ${a.ok ? 'ok' : 'bad'}">
+      <div class="vb-kop">Vraag ${i + 1} <span>${a.ok ? '✓ juist' : '✗ fout'}</span></div>
+      <div class="vb-vraag">${escHtml(a.vraag)}</div>
+      ${a.svg || a.extraHtml ? `<div class="vb-extra">${a.svg}${a.extraHtml}</div>` : ''}
+      <div class="vb-antw">Jouw antwoord: <b>${a.gegeven === null ? 'weet ik niet' : escHtml(a.gegeven)}</b></div>
+      ${a.ok ? '' : `<div class="vb-antw">Juist antwoord: <b>${escHtml(a.juist)}</b></div>`}
+      ${a.uitleg ? `<div class="vb-uitleg">${escHtml(a.uitleg)}</div>` : ''}
+    </div>`).join('');
+}
+
+/* Na het eerste openen kleurt de knop oranje met het tijdstip, zodat de
+   leerkracht ziet dat de leerling de verbetering al bekeken heeft. */
+function toonVerbeteringGezien(rec){
+  const btn = document.getElementById('btn-verbetering');
+  const open = document.getElementById('tr-verbetering').style.display !== 'none';
+  btn.classList.toggle('gezien', !!rec.verbeteringGezien);
+  if(rec.verbeteringGezien){
+    btn.textContent = (open ? 'Verbergen' : 'Verbetering') + ' · bekeken om ' + new Date(rec.verbeteringGezien).toLocaleTimeString('nl-BE');
+  } else {
+    btn.textContent = 'Verbetering bekijken';
+  }
+}
+
+function toggleVerbetering(){
+  const el = document.getElementById('tr-verbetering');
+  const open = el.style.display === 'none';
+  el.style.display = open ? 'block' : 'none';
+  const rec = toetsLees(toetsGetoond);
+  if(!rec) return;
+  if(open && !rec.verbeteringGezien){
+    rec.verbeteringGezien = Date.now();
+    toetsBewaar(rec);
+  }
+  toonVerbeteringGezien(rec);
+}
+
+function sluitToetsResultaat(){
+  clearInterval(toetsKlokTimer);
+  toetsKlokTimer = null;
+  showScreen('home');
+  updatePoolCount();
+}
+
+function toetsVrijgeven(){
+  if(document.getElementById('vrijgeven-code').value !== LEERKRACHT_CODE){
+    showToast('Verkeerde code.');
+    return;
+  }
+  toetsWis(toetsGetoond);
+  showToast('Toets vrijgegeven: deze leerling kan ze opnieuw maken.');
+  sluitToetsResultaat();
+}
 
 function updatePoolCount(){
   const countEl = document.getElementById('pool-count');
   const startBtn = document.getElementById('btn-start');
+  updateToetsKnop();
   const gen = GENERATED_MODES[gameMode];
   if(gen){
     const ok = gen.state.categories.size > 0;
@@ -3116,6 +4134,7 @@ function submitAnswer(userAnswer, gaveUp){
   }
   quiz.answers.push({ q, chosen: gaveUp ? null : userAnswer, correct, gaveUp });
   if(correct) quiz.score++;
+  if(toets){ volgendeToetsVraag(); return; }
 
   if(q.answerType === 'lang'){
     document.querySelectorAll('.option-btn').forEach(b => {
@@ -3321,12 +4340,23 @@ document.getElementById('btn-start').addEventListener('click', () => {
   else startQuiz();
 });
 document.getElementById('btn-lijst-terug').addEventListener('click', () => showScreen('home'));
+document.getElementById('btn-economie-uitleg').addEventListener('click', showEconomieTheorie);
+document.getElementById('btn-theorie-terug').addEventListener('click', () => showScreen('home'));
+document.getElementById('btn-theorie-start').addEventListener('click', startQuiz);
+document.getElementById('btn-toets').addEventListener('click', openToets);
+document.getElementById('btn-toets-annuleer').addEventListener('click', () => document.getElementById('overlay-toets').classList.remove('show'));
+document.getElementById('btn-toets-start').addEventListener('click', startToets);
+document.getElementById('btn-toets-terug').addEventListener('click', sluitToetsResultaat);
+document.getElementById('btn-vrijgeven-open').addEventListener('click', () => { document.getElementById('vrijgeven-form').style.display = 'flex'; });
+document.getElementById('btn-vrijgeven').addEventListener('click', toetsVrijgeven);
+document.getElementById('btn-verbetering').addEventListener('click', toggleVerbetering);
 document.getElementById('btn-replay').addEventListener('click', startQuiz);
 document.getElementById('btn-home').addEventListener('click', () => showScreen('home'));
 
 /* ---------- init ---------- */
 (async function init(){
   await loadTermbank();
+  markeerOnderbrokenToetsen();
   renderModeChips();
   refreshLangUI();
   refreshUitlegUI();
@@ -3340,10 +4370,11 @@ document.getElementById('btn-home').addEventListener('click', () => showScreen('
   renderBoomtoolTypeChips();
   updateBoomtoolPreview();
   renderWiskundeSubChips();
-  renderWiskundeTermenModeChips();
+  refreshEconomieUI();
+  renderVakTopChips();
   buildFilterUI();
   updateConfigVisibility();
 })();
 </script>
-</body>
-</html>
+
+</body></html>
