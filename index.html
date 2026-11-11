@@ -586,7 +586,7 @@
         </div>
 
         <div id="wiskunde-config-gen" style="display:none;">
-          <p class="hint">Vragen worden telkens opnieuw willekeurig samengesteld, dus ze komen niet steeds terug. Lees eerst de uitleg, of kies meteen welke soorten je wil oefenen.</p>
+          <p class="hint">Vragen worden telkens opnieuw willekeurig samengesteld, dus ze komen niet steeds terug. Vink eerst aan welke soorten vragen je wil oefenen. Met "Eerst wat uitleg" krijg je de uitleg bij precies die onderdelen.</p>
           <div class="filter-group">
             <label>Soorten vragen</label>
             <div class="chips" id="chips-wgen-cat"></div>
@@ -3071,9 +3071,8 @@ function theorieFuncties(){
   `;
 }
 
-function theorieAnalyse(){
-  const g = x => x * x * x - 3 * x;
-  const svg = svgGraphPlus(sampleClipped(g, -6, 6, DB_WIN), DB_WIN, { dots:[{ x:-1, y:2 }, { x:1, y:-2 }, { x:0, y:0, open:true }] });
+/* Uitleg per soort vragen (elk aanvinkbaar onderdeel heeft zijn eigen deel). */
+function theorieAnAfgeleide(){
   return `
     <p>In dit onderdeel <b>bereken</b> je het verloop van een functie met de afgeleide f' en de tweede afgeleide f''. Het aflezen op een grafiek vind je bij Functieverloop.</p>
     <h3>1. Wat is de afgeleide?</h3>
@@ -3082,7 +3081,37 @@ function theorieAnalyse(){
     <div class="formule">constante: (c)' = 0<br>machtsregel: (xⁿ)' = n·xⁿ⁻¹ &nbsp; bv. (x³)' = 3x², (x)' = 1<br>getal ervoor: (c·f)' = c·f' &nbsp; bv. (5x²)' = 10x<br>som: (f + g)' = f' + g'</div>
     <div class="formule">f(x) = x³ - 3x² + 4x - 7<br>f'(x) = 3x² - 6x + 4<br>f''(x) = 6x - 6</div>
     <p>De <b>tweede afgeleide</b> f'' is de afgeleide van f'.</p>
-    <h3>3. Stijgen, dalen en extrema</h3>
+  `;
+}
+
+function theorieAnTekenschema(){
+  const g = x => x * x * x - 3 * x;
+  const svg = svgGraphPlus(sampleClipped(g, -6, 6, DB_WIN), DB_WIN, { dots:[{ x:-1, y:2 }, { x:1, y:-2 }, { x:0, y:0, open:true }] });
+  return `
+    <h3>1. Tekenschema van f</h3>
+    <p>Zoek de <b>nulwaarden</b> en zet ze op de x-as. Daartussen blijft het teken van f hetzelfde.</p>
+    <div class="formule">eerstegraads f(x) = ax + b: rechts van de nulwaarde het teken van a, links het tegengestelde<br>tweedegraads f(x) = a(x - x₁)(x - x₂): buiten de nulwaarden het teken van a, ertussen het tegengestelde</div>
+    <p><b>Voorbeeld:</b> f(x) = −x² + x + 6 = −(x + 2)(x − 3), nulwaarden −2 en 3, a = −1 &lt; 0:</p>
+    ${tekenTabel('f(x)', [-2, 3], [MIN, '+', MIN])}
+    <h3>2. Tekenschema van f' → stijgen en dalen</h3>
+    <div class="formule">f' > 0 (+) → f stijgt &nbsp;&nbsp; f' < 0 (−) → f daalt<br>f' van + naar − → maximum &nbsp;&nbsp; f' van − naar + → minimum<br>f' = 0 zonder tekenwissel → geen extremum</div>
+    <h3>3. Tekenschema van f'' → hol en bol</h3>
+    <div class="formule">f'' > 0 (+) → hol (∪) &nbsp;&nbsp; f'' < 0 (−) → bol (∩)<br>f'' wisselt van teken → buigpunt<br>f'' = 0 zonder tekenwissel → geen buigpunt</div>
+    <h3>4. Alles samen: het verloopschema</h3>
+    <p>Voor f(x) = x³ − 3x is f'(x) = 3(x + 1)(x − 1) en f''(x) = 6x:</p>
+    ${verloopschemaTabel([-1, 0, 1], [
+      { label:"f'", cellen:['+', '0', MIN, MIN, MIN, '0', '+'] },
+      { label:"f''", cellen:[MIN, '', MIN, '0', '+', '', '+'] },
+      { label:'f', cellen:['stijgt', 'max', 'daalt', 'bp', 'daalt', 'min', 'stijgt'] },
+    ])}
+    <div class="theorie-svg">${svg}</div>
+    <p>De grafiek bevestigt het schema: maximum (−1, 2), buigpunt (0, 0), minimum (1, −2).</p>
+  `;
+}
+
+function theorieAnExtrema(){
+  return `
+    <h3>1. Stijgen, dalen en extrema</h3>
     <div class="formule">f'(x) > 0  → f stijgt &nbsp;&nbsp; f'(x) < 0  → f daalt<br>f' wisselt van + naar −  → maximum<br>f' wisselt van − naar +  → minimum</div>
     <p><b>Werkwijze:</b> bereken f', los f'(x) = 0 op (de <b>stationaire punten</b>), maak het tekenschema van f' en lees af. De functiewaarde van het extremum vind je door de x-waarde in <b>f</b> (niet in f') in te vullen.</p>
     <p><b>Voorbeeld:</b> f(x) = x³ − 3x</p>
@@ -3090,41 +3119,63 @@ function theorieAnalyse(){
     ${tekenTabel("f'(x)", [-1, 1], ['+', MIN, '+'])}
     <p>Maximum in x = −1: f(−1) = −1 + 3 = 2 → (−1, 2). Minimum in x = 1: f(1) = 1 − 3 = −2 → (1, −2).</p>
     <p>Opgepast: f'(a) = 0 zonder tekenwissel geeft <b>geen</b> extremum (bv. f(x) = x³ in x = 0).</p>
-    <h3>4. Hol, bol en buigpunten</h3>
+  `;
+}
+
+function theorieAnBuigpunt(){
+  return `
+    <h3>1. Hol, bol en buigpunten</h3>
     <div class="formule">f''(x) > 0  → hol (∪) &nbsp;&nbsp; f''(x) < 0  → bol (∩)<br>f'' wisselt van teken  → buigpunt</div>
     <p><b>Werkwijze:</b> bereken f'', los f''(x) = 0 op, maak het tekenschema van f'' en controleer of er een tekenwissel is. Vul de x-waarde in <b>f</b> in voor de y-coördinaat.</p>
     <div class="formule">f(x) = x³ - 3x &nbsp; f''(x) = 6x → nulwaarde 0</div>
     ${tekenTabel("f''(x)", [0], [MIN, '+'])}
     <p>Bol op ]−∞, 0[, hol op ]0, +∞[, buigpunt (0, f(0)) = (0, 0).</p>
     <p>Opgepast: f''(a) = 0 is niet genoeg. Bij f(x) = x⁴ is f''(0) = 0, maar f'' blijft positief: geen buigpunt.</p>
-    <h3>5. Alles samen: het verloopschema</h3>
-    ${verloopschemaTabel([-1, 0, 1], [
-      { label:"f'", cellen:['+', '0', MIN, MIN, MIN, '0', '+'] },
-      { label:"f''", cellen:[MIN, '', MIN, '0', '+', '', '+'] },
-      { label:'f', cellen:['stijgt', 'max', 'daalt', 'bp', 'daalt', 'min', 'stijgt'] },
-    ])}
-    <div class="theorie-svg">${svg}</div>
-    <p>De grafiek bevestigt de berekening: maximum (−1, 2), buigpunt (0, 0), minimum (1, −2).</p>
   `;
+}
+
+function theorieAnBegrippen(){
+  return `<p>Dit zijn de begrippen die in de vragen terugkomen, telkens met het juiste antwoord.</p>`
+    + ANALYSE_BEGRIPPEN.map(b => `<p><b>${b.vraag}</b><br>${b.juist}</p>`).join('');
+}
+
+/* Uitlegscherm voor een WISK_EXTRA-onderdeel: enkel de uitleg bij de
+   aangevinkte soorten vragen; niets aangevinkt → de uitleg bij alles. */
+function theorieWiskExtra(code){
+  const mod = WISK_EXTRA[code], st = wiskExtraStates[code];
+  const metUitleg = mod.categories.filter(c => c.theorie);
+  let delen = metUitleg.filter(c => st.categories.has(c.id));
+  const alles = delen.length === 0;
+  if(alles) delen = metUitleg;
+  const ga = id => `<a href="javascript:void(0)" onclick="document.getElementById('${id}').scrollIntoView({behavior:'smooth'})">`;
+  const deel = (id, titel) => `<h2 id="${id}" style="font-family:'Fraunces',serif; margin:30px 0 4px; padding-top:12px; border-top:2px solid var(--paper-line);">${titel}</h2>`;
+  const intro = alles
+    ? '<p class="hint">Je hebt nog geen soort vragen aangevinkt, dus hieronder staat de uitleg bij alle onderdelen. Vink eerst aan wat je wil oefenen om enkel die uitleg te zien.</p>'
+    : '<p class="hint">Uitleg bij de onderdelen die je aangevinkt hebt.</p>';
+  const inhoud = delen.length > 1
+    ? `<p class="hint">Inhoud: ${delen.map(c => `${ga('th-wx-' + c.id)}${c.label}</a>`).join(' · ')}</p>`
+    : '';
+  return intro + inhoud + delen.map(c => deel('th-wx-' + c.id, c.label) + c.theorie()).join('');
 }
 
 const WISK_EXTRA = {
   analyse: {
     categories: [
-      { id:'afgeleide', label:'Afgeleiden berekenen', gen: genAfgeleide },
-      { id:'tekenschema', label:"Tekenschema's (f, f', f'')", gen: () => randChoice([genTekenVoorschrift, genVerloopAfgeleide, genHolBolAfgeleide])() },
-      { id:'extrema', label:'Stijgen, dalen & extrema berekenen', gen: genExtremaBerekenen },
-      { id:'buigpunt', label:'Hol, bol & buigpunten berekenen', gen: genBuigpuntBerekenen },
-      { id:'asymptoten', label:'Asymptoten', gen: () => randChoice([genAsVA, genAsHA, genAsSchuin, genAsGat, genAsGrafiek, genAsGrafiekExtra, genAsBegrip])() },
-      { id:'begrippen', label:'Begrippen', gen: genAnalyseBegrip },
+      { id:'afgeleide', label:'Afgeleiden berekenen', gen: genAfgeleide, theorie: theorieAnAfgeleide },
+      { id:'tekenschema', label:"Tekenschema's (f, f', f'')", gen: () => randChoice([genTekenVoorschrift, genVerloopAfgeleide, genHolBolAfgeleide])(), theorie: theorieAnTekenschema },
+      { id:'extrema', label:'Stijgen, dalen & extrema berekenen', gen: genExtremaBerekenen, theorie: theorieAnExtrema },
+      { id:'buigpunt', label:'Hol, bol & buigpunten berekenen', gen: genBuigpuntBerekenen, theorie: theorieAnBuigpunt },
+      { id:'asymptoten', label:'Asymptoten', gen: () => randChoice([genAsVA, genAsHA, genAsSchuin, genAsGat, genAsGrafiek, genAsGrafiekExtra, genAsBegrip])(), theorie: theorieAsymptoten },
+      { id:'begrippen', label:'Begrippen', gen: genAnalyseBegrip, theorie: theorieAnBegrippen },
     ],
-    theorie: () => theorieAnalyseVolledig(),
+    theorie: () => theorieWiskExtra('analyse'),
   },
 };
 const WISK_EXTRA_AANTAL = [5, 10, 15, 20];
 const wiskExtraStates = {};
 Object.keys(WISK_EXTRA).forEach(code => {
-  wiskExtraStates[code] = { categories: new Set(WISK_EXTRA[code].categories.map(c => c.id)), aantal: 10 };
+  /* standaard niets aangevinkt: de leerling kiest zelf welke soorten vragen */
+  wiskExtraStates[code] = { categories: new Set(), aantal: 10 };
 });
 function buildWiskExtraQuestion(code){
   const cats = [...wiskExtraStates[code].categories];
@@ -5074,12 +5125,8 @@ function renderWiskExtraChips(){
     chip.className = 'chip' + (st.categories.has(cat.id) ? ' active' : '');
     chip.textContent = cat.label;
     chip.addEventListener('click', () => {
-      if(st.categories.has(cat.id)){
-        if(st.categories.size === 1){ showToast('Kies minstens 1 soort vragen.'); return; }
-        st.categories.delete(cat.id);
-      } else {
-        st.categories.add(cat.id);
-      }
+      if(st.categories.has(cat.id)) st.categories.delete(cat.id);
+      else st.categories.add(cat.id);
       renderWiskExtraChips();
       updatePoolCount();
     });
@@ -5098,14 +5145,6 @@ function theorieFunctieverloop(){
   return `<p class="hint">Inhoud: ${ga('th-a')}A. Grafiek en verloop</a> · ${ga('th-b')}B. Functiewaarde, domein &amp; bereik</a></p>`
     + deel('th-a', 'A. Grafiek en verloop') + theorieFuncties()
     + deel('th-b', 'B. Functiewaarde, domein & bereik') + theorieDomeinBereik();
-}
-
-function theorieAnalyseVolledig(){
-  const ga = id => `<a href="javascript:void(0)" onclick="document.getElementById('${id}').scrollIntoView({behavior:'smooth'})">`;
-  const deel = (id, titel) => `<h2 id="${id}" style="font-family:'Fraunces',serif; margin:30px 0 4px; padding-top:12px; border-top:2px solid var(--paper-line);">${titel}</h2>`;
-  return `<p class="hint">Inhoud: ${ga('th-an-a')}A. Afgeleiden en verloop</a> · ${ga('th-an-b')}B. Asymptoten</a></p>`
-    + deel('th-an-a', 'A. Afgeleiden en verloop') + theorieAnalyse()
-    + deel('th-an-b', 'B. Asymptoten') + theorieAsymptoten();
 }
 
 function showWiskTheorie(){
@@ -5904,7 +5943,7 @@ function updatePoolCount(){
   const gen = GENERATED_MODES[gameMode];
   if(gen){
     const ok = gen.state.categories.size > 0;
-    countEl.innerHTML = '<b>' + gen.state.aantal + '</b> willekeurig gegenereerde oefeningen';
+    countEl.innerHTML = ok ? '<b>' + gen.state.aantal + '</b> willekeurig gegenereerde oefeningen' : 'Vink eerst minstens één soort vragen aan.';
     startBtn.disabled = !ok;
     startBtn.textContent = 'START';
     return;
