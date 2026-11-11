@@ -5383,9 +5383,6 @@ async function loadTermbank(){
   if(voegStandaardTermenToe()){
     try{ await storageSet(STORAGE_KEY, JSON.stringify(termbank)); }catch(e3){ console.error(e3); }
   }
-  if(!hasSharedStorage){
-    showToast('Standalone modus: gegevens worden enkel lokaal in deze browser bewaard, niet gedeeld met anderen.');
-  }
 }
 
 /* Nieuwe of aangepaste standaardtermen uit een nieuwere app-versie
