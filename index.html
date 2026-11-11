@@ -1,5 +1,13 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Gymnasion Trainer</title>
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Gymnasion">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#F7F3E8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
@@ -504,6 +512,15 @@
   }
   .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 
+  .installtip{
+    display:flex; gap:12px; align-items:center;
+    background:var(--white); border:2px dashed var(--coral); border-radius:var(--radius);
+    padding:12px 14px; margin-bottom:18px; font-size:0.9rem; color:var(--ink); box-shadow:var(--shadow);
+  }
+  .installtip[hidden]{ display:none; }
+  .installtip .btn{ flex:none; }
+  .installtip svg{ width:17px; height:17px; vertical-align:-3px; }
+
   .empty-note{ text-align:center; color:var(--ink-soft); font-size:0.88rem; padding:10px 0 2px; }
 
   .screen{ display:none; }
@@ -527,6 +544,13 @@
     </div>
   </header>
 
+  <div class="installtip" id="installtip" hidden>
+    <div><b>Tip:</b> zet de Gymnasion Trainer als app op je beginscherm. Tik in Safari op
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="delen"><path d="M8 10H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-2"/><path d="M12 15V2"/><path d="M8 6l4-4 4 4"/></svg>
+      (delen) en kies <b>Zet op beginscherm</b>.</div>
+    <button class="btn btn-ghost" id="btn-installtip-ok" type="button">OK</button>
+  </div>
+
   <!-- HOME -->
   <div class="screen active" id="screen-home">
     <section class="card">
@@ -541,7 +565,7 @@
         </div>
 
         <div id="wiskunde-config-functies">
-          <p class="hint">Vragen worden telkens opnieuw willekeurig samengesteld, dus ze komen niet steeds terug. Kies welke soorten je wil oefenen.</p>
+          <p class="hint">Vragen worden telkens opnieuw willekeurig samengesteld, dus ze komen niet steeds terug. Vink eerst aan welke soorten vragen je wil oefenen. Met "Eerst wat uitleg" krijg je de uitleg bij precies die onderdelen.</p>
           <div class="filter-group">
             <label>Soorten vragen</label>
             <div class="chips" id="chips-functie-cat"></div>
@@ -556,7 +580,7 @@
         </div>
 
         <div id="wiskunde-config-complex" style="display:none;">
-          <p class="hint">Vragen worden telkens opnieuw willekeurig samengesteld, dus ze komen niet steeds terug. Kies welke soorten je wil oefenen.</p>
+          <p class="hint">Vragen worden telkens opnieuw willekeurig samengesteld, dus ze komen niet steeds terug. Vink eerst aan welke soorten vragen je wil oefenen. Met "Eerst wat uitleg" krijg je de uitleg bij precies die onderdelen.</p>
           <div class="filter-group">
             <label>Soorten vragen</label>
             <div class="chips" id="chips-complex-cat"></div>
@@ -571,12 +595,13 @@
         </div>
 
         <div id="wiskunde-config-combinatoriek" style="display:none;">
-          <p class="hint">Vragen worden telkens opnieuw willekeurig samengesteld, dus ze komen niet steeds terug. Kies welke soorten je wil oefenen.</p>
+          <p class="hint">Vragen worden telkens opnieuw willekeurig samengesteld, dus ze komen niet steeds terug. Vink eerst aan welke soorten vragen je wil oefenen. Met "Eerst wat uitleg" krijg je de uitleg bij precies die onderdelen.</p>
           <div class="filter-group">
             <label>Soorten vragen</label>
             <div class="chips" id="chips-combi-cat"></div>
           </div>
           <div class="filter-group">
+            <button class="btn btn-green" id="btn-combi-uitleg" type="button">Eerst wat uitleg</button>
             <button class="btn btn-green" id="btn-open-boomtool" type="button">Boom op maat tekenen</button>
           </div>
           <div class="filter-group">
@@ -607,7 +632,7 @@
           <label>Onderdeel</label>
           <div class="chips" id="chips-economie-sub"></div>
         </div>
-        <p class="hint">Vragen worden telkens opnieuw willekeurig samengesteld, dus ze komen niet steeds terug. Kies welke soorten je wil oefenen.</p>
+        <p class="hint">Vragen worden telkens opnieuw willekeurig samengesteld, dus ze komen niet steeds terug. Vink eerst aan welke soorten vragen je wil oefenen. Met "Eerst wat uitleg" krijg je de uitleg bij precies die onderdelen.</p>
         <div class="filter-group">
           <label>Soorten vragen</label>
           <div class="chips" id="chips-economie-cat"></div>
@@ -838,7 +863,7 @@
     <p class="hint">Voor leerlingen én leerkrachten &mdash; sluit dit venster gewoon om verder te gaan.</p>
 
     <p style="font-weight:600; margin-bottom:4px;">Voor leerlingen</p>
-    <p class="hint">Kies bovenaan eerst <b>"Vaktermen"</b>, <b>"Wiskunde"</b> of <b>"Economie"</b>. Bij Vaktermen kies je je spelmodus, taal (of talen) en het vak, hoofdstuk en graad waarover je wil oefenen, en klik je op start. Kies je <b>"Economie"</b>, dan kan je oefenen op <b>"Gini-coëfficiënt"</b>, <b>"Volkomen concurrentie"</b> en <b>"Monopolie"</b>. Kies je <b>"Wiskunde"</b>, dan kan je verder kiezen tussen <b>"Functieverloop"</b> (alles op zicht, zonder afgeleiden), <b>"Analyse van functies"</b> (met afgeleiden), <b>"Complexe getallen"</b> en <b>"Combinatieleer"</b> (bij Functieverloop, Analyse van functies en Complexe getallen vind je ook een knop <b>"Eerst wat uitleg"</b>) &mdash; dat zijn willekeurig samengestelde oefeningen (functieverloop: rechten, functiewaarden, domein en bereik, tekenverloop, stijgen en dalen, hol en bol, buigpunten, verloopschema; analyse van functies: afgeleiden berekenen en daarmee extrema en buigpunten bepalen, asymptoten; complexe getallen: termen &amp; begrippen, som, vermenigvuldiging, macht, n-de machtswortel, vraagstukken met gegeven formule; combinatieleer: termen &amp; begrippen, rekenen, woordproblemen, "welk telprobleem is dit?" en boomstructuren) die niet uit een lijst gehaald worden maar telkens opnieuw berekend, dus ze komen niet steeds terug. Staat de lijst van jouw leerkracht of vak er nog niet tussen? Vraag het CSV-bestand aan je leerkracht (bv. via Smartschool) en klik zelf op <b>"Lijst importeren"</b> hierboven om het toe te voegen &mdash; dat moet maar eenmalig, per toestel of browser. Je kan gerust na elkaar lijsten van verschillende leerkrachten of vakken importeren; ze worden gewoon samengevoegd, niets gaat verloren.</p>
+    <p class="hint">Kies bovenaan eerst <b>"Vaktermen"</b>, <b>"Wiskunde"</b> of <b>"Economie"</b>. Bij Vaktermen kies je je spelmodus, taal (of talen) en het vak, hoofdstuk en graad waarover je wil oefenen, en klik je op start. Kies je <b>"Economie"</b>, dan kan je oefenen op <b>"Gini-coëfficiënt"</b>, <b>"Volkomen concurrentie"</b> en <b>"Monopolie"</b>. Kies je <b>"Wiskunde"</b>, dan kan je verder kiezen tussen <b>"Functies DF"</b> (dubbele finaliteit: alles op zicht, zonder afgeleiden), <b>"Functies DS"</b> (doorstroom: met afgeleiden), <b>"Complexe getallen"</b> en <b>"Combinatieleer"</b> (vink aan welke soorten vragen je wil oefenen; de knop <b>"Eerst wat uitleg"</b> geeft de uitleg bij precies die soorten) &mdash; dat zijn willekeurig samengestelde oefeningen (functies DF: rechten, functiewaarden, domein en bereik, tekenverloop, stijgen en dalen, hol en bol, buigpunten, verloopschema; functies DS: afgeleiden berekenen en daarmee extrema en buigpunten bepalen, asymptoten; complexe getallen: termen &amp; begrippen, som, vermenigvuldiging, macht, n-de machtswortel, vraagstukken met gegeven formule; combinatieleer: termen &amp; begrippen, rekenen, vraagstukken, "welk telprobleem is dit?" en boomstructuren) die niet uit een lijst gehaald worden maar telkens opnieuw berekend, dus ze komen niet steeds terug. Staat de lijst van jouw leerkracht of vak er nog niet tussen? Vraag het CSV-bestand aan je leerkracht (bv. via Smartschool) en klik zelf op <b>"Lijst importeren"</b> hierboven om het toe te voegen &mdash; dat moet maar eenmalig, per toestel of browser. Je kan gerust na elkaar lijsten van verschillende leerkrachten of vakken importeren; ze worden gewoon samengevoegd, niets gaat verloren.</p>
 
     <p style="font-weight:600; margin:16px 0 4px;">Toets</p>
     <p class="hint">Onder START staat een paarse knop <b>TOETS</b>. Bij Wiskunde en Economie: 10 vragen over het gekozen onderdeel. Bij Vaktermen (Vertalen of Uitleg): maximaal 10 termen uit precies één gekozen vak en hoofdstuk. Er is geen hulp of verbetering tussendoor, en je kan elke toets maar één keer starten en moet ze helemaal afwerken. Toon daarna het paarse resultaatscherm aan je leerkracht.</p>
@@ -981,8 +1006,8 @@ const VAK_OPTIONS = [
   { code:'economie', label:'Economie' },
 ];
 const WISKUNDE_SUB_OPTIONS = [
-  { code:'functies', label:'Functieverloop' },
-  { code:'analyse', label:'Analyse van functies' },
+  { code:'functies', label:'Functies DF' },
+  { code:'analyse', label:'Functies DS' },
   { code:'complex', label:'Complexe getallen' },
   { code:'combinatoriek', label:'Combinatieleer' },
 ];
@@ -1007,30 +1032,30 @@ let leesState = { lang:'NL' };
    fijnere vraagtypes (zie GRAFISCH_GENS / REKENEN_GENS / TERMEN_GENS
    en generateForCategory hieronder). */
 const FUNCTIE_CATEGORIES = [
-  { id:'grafisch', label:'Rechten (grafisch)' },
-  { id:'rekenen', label:'Rechten (rekenen)' },
-  { id:'functiewaarde', label:'Functiewaarde' },
-  { id:'domeinbereik', label:'Domein & bereik' },
-  { id:'teken', label:'Tekenverloop' },
-  { id:'verloop', label:'Stijgen, dalen & extrema' },
-  { id:'holbol', label:'Hol, bol & buigpunten' },
-  { id:'schema', label:'Verloopschema' },
-  { id:'termen', label:'Termen & begrippen' },
+  { id:'grafisch', label:'Rechten (grafisch)', uitleg: () => uitlegFunctiesDF('grafisch') },
+  { id:'rekenen', label:'Rechten (rekenen)', uitleg: () => uitlegFunctiesDF('rekenen') },
+  { id:'functiewaarde', label:'Functiewaarde', uitleg: () => uitlegFunctiesDF('functiewaarde') },
+  { id:'domeinbereik', label:'Domein & bereik', uitleg: () => uitlegFunctiesDF('domeinbereik') },
+  { id:'teken', label:'Tekenverloop', uitleg: () => uitlegFunctiesDF('teken') },
+  { id:'verloop', label:'Stijgen, dalen & extrema', uitleg: () => uitlegFunctiesDF('verloop') },
+  { id:'holbol', label:'Hol, bol & buigpunten', uitleg: () => uitlegFunctiesDF('holbol') },
+  { id:'schema', label:'Verloopschema', uitleg: () => uitlegFunctiesDF('schema') },
+  { id:'termen', label:'Termen & begrippen', uitleg: () => uitlegFunctiesDF('termen') },
 ];
 const FUNCTIE_AANTAL_OPTIONS = [5, 10, 15, 20];
-let functieState = { categories: new Set(FUNCTIE_CATEGORIES.map(c=>c.id)), aantal: 10 };
+let functieState = { categories: new Set(), aantal: 10 };
 
 /* Zelfde opzet als functieState hierboven, maar dan voor complexe getallen. */
 const COMPLEX_CATEGORIES = [
-  { id:'termen', label:'Termen & begrippen' },
-  { id:'som', label:'Som' },
-  { id:'vermenigvuldiging', label:'Vermenigvuldiging' },
-  { id:'macht', label:'Macht' },
-  { id:'wortel', label:'n-de machtswortel' },
-  { id:'vraagstuk', label:'Vraagstukken (met formule)' },
+  { id:'termen', label:'Termen & begrippen', uitleg: () => uitlegComplex('termen') },
+  { id:'som', label:'Som', uitleg: () => uitlegComplex('som') },
+  { id:'vermenigvuldiging', label:'Vermenigvuldiging', uitleg: () => uitlegComplex('vermenigvuldiging') },
+  { id:'macht', label:'Macht', uitleg: () => uitlegComplex('macht') },
+  { id:'wortel', label:'n-de machtswortel', uitleg: () => uitlegComplex('wortel') },
+  { id:'vraagstuk', label:'Vraagstukken (met formule)', uitleg: () => uitlegComplex('vraagstuk') },
 ];
 const COMPLEX_AANTAL_OPTIONS = [5, 10, 15, 20];
-let complexState = { categories: new Set(COMPLEX_CATEGORIES.map(c=>c.id)), aantal: 10 };
+let complexState = { categories: new Set(), aantal: 10 };
 
 let quiz = { questions:[], index:0, score:0, answers:[] };
 let pendingImportRows = null;
@@ -3074,7 +3099,6 @@ function theorieFuncties(){
 /* Uitleg per soort vragen (elk aanvinkbaar onderdeel heeft zijn eigen deel). */
 function theorieAnAfgeleide(){
   return `
-    <p>In dit onderdeel <b>bereken</b> je het verloop van een functie met de afgeleide f' en de tweede afgeleide f''. Het aflezen op een grafiek vind je bij Functieverloop.</p>
     <h3>1. Wat is de afgeleide?</h3>
     <p>f'(a) is de <b>richtingscoëfficiënt van de raaklijn</b> aan de grafiek in x = a: hoe steil de grafiek daar stijgt of daalt.</p>
     <h3>2. Afgeleiden berekenen</h3>
@@ -3135,40 +3159,19 @@ function theorieAnBuigpunt(){
 }
 
 function theorieAnBegrippen(){
-  return `<p>Dit zijn de begrippen die in de vragen terugkomen, telkens met het juiste antwoord.</p>`
-    + ANALYSE_BEGRIPPEN.map(b => `<p><b>${b.vraag}</b><br>${b.juist}</p>`).join('');
-}
-
-/* Uitlegscherm voor een WISK_EXTRA-onderdeel: enkel de uitleg bij de
-   aangevinkte soorten vragen; niets aangevinkt → de uitleg bij alles. */
-function theorieWiskExtra(code){
-  const mod = WISK_EXTRA[code], st = wiskExtraStates[code];
-  const metUitleg = mod.categories.filter(c => c.theorie);
-  let delen = metUitleg.filter(c => st.categories.has(c.id));
-  const alles = delen.length === 0;
-  if(alles) delen = metUitleg;
-  const ga = id => `<a href="javascript:void(0)" onclick="document.getElementById('${id}').scrollIntoView({behavior:'smooth'})">`;
-  const deel = (id, titel) => `<h2 id="${id}" style="font-family:'Fraunces',serif; margin:30px 0 4px; padding-top:12px; border-top:2px solid var(--paper-line);">${titel}</h2>`;
-  const intro = alles
-    ? '<p class="hint">Je hebt nog geen soort vragen aangevinkt, dus hieronder staat de uitleg bij alle onderdelen. Vink eerst aan wat je wil oefenen om enkel die uitleg te zien.</p>'
-    : '<p class="hint">Uitleg bij de onderdelen die je aangevinkt hebt.</p>';
-  const inhoud = delen.length > 1
-    ? `<p class="hint">Inhoud: ${delen.map(c => `${ga('th-wx-' + c.id)}${c.label}</a>`).join(' · ')}</p>`
-    : '';
-  return intro + inhoud + delen.map(c => deel('th-wx-' + c.id, c.label) + c.theorie()).join('');
+  return begrippenLijst(ANALYSE_BEGRIPPEN);
 }
 
 const WISK_EXTRA = {
   analyse: {
     categories: [
-      { id:'afgeleide', label:'Afgeleiden berekenen', gen: genAfgeleide, theorie: theorieAnAfgeleide },
-      { id:'tekenschema', label:"Tekenschema's (f, f', f'')", gen: () => randChoice([genTekenVoorschrift, genVerloopAfgeleide, genHolBolAfgeleide])(), theorie: theorieAnTekenschema },
-      { id:'extrema', label:'Stijgen, dalen & extrema berekenen', gen: genExtremaBerekenen, theorie: theorieAnExtrema },
-      { id:'buigpunt', label:'Hol, bol & buigpunten berekenen', gen: genBuigpuntBerekenen, theorie: theorieAnBuigpunt },
-      { id:'asymptoten', label:'Asymptoten', gen: () => randChoice([genAsVA, genAsHA, genAsSchuin, genAsGat, genAsGrafiek, genAsGrafiekExtra, genAsBegrip])(), theorie: theorieAsymptoten },
-      { id:'begrippen', label:'Begrippen', gen: genAnalyseBegrip, theorie: theorieAnBegrippen },
+      { id:'afgeleide', label:'Afgeleiden berekenen', gen: genAfgeleide, uitleg: theorieAnAfgeleide },
+      { id:'tekenschema', label:"Tekenschema's (f, f', f'')", gen: () => randChoice([genTekenVoorschrift, genVerloopAfgeleide, genHolBolAfgeleide])(), uitleg: theorieAnTekenschema },
+      { id:'extrema', label:'Stijgen, dalen & extrema berekenen', gen: genExtremaBerekenen, uitleg: theorieAnExtrema },
+      { id:'buigpunt', label:'Hol, bol & buigpunten berekenen', gen: genBuigpuntBerekenen, uitleg: theorieAnBuigpunt },
+      { id:'asymptoten', label:'Asymptoten', gen: () => randChoice([genAsVA, genAsHA, genAsSchuin, genAsGat, genAsGrafiek, genAsGrafiekExtra, genAsBegrip])(), uitleg: theorieAsymptoten },
+      { id:'begrippen', label:'Begrippen', gen: genAnalyseBegrip, uitleg: theorieAnBegrippen },
     ],
-    theorie: () => theorieWiskExtra('analyse'),
   },
 };
 const WISK_EXTRA_AANTAL = [5, 10, 15, 20];
@@ -4104,7 +4107,7 @@ function genVerhaalCombinatie(){
   const tpl = randChoice(templates);
   const val = nCr(n, p);
   return {
-    kind:'functie', catId:'combi_verhaal', catLabel:'Woordprobleem',
+    kind:'functie', catId:'combi_verhaal', catLabel:'Vraagstuk',
     promptHtml: `${tpl(n, p)}<br>Op hoeveel manieren kan dat?`,
     answerType:'kort', checkKind:'number', checkData:{ value: val }, correct: String(val),
     explanation: `Volgorde maakt hier niet uit en herhaling kan niet → dit is het aantal combinaties zonder herhaling van ${p} uit ${n}: ${val}.`,
@@ -4121,7 +4124,7 @@ function genVerhaalCombinatieHerhaling(){
   const tpl = randChoice(templates);
   const val = nCrHerhaling(n, p);
   return {
-    kind:'functie', catId:'combi_verhaal', catLabel:'Woordprobleem',
+    kind:'functie', catId:'combi_verhaal', catLabel:'Vraagstuk',
     promptHtml: `${tpl(n, p)}<br>Op hoeveel manieren kan dat?`,
     answerType:'kort', checkKind:'number', checkData:{ value: val }, correct: String(val),
     explanation: `Volgorde maakt niet uit, maar herhaling kan wel → dit is een combinatie met herhaling van ${p} uit ${n}: ${val}.`,
@@ -4131,7 +4134,7 @@ function genVerhaalCombinatieHerhaling(){
 function genVerhaalPermutatieVol(){
   const n = randInt(4, 12);
   return {
-    kind:'functie', catId:'combi_verhaal', catLabel:'Woordprobleem',
+    kind:'functie', catId:'combi_verhaal', catLabel:'Vraagstuk',
     promptHtml: `Op hoeveel manieren kunnen ${n} renners over de meet komen (geen twee renners eindigen gelijk)?`,
     answerType:'kort', checkKind:'number', checkData:{ value: factorial(n) }, correct: String(factorial(n)),
     explanation: `Alle ${n} renners krijgen elk een unieke plaats → dit is een volledige rangschikking: ${n}! = ${factorial(n)}.`,
@@ -4142,7 +4145,7 @@ function genVerhaalPermutatieDeel(){
   const n = randInt(6, 15);
   const p = randInt(2, 4);
   return {
-    kind:'functie', catId:'combi_verhaal', catLabel:'Woordprobleem',
+    kind:'functie', catId:'combi_verhaal', catLabel:'Vraagstuk',
     promptHtml: `Bij een wedstrijd met ${n} deelnemers worden de eerste ${p} plaatsen bepaald (elke plaats is anders, niemand kan twee plaatsen tegelijk hebben).<br>Op hoeveel manieren kan dat?`,
     answerType:'kort', checkKind:'number', checkData:{ value: nPr(n, p) }, correct: String(nPr(n, p)),
     explanation: `De volgorde is belangrijk (1e ≠ 2e) en herhaling kan niet → dit is een variatie zonder herhaling van ${p} uit ${n}: ${nPr(n, p)}.`,
@@ -4158,7 +4161,7 @@ function genVerhaalVariatieHerhaling(){
     : `Een code bestaat uit ${p} letters (A t.e.m. Z), waarbij een letter meerdere keren mag voorkomen en de volgorde telt.<br>Hoeveel verschillende codes zijn er?`;
   const val = nVarHerhaling(n, p);
   return {
-    kind:'functie', catId:'combi_verhaal', catLabel:'Woordprobleem',
+    kind:'functie', catId:'combi_verhaal', catLabel:'Vraagstuk',
     promptHtml,
     answerType:'kort', checkKind:'number', checkData:{ value: val }, correct: String(val),
     explanation: `Volgorde telt en herhaling mag → variatie met herhaling: ${n}^${p} = ${val}.`,
@@ -4400,14 +4403,14 @@ const REKENEN_COMBI_GENS = [genFaculteitBereken, genPermutatieBereken, genCombin
 const VERHAALTJES_COMBI_GENS = [genVerhaalCombinatie, genVerhaalCombinatieHerhaling, genVerhaalPermutatieVol, genVerhaalPermutatieDeel, genVerhaalVariatieHerhaling];
 
 const COMBI_CATEGORIES = [
-  { id:'termen', label:'Termen & begrippen' },
-  { id:'rekenen', label:'Rekenen' },
-  { id:'verhaaltjes', label:'Woordproblemen' },
-  { id:'classificatie', label:'Welk telprobleem?' },
-  { id:'boom', label:'Boomstructuur' },
+  { id:'termen', label:'Termen & begrippen', uitleg: () => uitlegCombi('termen') },
+  { id:'rekenen', label:'Rekenen', uitleg: () => uitlegCombi('rekenen') },
+  { id:'verhaaltjes', label:'Vraagstukken', uitleg: () => uitlegCombi('verhaaltjes') },
+  { id:'classificatie', label:'Welk telprobleem?', uitleg: () => uitlegCombi('classificatie') },
+  { id:'boom', label:'Boomstructuur', uitleg: () => uitlegCombi('boom') },
 ];
 const COMBI_AANTAL_OPTIONS = [5, 10, 15, 20];
-let combinatoriekState = { categories: new Set(COMBI_CATEGORIES.map(c=>c.id)), aantal: 10 };
+let combinatoriekState = { categories: new Set(), aantal: 10 };
 
 function generateForCombiCategory(catId){
   switch(catId){
@@ -4442,20 +4445,27 @@ const ECONOMIE_SUB_OPTIONS = [
    De toets gebruikt enkel de soorten die standaard aan staan. */
 const ECONOMIE_CATEGORIES = {
   gini: [
-    { id:'rekenen', label:'Rekenen (kwintielen)', standaardAan:false },
-    { id:'integralen', label:'Met integralen' },
-    { id:'begrippen', label:'Begrippen' },
+    { id:'rekenen', label:'Rekenen (kwintielen)', standaardAan:false,
+      uitleg: () => uitlegKies(ECONOMIE_THEORIE.gini(), ['De Lorenzcurve', 'De Gini-coëfficiënt', 'Rekenen met kwintielen']) },
+    { id:'integralen', label:'Met integralen',
+      uitleg: () => uitlegKies(ECONOMIE_THEORIE.gini(), ['De Lorenzcurve', 'De Gini-coëfficiënt', 'Met integralen']) },
+    { id:'begrippen', label:'Begrippen',
+      uitleg: () => uitlegKies(ECONOMIE_THEORIE.gini(), ['De Lorenzcurve', 'De Gini-coëfficiënt']) + begrippenLijst(GINI_BEGRIPPEN) },
   ],
-  vc: [{ id:'rekenen', label:'Rekenen' }, { id:'begrippen', label:'Begrippen' }],
-  monopolie: [{ id:'rekenen', label:'Rekenen' }, { id:'begrippen', label:'Begrippen' }],
+  vc: [
+    { id:'rekenen', label:'Rekenen', uitleg: () => uitlegKies(ECONOMIE_THEORIE.vc(), ['Opbrengsten en kosten', 'Winstmaximalisatie']) },
+    { id:'begrippen', label:'Begrippen', uitleg: () => uitlegKies(ECONOMIE_THEORIE.vc(), ['Kenmerken', 'Korte en lange termijn']) + begrippenLijst(VC_BEGRIPPEN) },
+  ],
+  monopolie: [
+    { id:'rekenen', label:'Rekenen', uitleg: () => uitlegKies(ECONOMIE_THEORIE.monopolie(), ['Opbrengsten', 'Winstmaximalisatie in 3 stappen']) },
+    { id:'begrippen', label:'Begrippen', uitleg: () => uitlegKies(ECONOMIE_THEORIE.monopolie(), ['Kenmerken', 'Vergelijking met volkomen concurrentie']) + begrippenLijst(MONO_BEGRIPPEN) },
+  ],
 };
 const ECONOMIE_AANTAL_OPTIONS = [5, 10, 15, 20];
 const economieStates = {};
 ECONOMIE_SUB_OPTIONS.forEach(o => {
-  economieStates[o.code] = {
-    categories: new Set(ECONOMIE_CATEGORIES[o.code].filter(c => c.standaardAan !== false).map(c => c.id)),
-    aantal: 10,
-  };
+  /* standaard niets aangevinkt: de leerling kiest zelf welke soorten vragen */
+  economieStates[o.code] = { categories: new Set(), aantal: 10 };
 });
 
 function fmtNum(v, dec){
@@ -4910,12 +4920,8 @@ function renderEconomieCatChips(){
     chip.className = 'chip' + (state.categories.has(cat.id) ? ' active' : '');
     chip.textContent = cat.label;
     chip.addEventListener('click', () => {
-      if(state.categories.has(cat.id)){
-        if(state.categories.size === 1){ showToast('Kies minstens 1 soort vragen.'); return; }
-        state.categories.delete(cat.id);
-      } else {
-        state.categories.add(cat.id);
-      }
+      if(state.categories.has(cat.id)) state.categories.delete(cat.id);
+      else state.categories.add(cat.id);
       renderEconomieCatChips();
       updatePoolCount();
     });
@@ -5007,7 +5013,7 @@ const ECONOMIE_THEORIE = {
 function showEconomieTheorie(){
   const opt = ECONOMIE_SUB_OPTIONS.find(o => o.code === economieSub);
   document.getElementById('theorie-titel').textContent = opt.label;
-  document.getElementById('theorie-inhoud').innerHTML = ECONOMIE_THEORIE[economieSub]();
+  document.getElementById('theorie-inhoud').innerHTML = uitlegVoorSoorten(ECONOMIE_CATEGORIES[economieSub], economieStates[economieSub].categories);
   showScreen('theorie');
   window.scrollTo(0, 0);
 }
@@ -5020,12 +5026,8 @@ function renderFunctieCatChips(){
     chip.className = 'chip' + (functieState.categories.has(cat.id) ? ' active' : '');
     chip.textContent = cat.label;
     chip.addEventListener('click', () => {
-      if(functieState.categories.has(cat.id)){
-        if(functieState.categories.size === 1){ showToast('Kies minstens 1 soort vragen.'); return; }
-        functieState.categories.delete(cat.id);
-      } else {
-        functieState.categories.add(cat.id);
-      }
+      if(functieState.categories.has(cat.id)) functieState.categories.delete(cat.id);
+      else functieState.categories.add(cat.id);
       renderFunctieCatChips();
       updatePoolCount();
     });
@@ -5054,12 +5056,8 @@ function renderComplexCatChips(){
     chip.className = 'chip' + (complexState.categories.has(cat.id) ? ' active' : '');
     chip.textContent = cat.label;
     chip.addEventListener('click', () => {
-      if(complexState.categories.has(cat.id)){
-        if(complexState.categories.size === 1){ showToast('Kies minstens 1 soort vragen.'); return; }
-        complexState.categories.delete(cat.id);
-      } else {
-        complexState.categories.add(cat.id);
-      }
+      if(complexState.categories.has(cat.id)) complexState.categories.delete(cat.id);
+      else complexState.categories.add(cat.id);
       renderComplexCatChips();
       updatePoolCount();
     });
@@ -5088,12 +5086,8 @@ function renderCombiCatChips(){
     chip.className = 'chip' + (combinatoriekState.categories.has(cat.id) ? ' active' : '');
     chip.textContent = cat.label;
     chip.addEventListener('click', () => {
-      if(combinatoriekState.categories.has(cat.id)){
-        if(combinatoriekState.categories.size === 1){ showToast('Kies minstens 1 soort vragen.'); return; }
-        combinatoriekState.categories.delete(cat.id);
-      } else {
-        combinatoriekState.categories.add(cat.id);
-      }
+      if(combinatoriekState.categories.has(cat.id)) combinatoriekState.categories.delete(cat.id);
+      else combinatoriekState.categories.add(cat.id);
       renderCombiCatChips();
       updatePoolCount();
     });
@@ -5139,19 +5133,184 @@ function renderWiskExtraChips(){
   });
 }
 
-function theorieFunctieverloop(){
+/* ==================================================================
+   UITLEG PER SOORT VRAGEN
+   Elke aanvinkbare soort vragen heeft een eigen uitleg (functie die
+   HTML teruggeeft). "Eerst wat uitleg" toont enkel de uitleg bij de
+   aangevinkte soorten; niets aangevinkt → de uitleg bij alles.
+   Een stuk (<h3>) dat al bij een vorige soort stond, wordt niet herhaald.
+   ================================================================== */
+function uitlegStukken(html){
+  const delen = html.split('<h3>');
+  const out = [];
+  if(delen[0].trim()) out.push({ titel:'', html: delen[0] });
+  delen.slice(1).forEach(d => {
+    const eind = d.indexOf('</h3>');
+    const titel = d.slice(0, eind).replace(/^\d+\.\s*/, '');
+    out.push({ titel, html: '<h3>' + titel + d.slice(eind) });
+  });
+  return out;
+}
+/* de stukken met deze titels (zonder nummering) uit een uitlegtekst */
+function uitlegKies(html, titels){
+  const stukken = uitlegStukken(html);
+  return titels.map(t => (stukken.find(x => x.titel === t) || { html:'' }).html).join('');
+}
+function begrippenLijst(items){
+  return '<h3>Begrippen</h3>' + items.map(b => `<p><b>${b.vraag}</b><br>${b.juist}</p>`).join('');
+}
+function uitlegVoorSoorten(categorieen, gekozen, intro){
+  const metUitleg = categorieen.filter(c => c.uitleg);
+  let delen = metUitleg.filter(c => gekozen.has(c.id));
+  const alles = delen.length === 0;
+  if(alles) delen = metUitleg;
   const ga = id => `<a href="javascript:void(0)" onclick="document.getElementById('${id}').scrollIntoView({behavior:'smooth'})">`;
   const deel = (id, titel) => `<h2 id="${id}" style="font-family:'Fraunces',serif; margin:30px 0 4px; padding-top:12px; border-top:2px solid var(--paper-line);">${titel}</h2>`;
-  return `<p class="hint">Inhoud: ${ga('th-a')}A. Grafiek en verloop</a> · ${ga('th-b')}B. Functiewaarde, domein &amp; bereik</a></p>`
-    + deel('th-a', 'A. Grafiek en verloop') + theorieFuncties()
-    + deel('th-b', 'B. Functiewaarde, domein & bereik') + theorieDomeinBereik();
+  const hint = alles
+    ? '<p class="hint">Je hebt nog geen soort vragen aangevinkt, dus hieronder staat de uitleg bij alle onderdelen. Vink eerst aan wat je wil oefenen om enkel die uitleg te zien.</p>'
+    : '<p class="hint">Uitleg bij de onderdelen die je aangevinkt hebt.</p>';
+  const inhoud = delen.length > 1
+    ? `<p class="hint">Inhoud: ${delen.map(c => `${ga('th-u-' + c.id)}${c.label}</a>`).join(' · ')}</p>`
+    : '';
+  const gezien = new Set();
+  const body = delen.map(c => {
+    const stukken = uitlegStukken(c.uitleg()).filter(st => {
+      if(!st.titel) return true;
+      if(gezien.has(st.titel)) return false;
+      gezien.add(st.titel);
+      return true;
+    });
+    const html = stukken.length ? stukken.map(st => st.html).join('') : '<p class="hint">De uitleg hierbij staat al hierboven.</p>';
+    return deel('th-u-' + c.id, c.label) + html;
+  }).join('');
+  return hint + (intro || '') + inhoud + body;
 }
 
+/* ---------- Functies DF (dubbele finaliteit) ---------- */
+const FUNCTIES_DF_BEGRIPPEN = [
+  { vraag:'Functie', juist:'Een verband dat aan elke x (uit het domein) precies één y koppelt.' },
+  { vraag:'Functiewaarde f(x)', juist:'De y die bij een bepaalde x hoort. f(2) = 5 betekent: het punt (2, 5) ligt op de grafiek.' },
+  { vraag:'Functievoorschrift', juist:'De formule van de functie, bv. f(x) = 2x − 3.' },
+  { vraag:'Onafhankelijke veranderlijke', juist:'x: de grootheid die je zelf kiest (horizontale as).' },
+  { vraag:'Afhankelijke veranderlijke', juist:'y = f(x): de grootheid die van x afhangt (verticale as).' },
+  { vraag:'Domein', juist:'Alle x-waarden waarvoor f(x) bestaat.' },
+  { vraag:'Bereik', juist:'Alle y-waarden die de functie aanneemt.' },
+  { vraag:'Eerstegraadsfunctie', juist:'f(x) = ax + b met a ≠ 0; de grafiek is een schuine rechte.' },
+  { vraag:'Richtingscoëfficiënt (rico) a', juist:'Hoeveel f(x) verandert als x met 1 toeneemt. a > 0: stijgend, a < 0: dalend, a = 0: constant.' },
+  { vraag:'Snijpunt met de y-as', juist:'(0, b): de rechte gaat door de oorsprong als b = 0.' },
+  { vraag:'Nulwaarde', juist:'Een x-waarde waarvoor f(x) = 0: daar snijdt de grafiek de x-as.' },
+  { vraag:'Evenwijdige rechten', juist:'Rechten met dezelfde richtingscoëfficiënt (en een verschillende b).' },
+];
+function uitlegFunctiesDF(id){
+  const metGrafiek = html => html.replace('<p>In de grafiek hierboven is f', `<div class="theorie-svg">${voorbeeldDerdegraads()}</div><p>In deze grafiek is f`);
+  switch(id){
+    case 'grafisch': return uitlegKies(theorieFuncties(), ['Functie, functiewaarde en eerstegraadsfunctie']) + `
+      <h3>Een rechte aflezen op de grafiek</h3>
+      <div class="formule">nulwaarde: waar de rechte de x-as snijdt<br>b: waar de rechte de y-as snijdt, het punt (0, b)<br>rico a: ga 1 hokje naar rechts en tel hoeveel de rechte omhoog (+) of omlaag (−) gaat<br>voorschrift: vul a en b in, f(x) = ax + b</div>
+      <p>Lukt het trapje van 1 niet mooi, neem dan twee roosterpunten: a = (stap omhoog of omlaag) / (stap naar rechts).</p>
+      <h3>Is dit een functie?</h3>
+      <p>Gebruik de <b>verticale-lijntest</b>: een grafiek stelt een functie voor als elke verticale lijn de grafiek <b>hoogstens één keer</b> snijdt. Een cirkel of een verticale rechte is dus geen functie.</p>`;
+    case 'rekenen': return uitlegKies(theorieFuncties(), ['Functie, functiewaarde en eerstegraadsfunctie']) + `
+      <h3>Rekenen met rechten</h3>
+      <div class="formule">functiewaarde: f(x) = 2x − 2 → f(3) = 2·3 − 2 = 4<br>nulwaarde: ax + b = 0 ⇔ x = −b/a<br>rico uit twee punten: a = (y₂ − y₁) / (x₂ − x₁)<br>b vinden: b = y₁ − a·x₁<br>snijpunt van twee rechten: los f(x) = g(x) op en vul x in voor y<br>evenwijdig: dezelfde rico</div>
+      <p><b>Voorbeeld:</b> de rechte door (1, 3) en (3, 7). a = (7 − 3)/(3 − 1) = 2 en b = 3 − 2·1 = 1, dus f(x) = 2x + 1.</p>
+      <p>Snijpunt met g(x) = −x + 7: 2x + 1 = −x + 7 ⇔ 3x = 6 ⇔ x = 2, en f(2) = 5. Snijpunt (2, 5).</p>
+      <p>In een vraagstuk is b meestal een <b>vast bedrag of startwaarde</b> en a de <b>verandering per eenheid</b> (bv. prijs per km).</p>`;
+    case 'functiewaarde': return uitlegKies(theorieDomeinBereik(), ['Wat is een functiewaarde?', 'Functiewaarde aflezen op een grafiek', 'Functiewaarde berekenen']);
+    case 'domeinbereik': return uitlegKies(theorieDomeinBereik(), ['Het domein', 'Het bereik', 'Intervallen noteren']);
+    case 'teken': return uitlegKies(theorieFuncties(), ['Tekenverloop']);
+    case 'verloop': return uitlegKies(theorieFuncties(), ['Stijgen, dalen en extrema']);
+    case 'holbol': return metGrafiek(uitlegKies(theorieFuncties(), ['Hol en bol', 'Buigpunten']));
+    case 'schema': return uitlegKies(theorieFuncties(), ['Het verloopschema: alles in één tabel'])
+      .replace('Voor de grafiek hierboven:</p>', `Voor deze grafiek:</p><div class="theorie-svg">${voorbeeldDerdegraads()}</div>`);
+    default: return begrippenLijst(FUNCTIES_DF_BEGRIPPEN);
+  }
+}
+
+/* ---------- Complexe getallen ---------- */
+const COMPLEX_BEGRIPPEN = [
+  { vraag:'i', juist:'Het getal met i² = −1.' },
+  { vraag:'Machten van i', juist:'i¹ = i, i² = −1, i³ = −i, i⁴ = 1; daarna begint het opnieuw (deel de exponent door 4 en kijk naar de rest).' },
+  { vraag:'Reëel deel', juist:'In z = a + bi is a het reëel deel.' },
+  { vraag:'Imaginair deel', juist:'In z = a + bi is b het imaginair deel (zonder de i).' },
+  { vraag:'Toegevoegde (geconjugeerde)', juist:'Bij z = a + bi hoort a − bi: het teken van het imaginair deel keert om.' },
+  { vraag:'Modulus |z|', juist:'De afstand tot de oorsprong: |a + bi| = √(a² + b²).' },
+  { vraag:'Argument', juist:'De hoek φ met de positieve reële as.' },
+  { vraag:'Goniometrische vorm', juist:'z = r(cos φ + i sin φ) = r cis φ.' },
+];
+function uitlegComplex(id){
+  const t = theorieComplex();
+  const ab = uitlegKies(t, ['Rekenen in de vorm a + bi']);
+  switch(id){
+    case 'som': return ab + `
+      <h3>Optellen en aftrekken</h3>
+      <div class="formule">(3 + 2i) + (1 − 5i) = (3 + 1) + (2 − 5)i = 4 − 3i<br>(3 + 2i) − (1 − 5i) = (3 − 1) + (2 + 5)i = 2 + 7i</div>
+      <p>Reëel deel bij reëel deel, imaginair deel bij imaginair deel. Let bij aftrekken op de haakjes: het minteken geldt voor beide delen.</p>`;
+    case 'vermenigvuldiging': return ab + `
+      <h3>Vermenigvuldigen met i</h3>
+      <div class="formule">i · (a + bi) = ai + bi² = −b + ai<br>bv. i · (3 + 2i) = −2 + 3i</div>
+      <p>Vermenigvuldigen met i draait het getal 90° in tegenwijzerzin in het complexe vlak.</p>`
+      + uitlegKies(t, ['Goniometrische vorm', 'Vermenigvuldigen, delen en machten']);
+    case 'macht': return ab + `
+      <h3>Machten in de vorm a + bi</h3>
+      <div class="formule">(a + bi)² = a² − b² + 2abi<br>(a + bi)³ = a³ − 3ab² + (3a²b − b³)i</div>
+      <p><b>Voorbeeld:</b> (1 + 2i)² = 1 − 4 + 4i = −3 + 4i, en (1 + 2i)³ = (−3 + 4i)(1 + 2i) = −3 − 6i + 4i + 8i² = −11 − 2i.</p>
+      <p>Je kan ook gewoon herhaald vermenigvuldigen: (a + bi)³ = (a + bi)² · (a + bi).</p>`;
+    case 'wortel': return uitlegKies(t, ['Goniometrische vorm', 'De n-de machtswortel']);
+    case 'vraagstuk': return uitlegKies(t, ['Vermenigvuldigen, delen en machten', 'Vraagstukken']);
+    default: return begrippenLijst(COMPLEX_BEGRIPPEN);
+  }
+}
+
+/* ---------- Combinatieleer ---------- */
+const COMBI_BEGRIPPEN = [
+  { vraag:'Permutatie (volledige rangschikking)', juist:'Alle n verschillende elementen in een volgorde zetten: n! mogelijkheden.' },
+  { vraag:'Variatie', juist:'p elementen kiezen uit n waarbij de volgorde telt: AB ≠ BA.' },
+  { vraag:'Combinatie', juist:'p elementen kiezen uit n waarbij de volgorde niet telt: AB = BA.' },
+  { vraag:'Zonder herhaling', juist:'Elk element kan maar één keer gekozen worden (bv. niemand krijgt twee medailles).' },
+  { vraag:'Met herhaling', juist:'Eenzelfde element mag meerdere keren gekozen worden (bv. een cijfer in een pincode).' },
+  { vraag:'Faculteit n!', juist:'n! = n · (n − 1) · … · 2 · 1, bv. 4! = 24. Per afspraak is 0! = 1.' },
+];
+function uitlegCombi(id){
+  switch(id){
+    case 'rekenen': return `
+      <h3>Formules</h3>
+      <div class="formule">permutaties van n: n!<br>variaties zonder herhaling van p uit n: n! / (n − p)!<br>variaties met herhaling van p uit n: nᵖ<br>combinaties zonder herhaling van p uit n: n! / (p! · (n − p)!)<br>combinaties met herhaling van p uit n: combinaties zonder herhaling van p uit (n + p − 1)</div>
+      <p><b>Voorbeelden</b> met n = 5 en p = 2:</p>
+      <div class="formule">5! = 120<br>variaties zonder herhaling: 5! / 3! = 5 · 4 = 20<br>variaties met herhaling: 5² = 25<br>combinaties zonder herhaling: 5! / (2! · 3!) = 20 / 2 = 10<br>combinaties met herhaling: combinaties zonder herhaling van 2 uit 6 = 15</div>
+      <p>Tip: vereenvoudig eerst. 8! / 6! = 8 · 7 = 56, want 6! staat zowel boven als onder.</p>`;
+    case 'verhaaltjes': return `
+      <h3>Vraagstukken aanpakken</h3>
+      <div class="formule">1. Wat kies je, en hoeveel (p) uit hoeveel (n)?<br>2. Telt de volgorde? (een rangorde, code, 1e/2e/3e → ja; een groepje, team → nee)<br>3. Mag hetzelfde element opnieuw gekozen worden? (herhaling)<br>4. Kies de formule en reken uit</div>
+      <p><b>Voorbeelden</b></p>
+      <div class="formule">podium (goud, zilver, brons) uit 8 lopers: volgorde ja, herhaling nee → 8 · 7 · 6 = 336<br>pincode van 4 cijfers: volgorde ja, herhaling ja → 10⁴ = 10 000<br>team van 3 uit 10 leerlingen: volgorde nee, herhaling nee → 10! / (3! · 7!) = 120<br>3 bolletjes ijs uit 4 smaken: volgorde nee, herhaling ja → combinaties zonder herhaling van 3 uit 6 = 20<br>5 renners in een volgorde zetten: 5! = 120</div>`;
+    case 'classificatie': return `
+      <h3>Welk telprobleem is het?</h3>
+      <p>Stel jezelf twee vragen: <b>telt de volgorde?</b> en <b>mag herhaling?</b></p>
+      <table class="functie-table compact"><tr><th></th><th>zonder herhaling</th><th>met herhaling</th></tr>
+      <tr><th>volgorde telt</th><td>variatie zonder herhaling</td><td>variatie met herhaling</td></tr>
+      <tr><th>volgorde telt niet</th><td>combinatie zonder herhaling</td><td>combinatie met herhaling</td></tr></table>
+      <div class="formule">volgorde telt: code, wachtwoord, rangschikking, 1e/2e/3e plaats, functies (voorzitter, secretaris)<br>volgorde telt niet: groepje, team, hand kaarten, lottonummers<br>herhaling: "mag opnieuw", "meerdere keren", "met terugleggen", cijfers in een code</div>`;
+    case 'boom': return `
+      <h3>Een boomstructuur lezen</h3>
+      <p>Elk niveau van de boom is één keuze. Elk pad van het begin tot een eindpunt is <b>één mogelijkheid</b>, dus het aantal eindpunten is het aantal mogelijkheden.</p>
+      <div class="formule">komt AA voor (een letter twee keer in een pad)? → met herhaling<br>komen AB én BA allebei voor? → de volgorde telt: variatie<br>komt alleen AB voor en niet BA? → de volgorde telt niet: combinatie</div>
+      <p>Met de knop <b>"Boom op maat tekenen"</b> kan je zelf een boom laten tekenen voor elke keuze van n, p en soort.</p>`;
+    default: return begrippenLijst(COMBI_BEGRIPPEN);
+  }
+}
+
+const WISK_INTRO = {
+  functies: '<p>In dit onderdeel lees je alles af <b>op de grafiek</b>. Je hoeft geen afgeleiden te berekenen.</p>',
+  analyse: "<p>In dit onderdeel <b>bereken</b> je het verloop van een functie met de afgeleide f' en de tweede afgeleide f''. Het aflezen op een grafiek vind je bij Functies DF.</p>",
+};
+const WISK_SOORTEN = { functies: FUNCTIE_CATEGORIES, complex: COMPLEX_CATEGORIES, combinatoriek: COMBI_CATEGORIES };
+
 function showWiskTheorie(){
-  const mod = wiskundeSub === 'functies' ? { theorie: theorieFunctieverloop } : (wiskundeSub === 'complex' ? { theorie: theorieComplex } : WISK_EXTRA[wiskundeSub]);
-  if(!mod) return;
+  const soorten = WISK_EXTRA[wiskundeSub] ? WISK_EXTRA[wiskundeSub].categories : WISK_SOORTEN[wiskundeSub];
+  if(!soorten) return;
   document.getElementById('theorie-titel').textContent = WISKUNDE_SUB_OPTIONS.find(o => o.code === wiskundeSub).label;
-  document.getElementById('theorie-inhoud').innerHTML = mod.theorie();
+  document.getElementById('theorie-inhoud').innerHTML = uitlegVoorSoorten(soorten, GENERATED_MODES[wiskundeSub].state.categories, WISK_INTRO[wiskundeSub]);
   showScreen('theorie');
   window.scrollTo(0, 0);
 }
@@ -6406,6 +6565,7 @@ document.getElementById('btn-economie-uitleg').addEventListener('click', showEco
 document.getElementById('btn-wgen-uitleg').addEventListener('click', showWiskTheorie);
 document.getElementById('btn-functies-uitleg').addEventListener('click', showWiskTheorie);
 document.getElementById('btn-complex-uitleg').addEventListener('click', showWiskTheorie);
+document.getElementById('btn-combi-uitleg').addEventListener('click', showWiskTheorie);
 document.getElementById('btn-theorie-terug').addEventListener('click', () => showScreen('home'));
 document.getElementById('btn-theorie-start').addEventListener('click', startQuiz);
 document.getElementById('btn-toets').addEventListener('click', openToets);
@@ -6419,7 +6579,25 @@ document.getElementById('btn-replay').addEventListener('click', startQuiz);
 document.getElementById('btn-home').addEventListener('click', () => showScreen('home'));
 
 /* ---------- init ---------- */
+/* Op iPhone/iPad in Safari: tip om de app op het beginscherm te zetten.
+   Verschijnt niet als de app al via het icoon geopend is, of na "OK". */
+const INSTALLTIP_KEY = 'gymnasion-installtip-weg';
+function toonInstallTip(){
+  const opIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const alsApp = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+  let weg = false;
+  try{ weg = localStorage.getItem(INSTALLTIP_KEY) === '1'; }catch(e){}
+  if(!opIOS || alsApp || weg || hasSharedStorage) return;
+  const el = document.getElementById('installtip');
+  el.hidden = false;
+  document.getElementById('btn-installtip-ok').addEventListener('click', () => {
+    el.hidden = true;
+    try{ localStorage.setItem(INSTALLTIP_KEY, '1'); }catch(e){}
+  });
+}
+
 (async function init(){
+  toonInstallTip();
   await loadTermbank();
   markeerOnderbrokenToetsen();
   renderModeChips();
