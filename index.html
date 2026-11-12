@@ -1,5 +1,7 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Gymnasion Trainer</title>
+<!-- versie van de app: bij elke nieuwe versie aanpassen, dan herlaadt een geopende app (bv. op het beginscherm van een iPhone) zichzelf -->
+<meta name="app-versie" content="2026-11-12-2110">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -1093,6 +1095,35 @@ let complexState = { categories: new Set(), aantal: 10 };
 let quiz = { questions:[], index:0, score:0, answers:[] };
 let pendingImportRows = null;
 let pendingImportLabel = '';
+
+/* ==================================================================
+   NIEUWE VERSIE AUTOMATISCH LADEN
+   Een app op het beginscherm (iPhone) wordt niet gesloten maar "slaapt";
+   bij het terugkeren laadt iOS de pagina niet opnieuw. Daarom vergelijken
+   we bij het opstarten en bij het terugkeren naar de app de versie in de
+   pagina met die op de server. Enkel op het beginscherm, nooit tijdens
+   een oefening of toets.
+   ================================================================== */
+let laatsteVersieCheck = 0;
+async function controleerNieuweVersie(){
+  const meta = document.querySelector('meta[name="app-versie"]');
+  if(!meta || !/^https?:$/.test(location.protocol)) return;
+  if(toets || !document.getElementById('screen-home').classList.contains('active')) return;
+  if(Date.now() - laatsteVersieCheck < 30000) return;
+  laatsteVersieCheck = Date.now();
+  try{
+    const r = await fetch(location.pathname + '?versiecheck=' + Date.now(), { cache:'no-store' });
+    if(!r.ok) return;
+    const m = (await r.text()).match(/<meta name="app-versie" content="([^"]+)"/);
+    if(!m || m[1] === meta.content) return;
+    /* hoogstens één poging per versie, zodat een verouderde cache nooit een lus geeft */
+    try{ if(sessionStorage.getItem('app-versie-geladen') === m[1]) return; sessionStorage.setItem('app-versie-geladen', m[1]); }catch(e){}
+    /* een nieuwe URL omzeilt de browsercache */
+    location.replace(location.pathname + '?v=' + encodeURIComponent(m[1]));
+  }catch(e){}
+}
+document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'visible') controleerNieuweVersie(); });
+window.addEventListener('pageshow', () => controleerNieuweVersie());
 
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -8006,6 +8037,7 @@ function toonInstallTip(){
   toonInstallTip();
   await loadTermbank();
   markeerOnderbrokenToetsen();
+  controleerNieuweVersie();
   renderModeChips();
   refreshLangUI();
   refreshUitlegUI();
