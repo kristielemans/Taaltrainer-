@@ -1,7 +1,7 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Gymnasion Trainer</title>
 <!-- versie van de app: bij elke nieuwe versie aanpassen, dan herlaadt een geopende app (bv. op het beginscherm van een iPhone) zichzelf -->
-<meta name="app-versie" content="2026-11-17-1700">
+<meta name="app-versie" content="2026-11-17-1845">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -387,7 +387,35 @@
   .theorie h3{ font-family:'Fraunces', serif; font-size:1.08rem; margin:18px 0 6px; }
   .theorie p{ margin:0 0 10px; line-height:1.5; }
   /* afdrukbare cursus */
-  .cursus-balk{ display:flex; justify-content:space-between; gap:10px; margin-bottom:14px; }
+  .cursus-balk{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; }
+  .cursus-opties{ display:flex; align-items:center; flex-wrap:wrap; gap:10px; font-size:0.9rem; }
+  .afdruk-optie{ display:flex; align-items:center; gap:6px; }
+  .afdruk-optie input[type=number]{ width:4em; padding:6px; border-radius:8px; border:1.5px solid var(--paper-line); font:inherit; }
+  .afdruk-knoppen{ display:flex; flex-wrap:wrap; gap:8px; }
+  /* vragen op papier */
+  .cursus .pv{ border-top:1px solid var(--paper-line); padding:8px 0 10px; break-inside:avoid; }
+  .cursus .pv-kop{ margin-bottom:3px; }
+  .cursus .pv-cat{ font-size:0.8em; color:var(--ink-soft); }
+  .cursus .pv-svg svg{ display:block; max-width:230px; height:auto; margin:4px 0; }
+  .cursus .pv-rooster svg{ max-width:300px; }
+  .cursus .pv-extra{ margin:4px 0; overflow-x:auto; }
+  .cursus .pv-extra table{ border-collapse:collapse; font-size:0.9em; }
+  .cursus .pv-extra td, .cursus .pv-extra th{ border:1px solid var(--paper-line); padding:3px 8px; text-align:center; }
+  .cursus .pv-opties{ display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:4px 14px; margin-top:4px; }
+  .cursus .pv-optie{ display:flex; gap:6px; align-items:flex-start; }
+  .cursus .pv-vak{ flex:none; width:12px; height:12px; border:1.5px solid var(--ink); border-radius:2px; margin-top:3px; }
+  .cursus .pv-leeg{ display:inline-block; width:2.2em; height:1.2em; border-bottom:1px dotted var(--ink); }
+  .cursus .pv-lijn{ margin-top:8px; height:2.6em; border-bottom:1px dotted var(--ink-soft); color:var(--ink-soft); font-size:0.85em; }
+  .cursus .po{ padding:5px 0; border-top:1px solid var(--paper-line); break-inside:avoid; }
+  .cursus .po-uitleg{ white-space:pre-line; color:var(--ink-soft); font-size:0.88em; margin-top:2px; }
+  .cursus .toets-hoofding{ width:100%; }
+  .cursus table.oz-leeg{ width:100%; }
+  .cursus .pv.pv-oz, .cursus .po.pv-oz{ break-inside:auto; }
+  .cursus table.oz-leeg td{ height:1.9em; }
+  .cursus table.oz-leeg th{ white-space:nowrap; width:1%; }
+  .cursus .pv ol, .cursus .po ol{ margin:4px 0 8px; }
+  .cursus .toets-hoofding td{ width:35%; height:1.8em; }
+  .zonder-sleutel .sleutel{ display:none; }
   .cursus{ font-size:0.95rem; line-height:1.5; }
   .cursus h1{ font-family:'Fraunces', serif; font-size:1.5rem; margin:0 0 2px; }
   .cursus .sub{ color:var(--ink-soft); margin:0 0 14px; }
@@ -435,7 +463,9 @@
     .cursus .nieuwe-pagina{ break-before:page; border-top:none; }
     .cursus .cg-rooster{ grid-template-columns:repeat(3, 1fr); }
     .cursus .theorie-svg svg{ max-width:200px; }
-    .cursus table.ct th{ background:#eee !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    /* op papier alles wit: de beige kleuren van de app worden wit, lijnen grijs */
+    :root{ --paper:#fff; --white:#fff; --paper-line:#bbb; --toets-licht:#fff; --shadow:none; }
+    html, body{ background:#fff !important; }
   }
   .lim{ display:inline-flex; flex-direction:column; align-items:center; vertical-align:middle; line-height:1.05; margin:0 3px; }
   .lim sub{ font-size:0.62em; vertical-align:baseline; white-space:nowrap; }
@@ -628,13 +658,17 @@
   <div class="screen active" id="screen-home">
     <section class="card">
       <h2>Wat wil je oefenen?</h2>
-      <p class="hint">Vaktermen: de vaktermen van alle vakken oefenen in 4 talen. Wiskunde en Economie: aparte oefeningen die telkens opnieuw berekend worden.</p>
+      <p class="hint">Vaktermen: de vaktermen van alle vakken oefenen in 4 talen. Wiskunde DF, Wiskunde DS en Economie: aparte oefeningen die telkens opnieuw berekend worden, met uitleg, een oefenblad en een toets om af te drukken.</p>
       <div class="chips" id="chips-vak-top" style="margin-bottom:18px;"></div>
 
       <div id="config-wiskunde" style="display:none;">
         <div class="filter-group">
           <label>Onderdeel</label>
           <div class="chips" id="chips-wiskunde-sub"></div>
+        </div>
+        <div class="filter-group afdruk-knoppen">
+          <button class="btn btn-ghost" id="btn-wisk-oefenblad" type="button">Oefenblad afdrukken</button>
+          <button class="btn btn-ghost" id="btn-wisk-toetsafdruk" type="button">Toets afdrukken</button>
         </div>
 
         <div id="wiskunde-config-functies">
@@ -691,7 +725,6 @@
           </div>
           <div class="filter-group">
             <button class="btn btn-green" id="btn-wgen-uitleg" type="button">Eerst wat uitleg</button>
-            <button class="btn btn-ghost" id="btn-wgen-cursus" type="button" style="display:none;">Cursus bekijken &amp; afdrukken</button>
           </div>
           <div class="filter-group">
             <label id="wgen-aantal-label">Aantal vragen</label>
@@ -705,6 +738,10 @@
         <div class="filter-group">
           <label>Onderdeel</label>
           <div class="chips" id="chips-economie-sub"></div>
+        </div>
+        <div class="filter-group afdruk-knoppen">
+          <button class="btn btn-ghost" id="btn-eco-oefenblad" type="button">Oefenblad afdrukken</button>
+          <button class="btn btn-ghost" id="btn-eco-toetsafdruk" type="button">Toets afdrukken</button>
         </div>
         <p class="hint">Vragen worden telkens opnieuw willekeurig samengesteld, dus ze komen niet steeds terug. Vink eerst aan welke soorten vragen je wil oefenen. Met "Eerst wat uitleg" krijg je de uitleg bij precies die onderdelen.</p>
         <div class="filter-group">
@@ -877,6 +914,7 @@
     <section class="card">
       <div class="cursus-balk">
         <button class="btn btn-ghost" id="btn-cursus-terug">Terug</button>
+        <div id="cursus-opties" class="cursus-opties"></div>
         <button class="btn btn-primary" id="btn-cursus-print">Afdrukken / PDF</button>
       </div>
       <div class="cursus" id="cursus-inhoud"></div>
@@ -949,10 +987,13 @@
     <p class="hint">Voor leerlingen én leerkrachten &mdash; sluit dit venster gewoon om verder te gaan.</p>
 
     <p style="font-weight:600; margin-bottom:4px;">Voor leerlingen</p>
-    <p class="hint">Kies bovenaan eerst <b>"Vaktermen"</b>, <b>"Wiskunde"</b> of <b>"Economie"</b>. Bij Vaktermen kies je je spelmodus, taal (of talen) en het vak, hoofdstuk en graad waarover je wil oefenen, en klik je op start. Kies je <b>"Economie"</b>, dan kan je oefenen op <b>"Gini-coëfficiënt"</b>, <b>"Volkomen concurrentie"</b> en <b>"Monopolie"</b>. Kies je <b>"Wiskunde"</b>, dan kan je verder kiezen tussen <b>"Functies DF"</b> (dubbele finaliteit: alles op zicht, zonder afgeleiden), <b>"Functies DF+"</b> (symmetrie, gedrag op oneindig en periodieke functies, ook op zicht), <b>"Functies DS"</b> (doorstroom: met afgeleiden), <b>"Functieonderzoek"</b> (één functie stap voor stap volledig onderzoeken en de grafiek tekenen), <b>"Limieten veeltermen"</b>, <b>"Limieten rationale functies"</b>, <b>"Asymptoten"</b>, <b>"Complexe getallen"</b>, <b>"Combinatieleer"</b> en <b>"Regel van Bayes"</b> (vink aan welke soorten vragen je wil oefenen; de knop <b>"Eerst wat uitleg"</b> geeft de uitleg bij precies die soorten) &mdash; dat zijn willekeurig samengestelde oefeningen (functies DF: rechten, functiewaarden, domein en bereik, tekenverloop, stijgen en dalen, hol en bol, buigpunten, verloopschema; functies DS: afgeleiden berekenen en daarmee extrema en buigpunten bepalen; limieten: invullen, de hoogstegraadsterm voor x → ±∞, rekenen met oneindig, de vormen 0/0 en a/0 en vraagstukken; asymptoten: verticale, horizontale en schuine asymptoten en gaten; complexe getallen: termen &amp; begrippen, som, vermenigvuldiging, macht, n-de machtswortel, vraagstukken met gegeven formule; combinatieleer: termen &amp; begrippen, rekenen, vraagstukken, "welk telprobleem is dit?" en boomstructuren; regel van Bayes: voorwaardelijke kansen met de formule, een kruistabel, een boomdiagram en een venndiagram) die niet uit een lijst gehaald worden maar telkens opnieuw berekend, dus ze komen niet steeds terug. Staat de lijst van jouw leerkracht of vak er nog niet tussen? Vraag het CSV-bestand aan je leerkracht (bv. via Smartschool) en klik zelf op <b>"Lijst importeren"</b> hierboven om het toe te voegen &mdash; dat moet maar eenmalig, per toestel of browser. Je kan gerust na elkaar lijsten van verschillende leerkrachten of vakken importeren; ze worden gewoon samengevoegd, niets gaat verloren.</p>
+    <p class="hint">Kies bovenaan eerst <b>"Vaktermen"</b>, <b>"Wiskunde DF"</b>, <b>"Wiskunde DS"</b> of <b>"Economie"</b>. Bij Vaktermen kies je je spelmodus, taal (of talen) en het vak, hoofdstuk en graad waarover je wil oefenen, en klik je op start. Kies je <b>"Economie"</b>, dan kan je oefenen op <b>"Gini-coëfficiënt"</b>, <b>"Volkomen concurrentie"</b> en <b>"Monopolie"</b>. Bij <b>"Wiskunde DF"</b> (dubbele finaliteit) kies je tussen <b>"Functies DF"</b> (alles op zicht, zonder afgeleiden) en <b>"Functies DF+"</b> (symmetrie, gedrag op oneindig en periodieke functies, ook op zicht). Bij <b>"Wiskunde DS"</b> (doorstroom) kies je tussen <b>"Functies DS"</b> (doorstroom: met afgeleiden), <b>"Functieonderzoek"</b> (één functie stap voor stap volledig onderzoeken en de grafiek tekenen), <b>"Limieten veeltermen"</b>, <b>"Limieten rationale functies"</b>, <b>"Asymptoten"</b>, <b>"Complexe getallen"</b>, <b>"Combinatieleer"</b> en <b>"Regel van Bayes"</b> (vink aan welke soorten vragen je wil oefenen; de knop <b>"Eerst wat uitleg"</b> geeft de uitleg bij precies die soorten) &mdash; dat zijn willekeurig samengestelde oefeningen (functies DF: rechten, functiewaarden, domein en bereik, tekenverloop, stijgen en dalen, hol en bol, buigpunten, verloopschema; functies DS: afgeleiden berekenen en daarmee extrema en buigpunten bepalen; limieten: invullen, de hoogstegraadsterm voor x → ±∞, rekenen met oneindig, de vormen 0/0 en a/0 en vraagstukken; asymptoten: verticale, horizontale en schuine asymptoten en gaten; complexe getallen: termen &amp; begrippen, som, vermenigvuldiging, macht, n-de machtswortel, vraagstukken met gegeven formule; combinatieleer: termen &amp; begrippen, rekenen, vraagstukken, "welk telprobleem is dit?" en boomstructuren; regel van Bayes: voorwaardelijke kansen met de formule, een kruistabel, een boomdiagram en een venndiagram) die niet uit een lijst gehaald worden maar telkens opnieuw berekend, dus ze komen niet steeds terug. Staat de lijst van jouw leerkracht of vak er nog niet tussen? Vraag het CSV-bestand aan je leerkracht (bv. via Smartschool) en klik zelf op <b>"Lijst importeren"</b> hierboven om het toe te voegen &mdash; dat moet maar eenmalig, per toestel of browser. Je kan gerust na elkaar lijsten van verschillende leerkrachten of vakken importeren; ze worden gewoon samengevoegd, niets gaat verloren.</p>
 
     <p style="font-weight:600; margin:16px 0 4px;">Toets</p>
     <p class="hint">Onder START staat een paarse knop <b>TOETS</b>. Bij Wiskunde en Economie: 10 vragen over het gekozen onderdeel. Bij Vaktermen (Vertalen of Uitleg): maximaal 10 termen uit precies één gekozen vak en hoofdstuk. Er is geen hulp of verbetering tussendoor, en je kan elke toets maar één keer starten en moet ze helemaal afwerken. Toon daarna het paarse resultaatscherm aan je leerkracht.</p>
+
+    <p style="font-weight:600; margin:16px 0 4px;">Afdrukken</p>
+    <p class="hint">Bij elk onderdeel van Wiskunde en Economie staan de knoppen <b>Oefenblad afdrukken</b> (uitleg, oefeningen en oplossingen) en <b>Toets afdrukken</b>. Een afgedrukte toets wordt telkens opnieuw ad random samengesteld, met een verbeteringssleutel op een aparte bladzijde (die kan je uitvinken). Wil je dat buren een andere toets krijgen? Vul bij <b>Versies</b> een aantal in: elke versie krijgt eigen vragen en een eigen sleutel. Gebruik in het afdrukvenster "Opslaan als PDF" om een PDF te maken.</p>
 
     <p style="font-weight:600; margin:16px 0 4px;">Voor leerkrachten: een lijst opstellen</p>
     <p class="hint">Maak een CSV-bestand (puntkomma-gescheiden) volgens dit schema:</p>
@@ -1099,21 +1140,24 @@ const MODE_OPTIONS = [
    hier pas een eigen knop als het aparte oefenonderdelen heeft. */
 const VAK_OPTIONS = [
   { code:'taaltrainer', label:'Vaktermen' },
-  { code:'wiskunde', label:'Wiskunde' },
+  { code:'wiskdf', label:'Wiskunde DF' },
+  { code:'wiskds', label:'Wiskunde DS' },
   { code:'economie', label:'Economie' },
 ];
+/* groep: onder welke hoofdknop het onderdeel staat (DF = dubbele finaliteit, DS = doorstroom) */
 const WISKUNDE_SUB_OPTIONS = [
-  { code:'functies', label:'Functies DF' },
-  { code:'dfplus', label:'Functies DF+' },
-  { code:'analyse', label:'Functies DS' },
-  { code:'onderzoek', label:'Functieonderzoek' },
-  { code:'limveelterm', label:'Limieten veeltermen' },
-  { code:'limrationaal', label:'Limieten rationale functies' },
-  { code:'asymptoten', label:'Asymptoten' },
-  { code:'complex', label:'Complexe getallen' },
-  { code:'combinatoriek', label:'Combinatieleer' },
-  { code:'bayes', label:'Regel van Bayes' },
+  { code:'functies', label:'Functies DF', groep:'wiskdf' },
+  { code:'dfplus', label:'Functies DF+', groep:'wiskdf' },
+  { code:'analyse', label:'Functies DS', groep:'wiskds' },
+  { code:'onderzoek', label:'Functieonderzoek', groep:'wiskds' },
+  { code:'limveelterm', label:'Limieten veeltermen', groep:'wiskds' },
+  { code:'limrationaal', label:'Limieten rationale functies', groep:'wiskds' },
+  { code:'asymptoten', label:'Asymptoten', groep:'wiskds' },
+  { code:'complex', label:'Complexe getallen', groep:'wiskds' },
+  { code:'combinatoriek', label:'Combinatieleer', groep:'wiskds' },
+  { code:'bayes', label:'Regel van Bayes', groep:'wiskds' },
 ];
+function isWiskunde(){ return topVak === 'wiskdf' || topVak === 'wiskds'; }
 const RICHTING_OPTIONS = [
   { code:'term-naar-uitleg', label:'Term \u2192 uitleg' },
   { code:'uitleg-naar-term', label:'Uitleg \u2192 term' },
@@ -5216,13 +5260,6 @@ ${cTabel(['Nr', 'Hoogstegraadstermen', 'Limiet'], [
 `;
 }
 
-function showCursus(){
-  const mod = WISK_EXTRA[wiskundeSub];
-  if(!mod || !mod.cursus) return;
-  document.getElementById('cursus-inhoud').innerHTML = mod.cursus();
-  showScreen('cursus');
-  window.scrollTo(0, 0);
-}
 
 /* ==================================================================
    FUNCTIES DF+ : symmetrie, gedrag op oneindig (met asymptoten op een
@@ -5659,7 +5696,7 @@ ${cTabel(['Nr', 'Oplossing'], DP_BLAD.C.map((o, i) => ['C' + (i + 1), o.opl]).co
 
 const WISK_EXTRA = {
   dfplus: {
-    cursus: cursusDfPlus, cursusLabel: 'Oefenblad bekijken & afdrukken',
+    cursus: cursusDfPlus,
     categories: [
       { id:'symmetrie', label:'Symmetrie', gen: genDpSymmetrie,
         uitleg: () => uitlegKies(theorieDfPlus(), ['Even en oneven functies', 'Symmetrie herkennen']) },
@@ -7706,9 +7743,6 @@ function renderWiskExtraChips(){
     });
     el.appendChild(chip);
   });
-  const cursusKnop = document.getElementById('btn-wgen-cursus');
-  cursusKnop.style.display = mod.cursus ? '' : 'none';
-  cursusKnop.textContent = mod.cursusLabel || 'Cursus bekijken & afdrukken';
   document.getElementById('chips-wgen-aantal').parentElement.style.display = mod.enkeleKeuze ? 'none' : '';
   document.getElementById('wgen-aantal-label').textContent = mod.aantalLabel || 'Aantal vragen';
   renderSingleChips('chips-wgen-aantal', (mod.aantalOpties || WISK_EXTRA_AANTAL).map(n => ({ code:n, label:String(n) })), st.aantal, (code) => {
@@ -7897,6 +7931,196 @@ const WISK_INTRO = {
 };
 const WISK_SOORTEN = { functies: FUNCTIE_CATEGORIES, complex: COMPLEX_CATEGORIES, combinatoriek: COMBI_CATEGORIES };
 
+/* ==================================================================
+   AFDRUKKEN: oefenblad en toets op papier, voor elk onderdeel van
+   Wiskunde en Economie. Gebruikt dezelfde generatoren als de app;
+   een toets is telkens opnieuw ad random samengesteld.
+   ================================================================== */
+const AFDRUK_PER_SOORT = 3;
+const AFDRUK_LETTERS = 'ABCDEFGH';
+
+function afdrukMode(){ return topVak === 'economie' ? economieSub : wiskundeSub; }
+function afdrukLabel(mode){
+  const o = WISKUNDE_SUB_OPTIONS.find(x => x.code === mode) || ECONOMIE_SUB_OPTIONS.find(x => x.code === mode);
+  return o ? o.label : mode;
+}
+function afdrukSoorten(mode){
+  if(WISK_EXTRA[mode]) return WISK_EXTRA[mode].categories;
+  if(WISK_SOORTEN[mode]) return WISK_SOORTEN[mode];
+  return (ECONOMIE_CATEGORIES[mode] || []).filter(c => c.standaardAan !== false);
+}
+/* n vragen van één soort (bij functieonderzoek: één volledige functie) */
+function afdrukVragenVanSoort(mode, id, n){
+  const gen = GENERATED_MODES[mode];
+  const bewaard = gen.state.categories;
+  gen.state.categories = new Set([id]);
+  try{
+    if(gen.buildAll) return gen.buildAll(1);
+    const out = [], gezien = new Set();
+    for(let i = 0; i < n; i++){
+      let q, t = 0;
+      do{ q = gen.build(); t++; } while(gezien.has(functieQuestionSignature(q)) && t < 30);
+      gezien.add(functieQuestionSignature(q));
+      out.push(q);
+    }
+    return out;
+  } finally {
+    gen.state.categories = bewaard;
+  }
+}
+
+/* één vraag zoals op papier: opgave, figuur, keuzes of schrijfruimte */
+function afdrukVraag(q, nr){
+  let h = `<div class="pv"><div class="pv-kop"><b>${nr}.</b> <span class="pv-cat">${q.catLabel || ''}</span></div>`;
+  h += `<div class="pv-tekst">${q.promptHtml}</div>`;
+  if(q.svg) h += `<div class="pv-svg">${q.svg}</div>`;
+  if(q.extraHtml) h += `<div class="pv-extra">${q.extraHtml}</div>`;
+  if(q.answerType === 'lang'){
+    h += '<div class="pv-opties">' + q.options.map((o, i) => `<div class="pv-optie"><span class="pv-vak"></span><b>${AFDRUK_LETTERS[i]}</b> ${o}</div>`).join('') + '</div>';
+  } else if(q.answerType === 'tabel'){
+    h += '<div class="pv-extra">' + ozTabelHtml(q, false).replace(/<button[^>]*>\?<\/button>/g, '<span class="pv-leeg"></span>') + '</div>';
+  } else if(q.answerType === 'punten'){
+    h += `<div class="pv-svg pv-rooster">${svgGraphPlus([], OZ_WIN, {})}</div>`;
+  } else {
+    h += '<div class="pv-lijn">Antwoord:</div>';
+  }
+  return h + '</div>';
+}
+/* de oplossing van één vraag; metUitleg = met de uitleg van de app erbij */
+function afdrukOplossing(q, nr, metUitleg){
+  let juist = q.correct;
+  if(q.answerType === 'lang'){
+    const i = q.options.indexOf(q.correct);
+    if(i >= 0) juist = `${AFDRUK_LETTERS[i]} – ${q.correct}`;
+  }
+  let h = `<div class="po"><b>${nr}.</b> ${juist}`;
+  if(q.answerType === 'punten') h += `<div class="pv-svg pv-rooster">${ozRoosterSvg(q.ozGegevens, true, [])}</div>`;
+  if(metUitleg && q.explanation) h += `<div class="po-uitleg">${q.explanation}</div>`;
+  return h + '</div>';
+}
+
+/* functieonderzoek op papier: één opgave per functie met deelvragen, een lege
+   samenvattende tabel en een leeg rooster (in de app geeft elke stap de vorige
+   uitkomsten, op papier zou dat de antwoorden verklappen) */
+function afdrukVraagTekst(q){
+  const m = q.promptHtml.match(/<b>([^<]*)<\/b>\s*$/);
+  return (m ? m[1] : q.promptHtml).replace(/\s*Klik op de vraagtekens\.?/, '').replace(/^Plaats op het rooster/, 'Plaats op het rooster hieronder')
+    .replace(/:\s*[^:]*f\([^)]*\)\s*[=≈]\s*\?\s*$/, '.');   /* "max = f(−1) = ?" zou de ligging verklappen */
+}
+function afdrukOnderzoek(stappen, nr){
+  const g = stappen.find(q => q.ozGegevens).ozGegevens;
+  const leeg = '<td></td>'.repeat(9);
+  const tabel = `<table class="ct oz-leeg">${['x', 'y', "y'", 'stijgen / dalen', "y''", 'hol / bol'].map(r => `<tr><th>${r}</th>${leeg}</tr>`).join('')}</table>`;
+  return `<div class="pv pv-oz"><div class="pv-kop"><b>${nr}.</b> Onderzoek de functie <b>f(x) = ${g.fTxt || fmtPoly(g.f)}</b></div>
+<ol type="a">${stappen.map(q => `<li>${afdrukVraagTekst(q)}</li>`).join('')}</ol>
+<p>Vul stap voor stap de samenvattende tabel in:</p>${tabel}
+<div class="pv-svg pv-rooster">${svgGraphPlus([], OZ_WIN, {})}</div></div>`;
+}
+function afdrukOnderzoekOplossing(stappen, nr){
+  const laatste = stappen.find(q => q.answerType === 'punten');
+  return `<div class="po pv-oz"><b>${nr}.</b><ol type="a">${stappen.map(q => `<li>${q.correct}</li>`).join('')}</ol>
+${laatste && laatste.extraHtml ? `<div class="pv-extra">${laatste.extraHtml}</div>` : ''}
+${laatste ? `<div class="pv-svg pv-rooster">${ozRoosterSvg(laatste.ozGegevens, true, [])}</div>` : ''}</div>`;
+}
+
+function afdrukUitleg(mode){
+  const gezien = new Set();
+  const stukken = [];
+  afdrukSoorten(mode).forEach(c => {
+    if(!c.uitleg) return;
+    uitlegStukken(c.uitleg()).forEach(s => {
+      if(!s.titel || gezien.has(s.html)) return;
+      gezien.add(s.html);
+      stukken.push(s.html);
+    });
+  });
+  return stukken.join('');
+}
+
+function afdrukOefenblad(mode){
+  const mod = WISK_EXTRA[mode];
+  if(mod && mod.cursus) return mod.cursus();
+  let nr = 0;
+  const opl = [];
+  let oef = '';
+  afdrukSoorten(mode).forEach(c => {
+    const vragen = afdrukVragenVanSoort(mode, c.id, AFDRUK_PER_SOORT);
+    oef += `<h3>${c.label}</h3>`;
+    opl.push(`<h3>${c.label}</h3>`);
+    if(mode === 'onderzoek'){ nr++; oef += afdrukOnderzoek(vragen, nr); opl.push(afdrukOnderzoekOplossing(vragen, nr)); return; }
+    vragen.forEach(q => { nr++; oef += afdrukVraag(q, nr); opl.push(afdrukOplossing(q, nr, true)); });
+  });
+  return `
+<h1>${afdrukLabel(mode)}</h1>
+<p class="sub">Oefenblad · Gymnasion</p>
+<h2>Uitleg</h2>
+<div class="theorie">${WISK_INTRO[mode] || ''}${afdrukUitleg(mode)}</div>
+<h2 class="nieuwe-pagina">Oefeningen</h2>
+<p>Schrijf telkens je tussenstappen op. Bij meerkeuzevragen kruis je het juiste vakje aan.</p>
+${oef}
+<h2 class="nieuwe-pagina">Oplossingen</h2>
+${opl.join('')}`;
+}
+
+function afdrukToets(mode, versies){
+  let h = '';
+  for(let v = 1; v <= versies; v++){
+    const vragen = maakToetsVragen(mode);
+    const oz = mode === 'onderzoek';
+    const versieTxt = versies > 1 ? ` · versie ${v}` : '';
+    h += `<div class="${v > 1 ? 'nieuwe-pagina' : ''}">
+<h1>Toets – ${afdrukLabel(mode)}</h1>
+<p class="sub">Gymnasion${versieTxt}</p>
+<table class="ct toets-hoofding"><tr><th>Naam</th><td></td><th>Klas</th><td></td></tr><tr><th>Datum</th><td></td><th>Score</th><td>… / ${vragen.length}</td></tr></table>
+<p>Schrijf telkens je tussenstappen op. Bij meerkeuzevragen kruis je het juiste vakje aan. Je mag je rekentoestel gebruiken.</p>
+${oz ? afdrukOnderzoek(vragen, 1) : vragen.map((q, i) => afdrukVraag(q, i + 1)).join('')}</div>`;
+    {
+      h += `<div class="nieuwe-pagina sleutel"><h2>Verbeteringssleutel – ${afdrukLabel(mode)}${versieTxt}</h2>
+<p class="sub">Enkel voor de leerkracht.</p>
+${oz ? afdrukOnderzoekOplossing(vragen, 1) : vragen.map((q, i) => afdrukOplossing(q, i + 1, false)).join('')}</div>`;
+    }
+  }
+  return h;
+}
+
+/* het afdrukscherm (gedeeld met de cursussen) */
+function toonAfdruk(html, opties){
+  document.getElementById('cursus-inhoud').innerHTML = html;
+  document.getElementById('cursus-opties').innerHTML = opties || '';
+  showScreen('cursus');
+  window.scrollTo(0, 0);
+}
+function showOefenbladAfdruk(){
+  toonAfdruk(afdrukOefenblad(afdrukMode()),
+    WISK_EXTRA[afdrukMode()] && WISK_EXTRA[afdrukMode()].cursus ? '' : '<button class="btn btn-ghost" type="button" onclick="showOefenbladAfdruk()">Andere oefeningen</button>');
+}
+let afdrukToetsInstelling = { versies: 1, sleutel: true };
+function showToetsAfdruk(){
+  const mode = afdrukMode();
+  const mod = WISK_EXTRA[mode];
+  if(mod && mod.toetsPerSoort && !toetsSoort(mode)){
+    showToast('Vink voor een toets precies één soort aan, bv. Veeltermfuncties ★★.');
+    return;
+  }
+  const st = afdrukToetsInstelling;
+  const opties = `
+    <label class="afdruk-optie">Versies <input type="number" id="afdruk-versies" min="1" max="40" value="${st.versies}"></label>
+    <label class="afdruk-optie"><input type="checkbox" id="afdruk-sleutel" ${st.sleutel ? 'checked' : ''}> verbeteringssleutel</label>
+    <button class="btn btn-ghost" type="button" id="afdruk-nieuw">Nieuwe toets</button>`;
+  toonAfdruk(`<div id="toets-afdruk" class="${st.sleutel ? '' : 'zonder-sleutel'}">${afdrukToets(mode, st.versies)}</div>`, opties);
+  const herbouw = () => {
+    st.versies = Math.max(1, Math.min(40, parseInt(document.getElementById('afdruk-versies').value, 10) || 1));
+    showToetsAfdruk();
+  };
+  document.getElementById('afdruk-nieuw').addEventListener('click', herbouw);
+  document.getElementById('afdruk-versies').addEventListener('change', herbouw);
+  /* de sleutel tonen of verbergen verandert de toets zelf niet */
+  document.getElementById('afdruk-sleutel').addEventListener('change', e => {
+    st.sleutel = e.target.checked;
+    document.getElementById('toets-afdruk').classList.toggle('zonder-sleutel', !st.sleutel);
+  });
+}
+
 function showWiskTheorie(){
   const soorten = WISK_EXTRA[wiskundeSub] ? WISK_EXTRA[wiskundeSub].categories : WISK_SOORTEN[wiskundeSub];
   if(!soorten) return;
@@ -7907,7 +8131,7 @@ function showWiskTheorie(){
 }
 
 function renderWiskundeSubChips(){
-  renderSingleChips('chips-wiskunde-sub', WISKUNDE_SUB_OPTIONS, wiskundeSub, (code) => {
+  renderSingleChips('chips-wiskunde-sub', WISKUNDE_SUB_OPTIONS.filter(o => o.groep === topVak), wiskundeSub, (code) => {
     wiskundeSub = code;
     renderWiskundeSubChips();
     renderWiskExtraChips();
@@ -7918,13 +8142,13 @@ function renderWiskundeSubChips(){
 }
 
 function syncGameMode(){
-  if(topVak === 'wiskunde') gameMode = wiskundeSub;
+  if(isWiskunde()) gameMode = wiskundeSub;
   else if(topVak === 'economie') gameMode = economieSub;
   else gameMode = topMode;
 }
 
 function updateConfigVisibility(){
-  const inWiskunde = topVak === 'wiskunde';
+  const inWiskunde = isWiskunde();
   document.getElementById('config-wiskunde').style.display = inWiskunde ? 'block' : 'none';
   document.getElementById('config-economie').style.display = topVak === 'economie' ? 'block' : 'none';
   document.getElementById('config-termmode').style.display = topVak === 'taaltrainer' ? 'block' : 'none';
@@ -8268,6 +8492,11 @@ function refreshLeesUI(){
 function renderVakTopChips(){
   renderSingleChips('chips-vak-top', VAK_OPTIONS, topVak, (code) => {
     topVak = code;
+    /* bij DF of DS: het eerste onderdeel van die groep kiezen als het huidige er niet bij hoort */
+    if(isWiskunde() && WISKUNDE_SUB_OPTIONS.find(o => o.code === wiskundeSub).groep !== topVak){
+      wiskundeSub = WISKUNDE_SUB_OPTIONS.find(o => o.groep === topVak).code;
+    }
+    if(isWiskunde()){ renderWiskundeSubChips(); renderWiskExtraChips(); }
     renderVakTopChips();
     syncGameMode();
     updateConfigVisibility();
@@ -9215,7 +9444,10 @@ document.getElementById('btn-start').addEventListener('click', () => {
 document.getElementById('btn-lijst-terug').addEventListener('click', () => showScreen('home'));
 document.getElementById('btn-economie-uitleg').addEventListener('click', showEconomieTheorie);
 document.getElementById('btn-wgen-uitleg').addEventListener('click', showWiskTheorie);
-document.getElementById('btn-wgen-cursus').addEventListener('click', showCursus);
+document.getElementById('btn-wisk-oefenblad').addEventListener('click', showOefenbladAfdruk);
+document.getElementById('btn-wisk-toetsafdruk').addEventListener('click', showToetsAfdruk);
+document.getElementById('btn-eco-oefenblad').addEventListener('click', showOefenbladAfdruk);
+document.getElementById('btn-eco-toetsafdruk').addEventListener('click', showToetsAfdruk);
 document.getElementById('btn-cursus-terug').addEventListener('click', () => showScreen('home'));
 document.getElementById('btn-cursus-print').addEventListener('click', () => {
   document.body.classList.add('cursus-print');
