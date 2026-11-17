@@ -1,7 +1,7 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Gymnasion Trainer</title>
 <!-- versie van de app: bij elke nieuwe versie aanpassen, dan herlaadt een geopende app (bv. op het beginscherm van een iPhone) zichzelf -->
-<meta name="app-versie" content="2026-11-17-1845">
+<meta name="app-versie" content="2026-11-17-1900">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -406,6 +406,7 @@
   .cursus .pv-vak{ flex:none; width:12px; height:12px; border:1.5px solid var(--ink); border-radius:2px; margin-top:3px; }
   .cursus .pv-leeg{ display:inline-block; width:2.2em; height:1.2em; border-bottom:1px dotted var(--ink); }
   .cursus .pv-lijn{ margin-top:8px; height:2.6em; border-bottom:1px dotted var(--ink-soft); color:var(--ink-soft); font-size:0.85em; }
+  .cursus .pv-oplossing{ margin-top:6px; padding:6px 10px; border-left:3px solid var(--green); background:var(--paper); }
   .cursus .po{ padding:5px 0; border-top:1px solid var(--paper-line); break-inside:avoid; }
   .cursus .po-uitleg{ white-space:pre-line; color:var(--ink-soft); font-size:0.88em; margin-top:2px; }
   .cursus .toets-hoofding{ width:100%; }
@@ -491,6 +492,9 @@
   .tabel-cel.fout{ background:#FCE9E4; border:1.5px solid var(--coral); color:var(--coral); cursor:default; }
   .theorie-svg svg{ max-width:100%; height:auto; }
   .btn-toets{ background:var(--toets); color:var(--white); border-color:var(--toets); }
+  .btn-dossier{ background:var(--coral); color:var(--white); border-color:var(--coral); }
+  /* rij met Eerst wat uitleg / Dossier afdrukken / Toets afdrukken */
+  .filter-group:has(> .js-dossier){ display:flex; flex-wrap:wrap; gap:8px; }
   #btn-toets{ margin-top:6px; padding:12px 28px; font-weight:700; letter-spacing:0.08em; }
   .toets-label{ display:inline-block; background:var(--toets); color:var(--white); font-family:'IBM Plex Mono', monospace; font-weight:700; letter-spacing:0.25em; padding:5px 16px; border-radius:6px; }
   section.card.toets-kaart{ border:3px solid var(--toets); background:var(--toets-licht); }
@@ -658,17 +662,13 @@
   <div class="screen active" id="screen-home">
     <section class="card">
       <h2>Wat wil je oefenen?</h2>
-      <p class="hint">Vaktermen: de vaktermen van alle vakken oefenen in 4 talen. Wiskunde DF, Wiskunde DS en Economie: aparte oefeningen die telkens opnieuw berekend worden, met uitleg, een oefenblad en een toets om af te drukken.</p>
+      <p class="hint">Vaktermen: de vaktermen van alle vakken oefenen in 4 talen. Wiskunde DF, Wiskunde DS en Economie: aparte oefeningen die telkens opnieuw berekend worden, met uitleg, een dossier en een toets om af te drukken.</p>
       <div class="chips" id="chips-vak-top" style="margin-bottom:18px;"></div>
 
       <div id="config-wiskunde" style="display:none;">
         <div class="filter-group">
           <label>Onderdeel</label>
           <div class="chips" id="chips-wiskunde-sub"></div>
-        </div>
-        <div class="filter-group afdruk-knoppen">
-          <button class="btn btn-ghost" id="btn-wisk-oefenblad" type="button">Oefenblad afdrukken</button>
-          <button class="btn btn-ghost" id="btn-wisk-toetsafdruk" type="button">Toets afdrukken</button>
         </div>
 
         <div id="wiskunde-config-functies">
@@ -679,6 +679,8 @@
           </div>
           <div class="filter-group">
             <button class="btn btn-green" id="btn-functies-uitleg" type="button">Eerst wat uitleg</button>
+            <button class="btn btn-dossier js-dossier" type="button">Dossier afdrukken</button>
+            <button class="btn btn-toets js-toetsafdruk" type="button">Toets afdrukken</button>
           </div>
           <div class="filter-group">
             <label>Aantal vragen</label>
@@ -694,6 +696,8 @@
           </div>
           <div class="filter-group">
             <button class="btn btn-green" id="btn-complex-uitleg" type="button">Eerst wat uitleg</button>
+            <button class="btn btn-dossier js-dossier" type="button">Dossier afdrukken</button>
+            <button class="btn btn-toets js-toetsafdruk" type="button">Toets afdrukken</button>
           </div>
           <div class="filter-group">
             <label>Aantal vragen</label>
@@ -709,6 +713,8 @@
           </div>
           <div class="filter-group">
             <button class="btn btn-green" id="btn-combi-uitleg" type="button">Eerst wat uitleg</button>
+            <button class="btn btn-dossier js-dossier" type="button">Dossier afdrukken</button>
+            <button class="btn btn-toets js-toetsafdruk" type="button">Toets afdrukken</button>
             <button class="btn btn-green" id="btn-open-boomtool" type="button">Boom op maat tekenen</button>
           </div>
           <div class="filter-group">
@@ -725,6 +731,8 @@
           </div>
           <div class="filter-group">
             <button class="btn btn-green" id="btn-wgen-uitleg" type="button">Eerst wat uitleg</button>
+            <button class="btn btn-dossier js-dossier" type="button">Dossier afdrukken</button>
+            <button class="btn btn-toets js-toetsafdruk" type="button">Toets afdrukken</button>
           </div>
           <div class="filter-group">
             <label id="wgen-aantal-label">Aantal vragen</label>
@@ -739,10 +747,6 @@
           <label>Onderdeel</label>
           <div class="chips" id="chips-economie-sub"></div>
         </div>
-        <div class="filter-group afdruk-knoppen">
-          <button class="btn btn-ghost" id="btn-eco-oefenblad" type="button">Oefenblad afdrukken</button>
-          <button class="btn btn-ghost" id="btn-eco-toetsafdruk" type="button">Toets afdrukken</button>
-        </div>
         <p class="hint">Vragen worden telkens opnieuw willekeurig samengesteld, dus ze komen niet steeds terug. Vink eerst aan welke soorten vragen je wil oefenen. Met "Eerst wat uitleg" krijg je de uitleg bij precies die onderdelen.</p>
         <div class="filter-group">
           <label>Soorten vragen</label>
@@ -750,6 +754,8 @@
         </div>
         <div class="filter-group">
           <button class="btn btn-green" id="btn-economie-uitleg" type="button">Eerst wat uitleg</button>
+          <button class="btn btn-dossier js-dossier" type="button">Dossier afdrukken</button>
+          <button class="btn btn-toets js-toetsafdruk" type="button">Toets afdrukken</button>
         </div>
         <div class="filter-group">
           <label>Aantal vragen</label>
@@ -993,7 +999,7 @@
     <p class="hint">Onder START staat een paarse knop <b>TOETS</b>. Bij Wiskunde en Economie: 10 vragen over het gekozen onderdeel. Bij Vaktermen (Vertalen of Uitleg): maximaal 10 termen uit precies één gekozen vak en hoofdstuk. Er is geen hulp of verbetering tussendoor, en je kan elke toets maar één keer starten en moet ze helemaal afwerken. Toon daarna het paarse resultaatscherm aan je leerkracht.</p>
 
     <p style="font-weight:600; margin:16px 0 4px;">Afdrukken</p>
-    <p class="hint">Bij elk onderdeel van Wiskunde en Economie staan de knoppen <b>Oefenblad afdrukken</b> (uitleg, oefeningen en oplossingen) en <b>Toets afdrukken</b>. Een afgedrukte toets wordt telkens opnieuw ad random samengesteld, met een verbeteringssleutel op een aparte bladzijde (die kan je uitvinken). Wil je dat buren een andere toets krijgen? Vul bij <b>Versies</b> een aantal in: elke versie krijgt eigen vragen en een eigen sleutel. Gebruik in het afdrukvenster "Opslaan als PDF" om een PDF te maken.</p>
+    <p class="hint">Bij elk onderdeel van Wiskunde en Economie staan naast "Eerst wat uitleg" de knoppen <b>Dossier afdrukken</b> (uitleg, voorbeelden, oefeningen en oplossingen) en <b>Toets afdrukken</b>. Een afgedrukte toets wordt telkens opnieuw ad random samengesteld, met een verbeteringssleutel op een aparte bladzijde (die kan je uitvinken). Wil je dat buren een andere toets krijgen? Vul bij <b>Versies</b> een aantal in: elke versie krijgt eigen vragen en een eigen sleutel. Gebruik in het afdrukvenster "Opslaan als PDF" om een PDF te maken.</p>
 
     <p style="font-weight:600; margin:16px 0 4px;">Voor leerkrachten: een lijst opstellen</p>
     <p class="hint">Maak een CSV-bestand (puntkomma-gescheiden) volgens dit schema:</p>
@@ -5002,7 +5008,7 @@ function cursusLimieten(){
   const H = cF('x² − 4', 'x − 2');
   return `
 <h1>Limieten van functies berekenen</h1>
-<p class="sub">5 Humane Wetenschappen · Gymnasion</p>
+<p class="sub">Dossier · 5 Humane Wetenschappen · Gymnasion</p>
 
 <h2>1. Wat is een limiet?</h2>
 <p>Een limiet beschrijft welke waarde f(x) nadert als x steeds dichter bij een bepaald getal komt (of steeds groter of kleiner wordt). Het gaat om het <i>naderen</i>, niet om de functiewaarde zelf: f hoeft in dat getal zelfs niet gedefinieerd te zijn.</p>
@@ -5653,9 +5659,22 @@ function cursusDfPlus(){
   const kort = g => g === 'sch' ? 'blijft schommelen' : typeof g === 'number' ? `nadert tot ${mFmt(g)}` : g;
   return `
 <h1>Functies DF+</h1>
-<p class="sub">Symmetrie, gedrag op oneindig en periodieke functies · Gymnasion</p>
+<p class="sub">Dossier · Symmetrie, gedrag op oneindig en periodieke functies · Gymnasion</p>
 <h2>Uitleg</h2>
 <div class="theorie">${theorieDfPlus()}</div>
+
+<h2 class="nieuwe-pagina">Voorbeelden</h2>
+<div class="cg-rooster">
+  <div class="cg"><div class="cg-nr">Voorbeeld 1 – Symmetrie</div>${dpLijn([[-6, 1], [-5, 3], [-4, -1], [-3, 2], [-2, -2], [-1, 0], [0, 3], [1, 0], [2, -2], [3, 2], [4, -1], [5, 3], [6, 1]])}</div>
+  <div class="cg"><div class="cg-nr">Voorbeeld 2 – Gedrag op oneindig</div>${dpGraf(x => -1 / (x - 1) - 2, [1])}</div>
+  <div class="cg"><div class="cg-nr">Voorbeeld 3 – Periode</div>${dpLijn([-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6].map(x => [x, [-2, 1, 3, 1][((x % 4) + 4) % 4]]))}</div>
+</div>
+<p><b>Voorbeeld 1.</b> Is de functie even, oneven of geen van beide?</p>
+<div class="pv-oplossing"><b>Oplossing:</b> even. Kijk naar punten met tegengestelde x: f(1) = 0 en f(−1) = 0, f(2) = −2 en f(−2) = −2, f(5) = 3 en f(−5) = 3, … Bij x en −x hoort telkens dezelfde y: de grafiek is spiegelsymmetrisch t.o.v. de y-as.</div>
+<p><b>Voorbeeld 2.</b> Beschrijf het gedrag op oneindig en geef de asymptoten.</p>
+<div class="pv-oplossing"><b>Oplossing:</b> heel ver naar links en heel ver naar rechts komt de grafiek steeds dichter bij de rechte y = −2: x → −∞ en x → +∞: f(x) nadert tot −2, dus HA y = −2. Bij x = 1 schiet de grafiek omhoog (links) en omlaag (rechts) zonder die rechte te raken: VA x = 1.</div>
+<p><b>Voorbeeld 3.</b> Is de functie periodiek? Zo ja, wat is de periode?</p>
+<div class="pv-oplossing"><b>Oplossing:</b> ja. De top in (2, 3) komt terug in (6, 3) en in (−2, 3): het stuk grafiek herhaalt zich na 4 eenheden. De periode is 4, dus f(x + 4) = f(x).</div>
 
 <h2 class="nieuwe-pagina">Oefeningen</h2>
 <h3>Reeks A – Symmetrie</h3>
@@ -7932,7 +7951,7 @@ const WISK_INTRO = {
 const WISK_SOORTEN = { functies: FUNCTIE_CATEGORIES, complex: COMPLEX_CATEGORIES, combinatoriek: COMBI_CATEGORIES };
 
 /* ==================================================================
-   AFDRUKKEN: oefenblad en toets op papier, voor elk onderdeel van
+   AFDRUKKEN: dossier (uitleg, voorbeelden, oefeningen, oplossingen) en toets op papier, voor elk onderdeel van
    Wiskunde en Economie. Gebruikt dezelfde generatoren als de app;
    een toets is telkens opnieuw ad random samengesteld.
    ================================================================== */
@@ -8037,9 +8056,25 @@ function afdrukUitleg(mode){
   return stukken.join('');
 }
 
-function afdrukOefenblad(mode){
+/* een uitgewerkt voorbeeld: de vraag met meteen de oplossing en de uitleg */
+function afdrukVoorbeeld(q, nr){
+  let h = `<div class="pv"><div class="pv-kop"><b>Voorbeeld ${nr}.</b> <span class="pv-cat">${q.catLabel || ''}</span></div>`;
+  h += `<div class="pv-tekst">${q.promptHtml}</div>`;
+  if(q.svg) h += `<div class="pv-svg">${q.svg}</div>`;
+  if(q.extraHtml) h += `<div class="pv-extra">${q.extraHtml}</div>`;
+  if(q.answerType === 'lang') h += '<div class="pv-opties">' + q.options.map((o, i) => `<div class="pv-optie"><b>${AFDRUK_LETTERS[i]}</b> ${o}</div>`).join('') + '</div>';
+  h += `<div class="pv-oplossing"><b>Oplossing:</b> ${q.correct}${q.explanation ? `<div class="po-uitleg">${q.explanation}</div>` : ''}</div>`;
+  return h + '</div>';
+}
+
+/* dossier: uitleg, voorbeelden, oefeningen en oplossingen */
+function afdrukDossier(mode){
   const mod = WISK_EXTRA[mode];
   if(mod && mod.cursus) return mod.cursus();
+  let vb = '';
+  if(mode !== 'onderzoek'){   /* bij functieonderzoek staat het uitgewerkte voorbeeld al in de uitleg */
+    afdrukSoorten(mode).forEach((c, i) => { vb += afdrukVoorbeeld(afdrukVragenVanSoort(mode, c.id, 1)[0], i + 1); });
+  }
   let nr = 0;
   const opl = [];
   let oef = '';
@@ -8052,9 +8087,10 @@ function afdrukOefenblad(mode){
   });
   return `
 <h1>${afdrukLabel(mode)}</h1>
-<p class="sub">Oefenblad · Gymnasion</p>
+<p class="sub">Dossier · Gymnasion</p>
 <h2>Uitleg</h2>
 <div class="theorie">${WISK_INTRO[mode] || ''}${afdrukUitleg(mode)}</div>
+${vb ? `<h2 class="nieuwe-pagina">Voorbeelden</h2>${vb}` : ''}
 <h2 class="nieuwe-pagina">Oefeningen</h2>
 <p>Schrijf telkens je tussenstappen op. Bij meerkeuzevragen kruis je het juiste vakje aan.</p>
 ${oef}
@@ -8090,9 +8126,9 @@ function toonAfdruk(html, opties){
   showScreen('cursus');
   window.scrollTo(0, 0);
 }
-function showOefenbladAfdruk(){
-  toonAfdruk(afdrukOefenblad(afdrukMode()),
-    WISK_EXTRA[afdrukMode()] && WISK_EXTRA[afdrukMode()].cursus ? '' : '<button class="btn btn-ghost" type="button" onclick="showOefenbladAfdruk()">Andere oefeningen</button>');
+function showDossierAfdruk(){
+  toonAfdruk(afdrukDossier(afdrukMode()),
+    WISK_EXTRA[afdrukMode()] && WISK_EXTRA[afdrukMode()].cursus ? '' : '<button class="btn btn-ghost" type="button" onclick="showDossierAfdruk()">Andere oefeningen</button>');
 }
 let afdrukToetsInstelling = { versies: 1, sleutel: true };
 function showToetsAfdruk(){
@@ -9444,10 +9480,8 @@ document.getElementById('btn-start').addEventListener('click', () => {
 document.getElementById('btn-lijst-terug').addEventListener('click', () => showScreen('home'));
 document.getElementById('btn-economie-uitleg').addEventListener('click', showEconomieTheorie);
 document.getElementById('btn-wgen-uitleg').addEventListener('click', showWiskTheorie);
-document.getElementById('btn-wisk-oefenblad').addEventListener('click', showOefenbladAfdruk);
-document.getElementById('btn-wisk-toetsafdruk').addEventListener('click', showToetsAfdruk);
-document.getElementById('btn-eco-oefenblad').addEventListener('click', showOefenbladAfdruk);
-document.getElementById('btn-eco-toetsafdruk').addEventListener('click', showToetsAfdruk);
+document.querySelectorAll('.js-dossier').forEach(b => b.addEventListener('click', showDossierAfdruk));
+document.querySelectorAll('.js-toetsafdruk').forEach(b => b.addEventListener('click', showToetsAfdruk));
 document.getElementById('btn-cursus-terug').addEventListener('click', () => showScreen('home'));
 document.getElementById('btn-cursus-print').addEventListener('click', () => {
   document.body.classList.add('cursus-print');
