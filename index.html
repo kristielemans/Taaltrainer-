@@ -416,6 +416,25 @@
   .cursus table.oz-leeg th{ white-space:nowrap; width:1%; }
   .cursus .pv ol, .cursus .po ol{ margin:4px 0 8px; }
   .cursus .toets-hoofding td{ width:35%; height:1.8em; }
+  /* toetsblad functieonderzoek: opmaak zoals het Word-voorbeeld */
+  .cursus .ozt{ font-family:Arial, Helvetica, sans-serif; font-size:11pt; line-height:1.35; color:#000; }
+  .cursus .ozt p{ margin:0 0 4px; }
+  .cursus .ozt-school{ font-weight:700; margin:0 0 2px; }
+  .cursus .ozt-naam{ display:flex; justify-content:space-between; margin:0 0 10px; }
+  .cursus .ozt-titel{ text-align:center; font-size:18pt; font-weight:700; color:#1F4E9C; margin:6px 0; font-family:Arial, Helvetica, sans-serif; }
+  .cursus .ozt-totaal{ text-align:right; font-size:12pt; font-weight:700; margin:0 0 8px; }
+  .cursus .ozt-schuin{ font-style:italic; }
+  .cursus .ozt-functie{ text-align:center; font-weight:700; margin:6px 0; }
+  .cursus .ozt-kop{ font-weight:700; color:#1F4E9C; margin:10px 0 3px; }
+  .cursus .ozt table.ozt-tabel{ width:100%; border-collapse:collapse; table-layout:fixed; margin:4px 0 6px; }
+  .cursus .ozt-tabel td, .cursus .ozt-tabel th{ border:1px solid #000; height:1cm; padding:0 2px; }
+  .cursus .ozt-tabel th{ width:2.6cm; background:#E8EEF8; font-size:9pt; text-align:center; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .cursus .ozt-vraag{ display:flex; justify-content:space-between; font-weight:700; border-bottom:1px solid #1F4E9C; padding-bottom:2px; margin:14px 0 4px; break-after:avoid; }
+  .cursus .ozt-vraag b{ color:#1F4E9C; margin-right:0.5em; }
+  .cursus .ozt-deel{ break-inside:avoid; margin:0 0 4px; }
+  .cursus .ozt-lijn{ height:0.65cm; border-bottom:1px dotted #999; }
+  .cursus .ozt-grafiek{ break-inside:avoid; }
+  .cursus .ozt-rooster svg{ display:block; width:100%; max-width:13.5cm; height:auto; margin:4px auto 0; }
   .zonder-sleutel .sleutel{ display:none; }
   .cursus{ font-size:0.95rem; line-height:1.5; }
   .cursus h1{ font-family:'Fraunces', serif; font-size:1.5rem; margin:0 0 2px; }
@@ -8045,6 +8064,81 @@ function afdrukOnderzoek(stappen, nr){
 <p>Vul stap voor stap de samenvattende tabel in:</p>${tabel}
 <div class="pv-svg pv-rooster">${ozLeegRooster()}</div></div>`;
 }
+/* toetsblad functieonderzoek zoals op het Word-voorbeeld: hoofding, samenvattende tabel,
+   vragen met punten en schrijflijnen, en een groot leeg rooster */
+function afdrukOnderzoekToets(stappen, versieTxt){
+  const g = stappen.find(q => q.ozGegevens).ozGegevens;
+  const lijnen = n => '<div class="ozt-lijn"></div>'.repeat(n);
+  const deel = (tekst, n) => `<div class="ozt-deel"><p>${tekst}</p>${lijnen(n)}</div>`;
+  const vraag = (nr, titel, punten, delen) => ({ nr, titel, punten, delen });
+  const rationaal = !!g.noemer, homografisch = g.type === 'homografisch';
+  const meerBp = !!(g.bps && g.bps.length > 1);
+  const tabelInvullen = "Vul in de samenvattende tabel de nieuwe x- en y-waarden, de rij y ' en de rij stijgen / dalen aan.";
+  let vragen, rijen, grafiekTekst;
+  if(rationaal){
+    rijen = ['x', 'y', "y '", 'stijgen / dalen'];
+    vragen = [
+      vraag(1, 'Domein, nulwaarden en tekenschema van f', 3, [
+        deel('a) Bepaal het domein van f.', 2),
+        deel('b) Bepaal de nulwaarden van f.', 3),
+        deel('c) Vul in de samenvattende tabel de rij x en de rij y (tekenschema van f) aan. Duid de x-waarde die niet tot het domein behoort aan met |.', 0)]),
+      vraag(2, 'Asymptoten', 2, [
+        deel('a) Bepaal de verticale asymptoot.', 2),
+        deel(homografisch ? 'b) Bepaal de horizontale asymptoot.' : 'b) Bepaal de schuine asymptoot.', 3)]),
+      homografisch
+        ? vraag(3, 'Eerste afgeleide en verloop van f', 3, [
+          deel("a) Bereken f '(x) met de quotiëntregel.", 3),
+          deel("b) Vul in de samenvattende tabel de rij y ' en de rij stijgen / dalen aan.", 0)])
+        : vraag(3, 'Eerste afgeleide en verloop van f', 4, [
+          deel("a) Bereken f '(x) met de quotiëntregel.", 3),
+          deel("b) Bepaal de nulwaarden van f '(x).", 3),
+          deel('c) Bereken de y-waarden van de extrema. Gaat het om een maximum of een minimum?', 3),
+          deel('d) ' + tabelInvullen, 0)]),
+    ];
+    grafiekTekst = 'Teken de grafiek van f met behulp van de samenvattende tabel. Teken ook de asymptoten in stippellijn.'
+      + (homografisch ? ' Duid de nulpunten duidelijk aan.' : ' Duid de nulpunten en de extrema duidelijk aan.');
+    vragen.push(vraag(4, 'Grafiek', homografisch ? 2 : 1, []));
+  } else {
+    rijen = ['x', 'y', "y '", 'stijgen / dalen', "y ''", 'bol / hol'];
+    vragen = [
+      vraag(1, 'Nulwaarden van f en tekenschema van f', 2, [
+        deel('a) Bepaal de nulwaarden van f.', 5),
+        deel('b) Vul in de samenvattende tabel de rij x en de rij y (tekenschema van f) aan.', 0)]),
+      vraag(2, 'Eerste afgeleide en verloop van f', 4, [
+        deel("a) Bereken f '(x).", 2),
+        deel("b) Bepaal de nulwaarden van f '(x).", 4),
+        deel('c) Bereken de y-waarden van de extrema. Gaat het om een maximum of een minimum?', 3),
+        deel('d) ' + tabelInvullen, 0)]),
+      vraag(3, meerBp ? 'Tweede afgeleide en buigpunten' : 'Tweede afgeleide en buigpunt', 3, [
+        deel(meerBp ? "a) Bereken f ''(x) en bepaal de nulwaarden ervan." : "a) Bereken f ''(x) en bepaal de nulwaarde ervan.", 3),
+        deel(meerBp ? 'b) Bereken de coördinaten van de buigpunten.' : 'b) Bereken de coördinaten van het buigpunt.', 2),
+        deel(meerBp
+          ? "c) Vul in de samenvattende tabel de nieuwe x- en y-waarden, de rij y '' en de rij bol / hol aan. Duid de buigpunten aan."
+          : "c) Vul in de samenvattende tabel de nieuwe x- en y-waarde, de rij y '' en de rij bol / hol aan. Duid het buigpunt aan.", 0)]),
+      vraag(4, 'Grafiek', 1, []),
+    ];
+    grafiekTekst = 'Teken de grafiek van f met behulp van de samenvattende tabel. Duid de nulpunten, de extrema en '
+      + (meerBp ? 'de buigpunten' : 'het buigpunt') + ' duidelijk aan.';
+  }
+  const totaal = vragen.reduce((t, v) => t + v.punten, 0);
+  const kop = v => `<div class="ozt-vraag"><span><b>Vraag ${v.nr}</b>${v.titel}</span><span>…… / ${v.punten}</span></div>`;
+  const leeg = '<td></td>'.repeat(13);
+  const laatste = vragen[vragen.length - 1];
+  return `<div class="ozt">
+<p class="ozt-school">Het Gymnasion – Wiskunde${versieTxt}</p>
+<p class="ozt-naam"><span>Naam: ………………………………………   Klas: ……   Nr: ……</span><span>Datum: ……………</span></p>
+<h1 class="ozt-titel">Toets functieonderzoek</h1>
+<p class="ozt-totaal">Totaal: …… / ${totaal}</p>
+<p class="ozt-schuin">Je mag je rekenmachine gebruiken. Noteer al je tussenstappen: een antwoord zonder berekening levert geen punten op. Rond niet-gehele waarden af op 1 decimaal.</p>
+<p style="margin-top:8px">Onderzoek de functie</p>
+<p class="ozt-functie">f(x) = ${g.fTxt || fmtPoly(g.f)}</p>
+<p class="ozt-kop">Samenvattende tabel</p>
+<p class="ozt-schuin">Deze tabel vul je bij elke vraag verder aan. Laat tussen de x-waarden voldoende kolommen vrij: in de volgende vragen komen er nog x-waarden bij.</p>
+<table class="ozt-tabel">${rijen.map(r => `<tr><th>${r}</th>${leeg}</tr>`).join('')}</table>
+${vragen.slice(0, -1).map(v => kop(v) + v.delen.join('')).join('\n')}
+<div class="ozt-grafiek">${kop(laatste)}<p>${grafiekTekst}</p><div class="ozt-rooster">${ozLeegRooster()}</div></div>
+</div>`;
+}
 function afdrukOnderzoekOplossing(stappen, nr){
   const laatste = stappen.find(q => q.answerType === 'punten');
   return `<div class="po pv-oz"><b>${nr}.</b><ol type="a">${stappen.map(q => `<li>${q.correct}</li>`).join('')}</ol>
@@ -8114,12 +8208,14 @@ function afdrukToets(mode, versies){
     const vragen = maakToetsVragen(mode);
     const oz = mode === 'onderzoek';
     const versieTxt = versies > 1 ? ` · versie ${v}` : '';
-    h += `<div class="${v > 1 ? 'nieuwe-pagina' : ''}">
+    if(oz){
+      h += `<div class="${v > 1 ? 'nieuwe-pagina' : ''}">${afdrukOnderzoekToets(vragen, versieTxt)}</div>`;
+    } else h += `<div class="${v > 1 ? 'nieuwe-pagina' : ''}">
 <h1>Toets – ${afdrukLabel(mode)}</h1>
 <p class="sub">Gymnasion${versieTxt}</p>
 <table class="ct toets-hoofding"><tr><th>Naam</th><td></td><th>Klas</th><td></td></tr><tr><th>Datum</th><td></td><th>Score</th><td>… / ${vragen.length}</td></tr></table>
 <p>Schrijf telkens je tussenstappen op. Bij meerkeuzevragen kruis je het juiste vakje aan. Je mag je rekentoestel gebruiken.</p>
-${oz ? afdrukOnderzoek(vragen, 1) : vragen.map((q, i) => afdrukVraag(q, i + 1)).join('')}</div>`;
+${vragen.map((q, i) => afdrukVraag(q, i + 1)).join('')}</div>`;
     {
       h += `<div class="nieuwe-pagina sleutel"><h2>Verbeteringssleutel – ${afdrukLabel(mode)}${versieTxt}</h2>
 <p class="sub">Enkel voor de leerkracht.</p>
