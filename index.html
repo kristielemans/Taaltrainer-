@@ -7989,6 +7989,16 @@ function afdrukVragenVanSoort(mode, id, n){
 }
 
 /* één vraag zoals op papier: opgave, figuur, keuzes of schrijfruimte */
+/* leeg rooster voor op papier: assen in het midden, vierkante hokjes en geen getallen,
+   zodat de leerling niet op voorhand ziet waar de nulpunten liggen */
+function ozLeegRooster(){
+  const win = { xMin:-8, xMax:8, yMin:-8, yMax:8 };
+  const [x0, y0] = svgPt(win, 0, 0), [xR] = svgPt(win, win.xMax, 0), [, yT] = svgPt(win, 0, win.yMax);
+  const pijlen = `<path d="M${xR + 6} ${y0} l-8 -4 v8 z M${x0} ${yT - 6} l-4 8 h8 z" fill="var(--ink)"/>`
+    + `<text x="${xR + 2}" y="${y0 + 14}" font-size="10" fill="var(--ink)">x</text>`
+    + `<text x="${x0 + 6}" y="${yT}" font-size="10" fill="var(--ink)">y</text>`;
+  return svgCurveGraph([], win).replace(/<text[^>]*>[^<]*<\/text>/g, '').replace('</svg>', pijlen + '</svg>');
+}
 function afdrukVraag(q, nr){
   let h = `<div class="pv"><div class="pv-kop"><b>${nr}.</b> <span class="pv-cat">${q.catLabel || ''}</span></div>`;
   h += `<div class="pv-tekst">${q.promptHtml}</div>`;
@@ -7999,7 +8009,7 @@ function afdrukVraag(q, nr){
   } else if(q.answerType === 'tabel'){
     h += '<div class="pv-extra">' + ozTabelHtml(q, false).replace(/<button[^>]*>\?<\/button>/g, '<span class="pv-leeg"></span>') + '</div>';
   } else if(q.answerType === 'punten'){
-    h += `<div class="pv-svg pv-rooster">${svgGraphPlus([], OZ_WIN, {})}</div>`;
+    h += `<div class="pv-svg pv-rooster">${ozLeegRooster()}</div>`;
   } else {
     h += '<div class="pv-lijn">Antwoord:</div>';
   }
@@ -8033,7 +8043,7 @@ function afdrukOnderzoek(stappen, nr){
   return `<div class="pv pv-oz"><div class="pv-kop"><b>${nr}.</b> Onderzoek de functie <b>f(x) = ${g.fTxt || fmtPoly(g.f)}</b></div>
 <ol type="a">${stappen.map(q => `<li>${afdrukVraagTekst(q)}</li>`).join('')}</ol>
 <p>Vul stap voor stap de samenvattende tabel in:</p>${tabel}
-<div class="pv-svg pv-rooster">${svgGraphPlus([], OZ_WIN, {})}</div></div>`;
+<div class="pv-svg pv-rooster">${ozLeegRooster()}</div></div>`;
 }
 function afdrukOnderzoekOplossing(stappen, nr){
   const laatste = stappen.find(q => q.answerType === 'punten');
