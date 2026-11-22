@@ -6264,6 +6264,26 @@ const ST_CONTEXT_RUW = [
   { wat:'het aantal huisdieren per gezin', wie:'gezinnen', min:0, max:4 },
   { wat:'de schoenmaat van leerlingen', wie:'leerlingen', min:36, max:44 },
 ];
+/* klokvormige frequenties: n waarnemingen over k waarden of klassen, één top (eventueel wat
+   scheef), elke frequentie minstens 1, zodat polygoon, histogram en ogief er 'statistisch' uitzien */
+function stKlokAF(k, n){
+  for(;;){
+    const c = (k - 1) / 2 + (Math.random() - 0.5) * k * 0.3, sig = k / (3.6 + Math.random());
+    const w = Array.from({ length:k }, (_, j) => Math.exp(-((j - c) ** 2) / (2 * sig * sig)));
+    const sw = stSom(w);
+    const af = w.map(x => Math.max(1, Math.round(n * x / sw)));
+    for(let t = 0; t < k; t++) if(Math.random() < 0.35) af[t] = Math.max(1, af[t] + randChoice([-1, 1]));
+    let verschil = n - stSom(af);
+    while(verschil !== 0){
+      const j = randInt(0, k - 1);
+      if(verschil > 0){ af[j]++; verschil--; } else if(af[j] > 1){ af[j]--; verschil++; }
+    }
+    const top = af.indexOf(Math.max(...af));
+    const stijgt = af.slice(0, top + 1).every((v, j) => j === 0 || v >= af[j - 1]);
+    const daalt = af.slice(top).every((v, j) => j === 0 || v <= af[top + j - 1]);
+    if(stijgt && daalt) return af;
+  }
+}
 /* ruwe data: 4 à 6 opeenvolgende waarden, elk minstens één keer, meeste in het midden */
 function stRuweData(nMin, nMax, uniekeModus){
   for(;;){
@@ -6272,11 +6292,7 @@ function stRuweData(nMin, nMax, uniekeModus){
     const start = randInt(c.min, c.max - k + 1);
     const waarden = Array.from({ length:k }, (_, i) => start + i);
     const n = randInt(nMin, nMax);
-    const af = waarden.map(() => 1);
-    for(let i = k; i < n; i++){
-      const j = Math.round((k - 1) / 2 + (Math.random() + Math.random() - 1) * k * 0.6);
-      af[Math.max(0, Math.min(k - 1, j))]++;
-    }
+    const af = stKlokAF(k, n);
     const mx = Math.max(...af);
     if(uniekeModus && af.filter(a => a === mx).length > 1) continue;
     const data = [];
@@ -6286,26 +6302,24 @@ function stRuweData(nMin, nMax, uniekeModus){
 }
 function stCum(af){ let s = 0; return af.map(a => (s += a)); }
 
+/* minstens 8 klassen (afspraak in de klas), dus breedtes die met 8 à 9 klassen realistisch blijven */
+const ST_KLASSEN_MIN = 8;
 const ST_CONTEXT_GROEP = [
-  { wat:'de lengte van leerlingen', eenheid:'cm', start:[150, 155, 160], h:[5, 10] },
-  { wat:'de reactietijd van deelnemers', eenheid:'ms', start:[200, 250, 300], h:[20, 25, 50] },
-  { wat:'de massa van appels', eenheid:'g', start:[120, 140, 150], h:[10, 20] },
+  { wat:'de lengte van leerlingen', eenheid:'cm', start:[145, 150, 155], h:[5] },
+  { wat:'de reactietijd van deelnemers', eenheid:'ms', start:[200, 250], h:[20, 25] },
+  { wat:'de massa van appels', eenheid:'g', start:[110, 120, 130], h:[10] },
   { wat:'de reistijd naar school', eenheid:'min', start:[0], h:[5, 10] },
-  { wat:'de dagelijkse schermtijd', eenheid:'min', start:[0, 60], h:[30, 60] },
+  { wat:'de dagelijkse schermtijd', eenheid:'min', start:[0], h:[30] },
 ];
 /* gegroepeerde data: k klassen [a, a+h[, AF per klasse; n = 20 geeft mooie percentages */
 function stGroepData(opties){
   opties = opties || {};
   for(;;){
     const c = randChoice(ST_CONTEXT_GROEP);
-    const h = randChoice(c.h), a0 = randChoice(c.start), k = opties.k || randInt(5, 6);
+    const h = randChoice(c.h), a0 = randChoice(c.start), k = opties.k || randInt(ST_KLASSEN_MIN, ST_KLASSEN_MIN + 1);
     const grenzen = Array.from({ length:k + 1 }, (_, i) => a0 + i * h);
-    const n = opties.n || randInt(20, 40);
-    const af = grenzen.slice(0, k).map(() => 1);
-    for(let i = k; i < n; i++){
-      const j = Math.round((k - 1) / 2 + (Math.random() + Math.random() - 1) * k * 0.6);
-      af[Math.max(0, Math.min(k - 1, j))]++;
-    }
+    const n = opties.n || randInt(30, 50);
+    const af = stKlokAF(k, n);
     const caf = stCum(af), mx = Math.max(...af);
     if(af.filter(a => a === mx).length > 1) continue;            /* één modale klasse */
     if(caf.includes(n / 2)) continue;                            /* mediaan niet net op een grens */
@@ -6540,7 +6554,7 @@ function genStMatenRuw(){
 function genStTabelGroep(){
   const soort = randChoice(['h', 'midden', 'af', 'caf', 'rf', 'crf']);
   if(soort === 'h'){
-    const c = randChoice(ST_CONTEXT_GROEP), k = randInt(4, 7), h0 = randChoice(c.h);
+    const c = randChoice(ST_CONTEXT_GROEP), k = randInt(ST_KLASSEN_MIN, ST_KLASSEN_MIN + 2), h0 = randChoice(c.h);
     const min = randChoice(c.start) + randInt(1, 4), max = min + k * h0 - randInt(1, h0 - 1);
     const h = Math.ceil((max - min) / k);
     return stVraag('Gegroepeerde tabel', `Bij ${c.wat} is de kleinste waarneming ${min} ${c.eenheid} en de grootste ${max} ${c.eenheid}. Je wil de gegevens verdelen in <b>${k} klassen</b>.<br>Bereken de klassenbreedte h.`,
@@ -6703,7 +6717,7 @@ function genStMaken(){
     opdracht = soort === 'staaf' ? 'Maak het <b>staafdiagram</b>: tik boven elke waarde op de juiste hoogte.' : 'Maak de <b>frequentiepolygoon</b>: tik boven elke waarde op de juiste hoogte; de app verbindt de punten.';
     uitleg = `${soort === 'staaf' ? 'Staafdiagram: boven elke waarde xᵢ een losse staaf' : 'Frequentiepolygoon: boven elke waarde xᵢ een punt'} met als hoogte AFᵢ.\n${d.waarden.map((w, i) => `${w} → ${d.af[i]}`).join(', ')}`;
   } else if(soort === 'histogram'){
-    const g = stGroepData({ k: randInt(4, 6), n: randInt(18, 32) });
+    const g = stGroepData({ k: ST_KLASSEN_MIN, n: randInt(24, 36) });
     const { ymax, ystap } = stYmax(Math.max(...g.af));
     spec = { soort, labels: g.grenzen.map(String), ymax, ystap, xLabel: `${g.c.wat.replace(/^de /, '')} (${g.c.eenheid})`, yLabel: 'AFᵢ', stap: 1 };
     juist = g.af;
@@ -6711,7 +6725,7 @@ function genStMaken(){
     opdracht = 'Maak het <b>histogram</b>: tik in elke klasse op de juiste hoogte. De staven sluiten op elkaar aan.';
     uitleg = `Histogram: boven elke klasse een staaf met als hoogte AFᵢ, zonder ruimte ertussen.\n${g.klassen.map((k, i) => `${k} → ${g.af[i]}`).join(', ')}`;
   } else {
-    const g = stGroepData({ k: randInt(4, 5), n: randInt(12, 22) });
+    const g = stGroepData({ k: ST_KLASSEN_MIN, n: randInt(20, 30) });
     const { ymax, ystap } = stYmax(g.n);
     spec = { soort, labels: g.grenzen.map(String), ymax, ystap, xLabel: `${g.c.wat.replace(/^de /, '')} (${g.c.eenheid})`, yLabel: 'CAFᵢ', stap: 1 };
     juist = [0].concat(g.caf);
@@ -6769,9 +6783,10 @@ function stToonOplossing(q){
 function theorieStatistiek(){
   const vb = [1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4];
   const box = stBoxSvg([2, 4, 5, 7, 10], 1, 11, 1);
-  const histo = stGrafiekSvg({ soort:'histogram', labels:['150', '160', '170', '180', '190', '200'], ymax: 20, ystap: 5, xLabel:'lengte (cm)', yLabel:'AFᵢ' }, [5, 12, 17, 10, 4]);
-  const ogief = stGrafiekSvg({ soort:'ogief', labels:['150', '160', '170', '180', '190', '200'], ymax: 100, ystap: 10, labelElke: 2, pct: true, xLabel:'lengte (cm)', yLabel:'CRFᵢ' }, [0, 10.4, 35.4, 70.8, 91.7, 100]);
-  const staaf = stGrafiekSvg({ soort:'staaf', labels:['1', '2', '3', '4'], ymax: 8, ystap: 1, labelElke: 2, xLabel:'waarde xᵢ', yLabel:'AFᵢ' }, [3, 5, 7, 5]);
+  const grenzen = ['150', '155', '160', '165', '170', '175', '180', '185', '190'];
+  const histo = stGrafiekSvg({ soort:'histogram', labels: grenzen, ymax: 14, ystap: 2, xLabel:'lengte (cm)', yLabel:'AFᵢ' }, [2, 4, 7, 11, 12, 8, 4, 2]);
+  const ogief = stGrafiekSvg({ soort:'ogief', labels: grenzen, ymax: 100, ystap: 10, labelElke: 2, pct: true, xLabel:'lengte (cm)', yLabel:'CRFᵢ' }, [0, 4, 12, 26, 48, 72, 88, 96, 100]);
+  const staaf = stGrafiekSvg({ soort:'staaf', labels:['1', '2', '3', '4'], ymax: 8, ystap: 1, labelElke: 2, xLabel:'waarde xᵢ', yLabel:'AFᵢ' }, [3, 5, 8, 4]);
   return `
     <h3>Wat is statistiek?</h3>
     <p><b>Statistiek</b> is de wetenschap die gegevens verzamelt, ordent, verwerkt, ontleedt en verklaart om inzicht te krijgen in verschijnselen. <b>Verzamelende</b> statistiek verzamelt gegevens, <b>beschrijvende</b> statistiek stelt ze voor met tabellen, grafieken en kengetallen, <b>verklarende</b> statistiek trekt er conclusies uit.</p>
@@ -6792,19 +6807,21 @@ function theorieStatistiek(){
     <p><b>Misleidend:</b> een suggestieve vraag of niet-representatieve steekproef; een afgeknotte as, 3D-diagrammen of beelddiagrammen; een gemiddelde zonder naar extreme waarden of de mediaan te kijken; procent verwarren met procentpunt.</p>
     <h3>Frequentietabel bij ruwe data</h3>
     <p>Per waarde xᵢ noteer je hoe vaak ze voorkomt. n is het totale aantal waarnemingen.</p>
-    ${stTabel(['xᵢ', 'AFᵢ', 'CAFᵢ', 'RFᵢ', 'CRFᵢ'], [[1, 3, 3, '15%', '15%'], [2, 5, 8, '25%', '40%'], [3, 7, 15, '35%', '75%'], [4, 5, 20, '25%', '100%']])}
+    ${stTabel(['xᵢ', 'AFᵢ', 'CAFᵢ', 'RFᵢ', 'CRFᵢ'], [[1, 3, 3, '15%', '15%'], [2, 5, 8, '25%', '40%'], [3, 8, 16, '40%', '80%'], [4, 4, 20, '20%', '100%']])}
     <div class="formule">AF = absolute frequentie (hoe vaak) &nbsp; CAF = de AF opgeteld tot en met die waarde<br>RFᵢ = ${stBreuk('AFᵢ', 'n')} &nbsp;&nbsp; CRFᵢ = ${stBreuk('CAFᵢ', 'n')} &nbsp; (× 100% als je een percentage noteert)</div>
     <h3>Centrummaten</h3>
     <div class="formule">Gemiddelde: x̄ = ${stBreuk('Σ xᵢ · AFᵢ', 'n')} (som over de k verschillende waarden)<br>Mediaan: sorteer; bij een oneven n de middelste waarde, bij een even n het gemiddelde van de twee middelste<br>Modus: de waarde die het vaakst voorkomt (grootste AF)</div>
-    <p><b>Voorbeeld</b> (de tabel hierboven, n = 20): x̄ = ${stBreuk('1·3 + 2·5 + 3·7 + 4·5', '20')} = ${stBreuk('54', '20')} = 2,7. De mediaan is het gemiddelde van de 10e en 11e waarde: (3 + 3) / 2 = 3. De modus is 3.</p>
+    <p><b>Voorbeeld</b> (de tabel hierboven, n = 20): x̄ = ${stBreuk('1·3 + 2·5 + 3·8 + 4·4', '20')} = ${stBreuk('53', '20')} = 2,65. De mediaan is het gemiddelde van de 10e en 11e waarde: (3 + 3) / 2 = 3. De modus is 3.</p>
     <h3>Spreidingsmaten</h3>
     <div class="formule">Variatiebreedte: R = x<sub>max</sub> − x<sub>min</sub><br>Interkwartielafstand: IQR = Q₃ − Q₁ (de spreiding van de middelste 50%)<br>Standaarddeviatie: s = ${stWortel(stBreuk('Σ (xᵢ − x̄)² · AFᵢ', 'n − 1'))}</div>
     <p>Hoe groter s, hoe meer de waarden rond het gemiddelde verspreid liggen. Met je rekentoestel: 1-Var Stats, en je neemt <b>Sx</b> (met n − 1), niet σx.</p>
     <h3>Kwartielen bepalen</h3>
     <p>Sorteer de gegevens en zoek de mediaan. <b>Q₁</b> is de mediaan van de onderste helft, <b>Q₃</b> de mediaan van de bovenste helft. Bij een <b>oneven</b> aantal telt de mediaan zelf bij geen van beide helften mee (zoals op je rekentoestel).</p>
-    <p><b>Voorbeeld:</b> 2, 4, 5, 5, 7, 8, 9, 10, 12 (n = 9): mediaan = 7. Onderste helft 2, 4, 5, 5 → Q₁ = 4,5. Bovenste helft 8, 9, 10, 12 → Q₃ = 9,5. IQR = 9,5 − 4,5 = 5.</p>
+    <p><b>Voorbeeld 1</b> (oneven aantal): 2, 4, 5, 5, 7, 8, 9, 10, 12 (n = 9): mediaan = 7. Onderste helft 2, 4, 5, 5 → Q₁ = (4 + 5) / 2 = 4,5. Bovenste helft 8, 9, 10, 12 → Q₃ = (9 + 10) / 2 = 9,5. IQR = 9,5 − 4,5 = 5.</p>
+    <p><b>Voorbeeld 2</b> (even aantal): 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5 (n = 16): mediaan = (3 + 3) / 2 = 3. Onderste helft (8 waarden) 2, 2, 2, 2, 2, 3, 3, 3 → Q₁ = (2 + 2) / 2 = 2. Bovenste helft 3, 4, 4, 4, 5, 5, 5, 5 → Q₃ = (4 + 5) / 2 = 4,5. IQR = 4,5 − 2 = 2,5.</p>
+    <p>Bij een even aantal is de mediaan (of een kwartiel) het gemiddelde van de twee middelste waarden. Dat hoeft geen gemeten waarde te zijn: Q₃ = 4,5 betekent dat 75% van de gegevens op of onder die grens tussen 4 en 5 ligt.</p>
     <h3>Gegroepeerde frequentietabel</h3>
-    <p>Veel verschillende waarden (meestal continue gegevens) groepeer je in k <b>klassen</b> [oᵢ, bᵢ[ met ondergrens oᵢ en bovengrens bᵢ: oᵢ hoort erbij, bᵢ niet meer (bᵢ is de ondergrens van de volgende klasse).</p>
+    <p>Veel verschillende waarden (meestal continue gegevens) groepeer je in k <b>klassen</b> [oᵢ, bᵢ[ (neem er <b>minstens 8</b>) met ondergrens oᵢ en bovengrens bᵢ: oᵢ hoort erbij, bᵢ niet meer (bᵢ is de ondergrens van de volgende klasse).</p>
     <div class="formule">Klassenbreedte: h = ${stBreuk('MAX − MIN', 'aantal klassen')} (naar boven afronden)<br>Klassenmidden: mᵢ = ${stBreuk('oᵢ + bᵢ', '2')}<br>AF, CAF, RF en CRF bereken je zoals bij ruwe data, maar per klasse.</div>
     <h3>Rekenen met klassenmiddens</h3>
     <p>Je kent de echte waarden niet meer, dus je rekent met de <b>klassenmiddens</b>.</p>
