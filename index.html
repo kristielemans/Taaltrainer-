@@ -914,6 +914,8 @@
       <div class="answer-actions" id="answer-actions">
         <button class="btn btn-primary" id="btn-check">Controleer</button>
         <button class="btn btn-ghost" id="btn-show-answer">Toon antwoord</button>
+        <!-- na het antwoorden komt Volgende in de plaats van Controleer, boven de uitleg: geen scrollen nodig -->
+        <button class="btn btn-primary" id="btn-next" style="display:none;">Volgende &rarr;</button>
       </div>
 
       <div class="feedback" id="feedback">
@@ -921,9 +923,6 @@
         <div id="feedback-text"></div>
       </div>
 
-      <div class="quiz-actions">
-        <button class="btn btn-primary" id="btn-next" style="display:none;">Volgende &rarr;</button>
-      </div>
     </section>
   </div>
 
@@ -6570,12 +6569,14 @@ function genStTabelGroep(){
       explanation: `mᵢ = (oᵢ + bᵢ) / 2 = (${g.grenzen[i]} + ${g.grenzen[i + 1]}) / 2 = ${stGetal(g.midden[i])}` }));
   }
   if(soort === 'af'){
-    /* ruwe waarnemingen; een paar liggen precies op een grens: [a, b[ telt a wel mee en b niet */
+    /* ruwe waarnemingen; de ondergrens én de bovengrens van de gevraagde klasse komen zeker voor:
+       in [oᵢ, bᵢ[ telt oᵢ wel mee en bᵢ niet (bᵢ hoort al bij de volgende klasse) */
+    const ia = randInt(0, g.k - 2), kla = g.klassen[ia];
     const data = [];
-    g.af.forEach((a, j) => { for(let t = 0; t < a; t++){ const lo = g.grenzen[j], hi = g.grenzen[j + 1]; data.push(t === 0 && Math.random() < 0.5 ? lo : randInt(lo, hi - 1)); } });
-    return stVraag('Gegroepeerde tabel', `${intro} Dit zijn de waarnemingen:<br>Hoeveel waarnemingen liggen in de klasse <b>${kl}</b>?`, Object.assign(stGetalVraag(g.af[i]), {
-      extraHtml: stLijst(data), correct: String(g.af[i]),
-      explanation: `In ${kl} horen de waarden vanaf ${g.grenzen[i]} (inbegrepen) tot ${g.grenzen[i + 1]} (niet inbegrepen): AF = ${g.af[i]}.\nOpgepast: een waarde gelijk aan ${g.grenzen[i + 1]} hoort al bij de volgende klasse.` }));
+    g.af.forEach((a, j) => { for(let t = 0; t < a; t++){ const lo = g.grenzen[j], hi = g.grenzen[j + 1]; data.push(t === 0 && (j === ia || j === ia + 1 || Math.random() < 0.4) ? lo : randInt(lo, hi - 1)); } });
+    return stVraag('Gegroepeerde tabel', `${intro} Dit zijn de waarnemingen:<br>Hoeveel waarnemingen liggen in de klasse <b>${kla}</b>?`, Object.assign(stGetalVraag(g.af[ia]), {
+      extraHtml: stLijst(data), correct: String(g.af[ia]),
+      explanation: `In ${kla} horen de waarden vanaf ${g.grenzen[ia]} (inbegrepen) tot ${g.grenzen[ia + 1]} (niet inbegrepen): AF = ${g.af[ia]}.\nOpgepast: ${g.grenzen[ia]} telt wel mee, maar ${g.grenzen[ia + 1]} niet: die waarde hoort al bij de volgende klasse [${g.grenzen[ia + 1]}, ${g.grenzen[ia + 2]}[.` }));
   }
   if(soort === 'caf'){
     return stVraag('Gegroepeerde tabel', `${intro}<br>Bereken CAF van de klasse <b>${kl}</b>.`, Object.assign(stGetalVraag(g.caf[i]), {
@@ -10583,6 +10584,7 @@ function submitAnswer(userAnswer, gaveUp){
   document.getElementById('feedback-text').textContent = uitlegText;
 
   renderStamps();
+  document.getElementById('btn-check').style.display = 'none';
   document.getElementById('btn-next').style.display = 'inline-block';
 }
 
