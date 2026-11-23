@@ -1,7 +1,7 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Gymnasion Trainer</title>
 <!-- versie van de app: bij elke nieuwe versie aanpassen, dan herlaadt een geopende app (bv. op het beginscherm van een iPhone) zichzelf -->
-<meta name="app-versie" content="2026-11-23-1215">
+<meta name="app-versie" content="2026-11-23-1230">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -541,6 +541,7 @@
   .px-functie{ text-align:center; font-size:14pt; margin:6px 0 12px; } .px-schuin{ font-style:italic; font-size:10.5pt; }
   .px-groot svg{ width:100%; max-width:520px; height:auto; }
   .px-veel .px-punten td{ padding:2px 8px; } .px-veel .px-todo{ margin-top:10px; } .px-veel .px-voet{ margin-top:8px; } .px-veel .px-kader{ margin-bottom:10px; }
+  .px-kruis{ width:auto; min-width:60%; margin:6px auto 10px; } .px-kruis td{ width:80px; text-align:center; } .px-kruis th{ padding:0 8px; font-weight:600; }
   .px-tekenvak{ height:300px; margin:4px 0 8px 18px; } .px-tekenvak-klein{ height:250px; }
   .px-leeg{ display:none; }
   .px-reflectie{ margin-top:30px; }
@@ -7334,14 +7335,28 @@ function examenOnderzoek(){
 }
 /* ---------- examen kansrekenen: combinatieleer, kansen, kortste wegen, boomdiagram en Bayes (50 punten) ---------- */
 function pxGetal(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
-/* stratenrooster voor kortste wegen: A linksonder, B rechtsboven, P een kruispunt ertussen */
-function pxStratenSvg(m, n, P){
-  const s = 34, pad = 22, W = m * s + 2 * pad, H = n * s + 2 * pad, x = i => pad + i * s, y = j => H - pad - j * s;
+/* stratenrooster voor kortste wegen: A linksonder, B rechtsboven, eventueel een kruispunt P.
+   weg: opgebroken straten ('h,i,j' van (i,j) naar (i+1,j), 'v,i,j' van (i,j) naar (i,j+1)) worden niet getekend;
+   tel: het aantal kortste wegen bij elk kruispunt (oplossing) */
+function pxStratenSvg(m, n, P, weg, tel){
+  const s = 38, pad = 22, W = m * s + 2 * pad, H = n * s + 2 * pad, x = i => pad + i * s, y = j => H - pad - j * s;
+  const open = (soort, i, j) => !(weg && weg.has(`${soort},${i},${j}`));
   let g = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" font-family="Calibri, Arial, sans-serif" style="max-width:100%;height:auto;">`;
-  for(let i = 0; i <= m; i++) g += `<line x1="${x(i)}" y1="${y(0)}" x2="${x(i)}" y2="${y(n)}" stroke="#000" stroke-width="1.2"/>`;
-  for(let j = 0; j <= n; j++) g += `<line x1="${x(0)}" y1="${y(j)}" x2="${x(m)}" y2="${y(j)}" stroke="#000" stroke-width="1.2"/>`;
+  for(let i = 0; i <= m; i++) for(let j = 0; j <= n; j++){
+    if(i < m && open('h', i, j)) g += `<line x1="${x(i)}" y1="${y(j)}" x2="${x(i + 1)}" y2="${y(j)}" stroke="#000" stroke-width="1.2"/>`;
+    if(j < n && open('v', i, j)) g += `<line x1="${x(i)}" y1="${y(j)}" x2="${x(i)}" y2="${y(j + 1)}" stroke="#000" stroke-width="1.2"/>`;
+    if(tel && (i || j)) g += `<text x="${x(i) + 3}" y="${y(j) - 3}" font-size="10">${tel[i][j]}</text>`;
+  }
   const punt = (i, j, t, dx, dy) => `<circle cx="${x(i)}" cy="${y(j)}" r="4" fill="#000"/><text x="${x(i) + dx}" y="${y(j) + dy}" font-size="14" font-weight="700" text-anchor="middle">${t}</text>`;
-  return g + punt(0, 0, 'A', -11, 15) + punt(m, n, 'B', 11, -7) + punt(P[0], P[1], 'P', 10, -7) + '</svg>';
+  return g + punt(0, 0, 'A', -11, 15) + punt(m, n, 'B', tel ? -10 : 11, -7) + (P ? punt(P[0], P[1], 'P', 10, -7) : '') + '</svg>';
+}
+/* aantal kortste wegen tot elk kruispunt: optellen van links en van onder (zonder de opgebroken straten) */
+function pxTelWegen(m, n, weg){
+  const t = [];
+  for(let i = 0; i <= m; i++){ t.push([]); for(let j = 0; j <= n; j++){
+    t[i][j] = i === 0 && j === 0 ? 1 : (i > 0 && !weg.has(`h,${i - 1},${j}`) ? t[i - 1][j] : 0) + (j > 0 && !weg.has(`v,${i},${j - 1}`) ? t[i][j - 1] : 0);
+  } }
+  return t;
 }
 /* boomdiagram van drie herhalingen met twee uitkomsten (R/M), met de kansen en de eindkansen */
 function pxBoom3Svg(p, R, M){
@@ -7359,6 +7374,32 @@ function pxBoom3Svg(p, R, M){
   tak(1, X[0], H / 2, '', 1, 52);
   return g + '</svg>';
 }
+/* kansboom bij 3 keer trekken zonder terugleggen uit r rode en w witte bollen */
+function pxKansboomSvg(r, w){
+  const X = [16, 105, 195, 285], H = 8 * 26 + 10;
+  const tx = (x, y, t, a, e) => `<text x="${x}" y="${y}" font-size="12" text-anchor="${a || 'middle'}"${e || ''}>${t}</text>`;
+  let g = `<svg viewBox="0 0 480 ${H}" width="480" height="${H}" xmlns="http://www.w3.org/2000/svg" font-family="Calibri, Arial, sans-serif" style="max-width:100%;height:auto;"><circle cx="${X[0]}" cy="${H / 2}" r="3.5" fill="#000"/>`;
+  const tak = (niv, x0, y0, pad, rr, ww, tel, noem, span) => {
+    const N = rr + ww;
+    [['R', rr, -1], ['W', ww, 1]].forEach(([letter, aantal, z]) => {
+      const y1 = y0 + z * span, x1 = X[niv];
+      g += `<line x1="${x0 + 5}" y1="${y0}" x2="${x1 - 9}" y2="${y1}" stroke="#000" stroke-width="1"/>` + tx((x0 + x1) / 2 - 4, (y0 + y1) / 2 + (z < 0 ? -4 : 12), `${aantal}/${N}`, 'end', ' font-size="10.5"') + tx(x1, y1 + 4, letter, 'middle', ' font-weight="700"');
+      const t2 = tel * aantal, n2 = noem * N;
+      if(niv < 3) tak(niv + 1, x1, y1, pad + letter, rr - (letter === 'R'), ww - (letter === 'W'), t2, n2, span / 2);
+      else g += tx(x1 + 14, y1 + 4, `${pad + letter}: ${t2 ? bBreuk(t2, n2) : '0'}`, 'start');
+    });
+  };
+  tak(1, X[0], H / 2, '', r, w, 1, 1, 52);
+  return g + '</svg>';
+}
+/* kruistabel voor het examen: leeg (in te vullen) of met de aantallen */
+function pxKruistabel(sc, t){
+  const A = t.AB + t.AnB, nA = t.nAB + t.nAnB, B = t.AB + t.nAB, nB = t.AnB + t.nAnB, c = v => (t.leeg ? '' : v);
+  return `<table class="px-sam px-kruis"><tr><th></th><th>${sc.B}: ${sc.Bkort}</th><th>${ov(sc.B)}: ${sc.nBkort}</th><th>totaal</th></tr>
+    <tr><th>${sc.A}: ${sc.Akort}</th><td>${c(t.AB)}</td><td>${c(t.AnB)}</td><td>${c(A)}</td></tr>
+    <tr><th>${ov(sc.A)}: ${sc.nAkort}</th><td>${c(t.nAB)}</td><td>${c(t.nAnB)}</td><td>${c(nA)}</td></tr>
+    <tr><th>totaal</th><td>${c(B)}</td><td>${c(nB)}</td><td>${t.N}</td></tr></table>`;
+}
 function examenKans(){
   const vragen = [], k = v => bKomma(v, 4), br = (t, n) => `${bBreuk(t, n)} ≈ ${k(t / n)}`;
   /* 1. combinatieleer: vijf telproblemen, zonder te zeggen welk soort */
@@ -7374,27 +7415,38 @@ function examenKans(){
       `c) variatie met herhaling van ${ringen} uit 10: 10<sup>${ringen}</sup> = ${pxGetal(10 ** ringen)} (2)<br>d) combinatie van ${pD} uit ${nD}: C(${nD}, ${pD}) = ${pxGetal(nCr(nD, pD))} (2)<br>` +
       `e) herhalingscombinatie van ${bol} uit ${sm}: C(${sm + bol - 1}, ${bol}) = ${pxGetal(nCrHerhaling(sm, bol))} (2)`]);
   }
-  /* 2. kansen met combinatieleer: knikkers tegelijk uit een vaas */
+  /* 2. kansen: 3 bollen uit een zak, met een kansboom */
   {
-    const r = randInt(4, 8), w = randInt(3, 7), N = r + w, T = nCr(N, 3);
+    const r = randInt(4, 7), w = randInt(3, 6), N = r + w, T = nCr(N, 3);
     const alleR = nCr(r, 3), tweeR = nCr(r, 2) * w, minW = T - alleR;
     vragen.push(['Kansen', 10,
-      `<p>Een vaas bevat ${r} rode en ${w} witte knikkers. Je neemt in één greep 3 knikkers uit de vaas. Geef je antwoord als breuk en afgerond op 4 cijfers na de komma.</p>` +
-      `<p>a)&nbsp; Hoeveel verschillende grepen zijn er mogelijk?</p>${pxLijnen(1)}<p>b)&nbsp; Bereken de kans dat de 3 knikkers rood zijn.</p>${pxLijnen(2)}` +
-      `<p>c)&nbsp; Bereken de kans dat er precies 2 rode knikkers bij zijn.</p>${pxLijnen(3)}<p>d)&nbsp; Bereken de kans dat er minstens 1 witte knikker bij is.</p>${pxLijnen(3)}`,
-      `a) C(${N}, 3) = ${T} (2)<br>b) C(${r}, 3) / C(${N}, 3) = ${alleR}/${T} = ${br(alleR, T)} (2)<br>c) C(${r}, 2) · C(${w}, 1) / C(${N}, 3) = ${nCr(r, 2)} · ${w} / ${T} = ${br(tweeR, T)} (3)<br>` +
-      `d) tegengestelde gebeurtenis van "3 rode": 1 − ${alleR}/${T} = ${br(minW, T)} (3)`]);
+      `<p>Een zak bevat ${r} rode (R) en ${w} witte (W) bollen. Je neemt 3 bollen uit de zak, zonder ze terug te leggen. Geef je antwoord als breuk en afgerond op 4 cijfers na de komma.</p>` +
+      `<p>a)&nbsp; Op hoeveel manieren kan je 3 bollen uit de zak nemen?</p>${pxLijnen(1)}<p>b)&nbsp; Teken een kansboom met alle kansen.</p><div class="px-tekenvak"></div>` +
+      `<p>c)&nbsp; Bereken de kans dat je precies 2 rode bollen neemt.</p>${pxLijnen(3)}<p>d)&nbsp; Bereken de kans dat je minstens 1 witte bol neemt.</p>${pxLijnen(3)}`,
+      `a) C(${N}, 3) = ${T} (2)<br>b) <div class="px-midden">${pxKansboomSvg(r, w)}</div>(3)<br>` +
+      `c) C(${r}, 2) · C(${w}, 1) / C(${N}, 3) = ${nCr(r, 2)} · ${w} / ${T} = ${br(tweeR, T)} (3)<br>&nbsp;&nbsp;&nbsp;&nbsp;of met de kansboom: P(RRW) + P(RWR) + P(WRR) = 3 · ${bBreuk(r * (r - 1) * w, N * (N - 1) * (N - 2))} = ${bBreuk(tweeR, T)}<br>` +
+      `d) tegengestelde gebeurtenis van "3 rode": 1 − C(${r}, 3) / C(${N}, 3) = 1 − ${alleR}/${T} = ${br(minW, T)} (2)`]);
   }
-  /* 3. kortste wegen in een stratenrooster */
+  /* 3. kortste wegen in een stratenrooster, daarna met opgebroken straten */
   {
-    const m = randInt(5, 7), n = randInt(3, 5), P = [randInt(2, m - 2), randInt(1, n - 1)];
+    const m = randInt(5, 7), n = randInt(3, 4), P = [randInt(2, m - 2), randInt(1, n - 1)];
     const tot = nCr(m + n, n), via1 = nCr(P[0] + P[1], P[1]), via2 = nCr(m - P[0] + n - P[1], n - P[1]), via = via1 * via2;
-    vragen.push(['Kortste wegen', 8,
+    let weg, tel, rest;
+    do{
+      weg = new Set();
+      while(weg.size < randChoice([3, 4])){
+        const soort = randChoice(['h', 'v']), i = soort === 'h' ? randInt(0, m - 1) : randInt(1, m - 1), j = soort === 'h' ? randInt(1, n - 1) : randInt(0, n - 1);
+        weg.add(`${soort},${i},${j}`);
+      }
+      tel = pxTelWegen(m, n, weg); rest = tel[m][n];
+    } while(rest < tot / 4 || rest > tot * 0.85);
+    vragen.push(['Kortste wegen', 12,
       `<p>Je wandelt langs de straten van het rooster van A naar B en neemt altijd een kortste weg (enkel naar rechts of naar boven).</p><div class="px-midden">${pxStratenSvg(m, n, P)}</div>` +
       `<p>a)&nbsp; Hoeveel kortste wegen zijn er van A naar B?</p>${pxLijnen(2)}<p>b)&nbsp; Hoeveel van die kortste wegen gaan langs het kruispunt P?</p>${pxLijnen(3)}` +
-      `<p>c)&nbsp; Je kiest willekeurig een kortste weg van A naar B. Hoe groot is de kans dat die langs P gaat?</p>${pxLijnen(2)}`,
-      `a) ${m} stappen naar rechts en ${n} naar boven: C(${m + n}, ${n}) = ${tot} (2)<br>b) van A naar P: C(${P[0] + P[1]}, ${P[1]}) = ${via1}; van P naar B: C(${m - P[0] + n - P[1]}, ${n - P[1]}) = ${via2}; samen ${via1} · ${via2} = ${via} (4)<br>` +
-      `c) ${via}/${tot} = ${br(via, tot)} (2)`]);
+      `<p>c)&nbsp; Je kiest willekeurig een kortste weg van A naar B. Hoe groot is de kans dat die langs P gaat?</p>${pxLijnen(2)}` +
+      `<p>d)&nbsp; Door wegenwerken zijn enkele straten opgebroken: in het rooster hieronder ontbreken ze. Hoeveel kortste wegen zijn er nu nog van A naar B?</p><div class="px-midden">${pxStratenSvg(m, n, null, weg)}</div>${pxLijnen(3)}`,
+      `a) ${m} stappen naar rechts en ${n} naar boven: C(${m + n}, ${n}) = ${tot} (2)<br>b) van A naar P: C(${P[0] + P[1]}, ${P[1]}) = ${via1}; van P naar B: C(${m - P[0] + n - P[1]}, ${n - P[1]}) = ${via2}; samen ${via1} · ${via2} = ${via} (3)<br>` +
+      `c) ${via}/${tot} = ${br(via, tot)} (2)<br>d) schrijf bij elk kruispunt het aantal kortste wegen vanuit A: de som van het kruispunt links en het kruispunt eronder, als die straat nog bestaat. Er blijven ${rest} kortste wegen over. (5)<div class="px-midden">${pxStratenSvg(m, n, null, weg, tel)}</div>`]);
   }
   /* 4. boomdiagram bij een herhaald experiment */
   {
@@ -7405,25 +7457,24 @@ function examenKans(){
       { wie:'Een boogschutter', wat:'pijl', doe:'schiet 3 pijlen', r:'in de roos', m:'naast de roos', kort:['R', 'N'] },
     ]);
     const [R, M] = ctx.kort, alle = p ** 3, twee = 3 * p * p * q, min1 = 1 - q ** 3;
-    vragen.push(['Boomdiagram', 10,
+    vragen.push(['Boomdiagram', 8,
       `<p>${ctx.wie} heeft bij elke ${ctx.wat} een kans van ${bKomma(p, 2)} op ${ctx.r} (${R}), los van de vorige pogingen. Hij ${ctx.doe}. Een poging die niet ${ctx.r} is, noteer je met ${M}. Rond af op 4 cijfers na de komma.</p>` +
       `<p>a)&nbsp; Teken een volledig boomdiagram met alle kansen.</p><div class="px-tekenvak"></div>` +
       `<p>b)&nbsp; Bereken de kans dat alle 3 pogingen ${ctx.r} zijn.</p>${pxLijnen(1)}<p>c)&nbsp; Bereken de kans dat precies 2 pogingen ${ctx.r} zijn.</p>${pxLijnen(2)}` +
       `<p>d)&nbsp; Bereken de kans dat minstens 1 poging ${ctx.r} is.</p>${pxLijnen(2)}`,
-      `a) <div class="px-midden">${pxBoom3Svg(p, R, M)}</div>(3)<br>b) P(${R}${R}${R}) = ${bKomma(p, 2)}³ ≈ ${k(alle)} (2)<br>` +
-      `c) drie takken: ${R}${R}${M}, ${R}${M}${R}, ${M}${R}${R} → 3 · ${bKomma(p, 2)}² · ${bKomma(q, 2)} ≈ ${k(twee)} (3)<br>d) 1 − P(${M}${M}${M}) = 1 − ${bKomma(q, 2)}³ ≈ ${k(min1)} (2)`]);
+      `a) <div class="px-midden">${pxBoom3Svg(p, R, M)}</div>(3)<br>b) P(${R}${R}${R}) = ${bKomma(p, 2)}³ ≈ ${k(alle)} (1)<br>` +
+      `c) drie takken: ${R}${R}${M}, ${R}${M}${R}, ${M}${R}${R} → 3 · ${bKomma(p, 2)}² · ${bKomma(q, 2)} ≈ ${k(twee)} (2)<br>d) 1 − P(${M}${M}${M}) = 1 − ${bKomma(q, 2)}³ ≈ ${k(min1)} (2)`]);
   }
-  /* 5. voorwaardelijke kans: de methode (boom, kruistabel, formule) kiest de leerling zelf */
+  /* 5. voorwaardelijke kans, grafisch voorgesteld met een kruistabel */
   {
-    const { sc, pA, s, f } = bayesSituatie();
-    const PAB = pA * s, PnAB = (1 - pA) * f, PB = PAB + PnAB;
-    vragen.push(['Voorwaardelijke kans', 12,
-      `<p>${sc.gegeven(pA, s, f)}</p><p>Noem ${sc.A}: ${sc.Akort} en ${sc.B}: ${sc.Bkort}. Rond af op 4 cijfers na de komma.</p>` +
-      `<p>a)&nbsp; Stel de situatie voor in een boomdiagram.</p><div class="px-tekenvak px-tekenvak-klein"></div>` +
+    const { sc, pA, s, f, t } = bayesSituatie();
+    const B = t.AB + t.nAB;
+    vragen.push(['Voorwaardelijke kans', 10,
+      `<p>${sc.intro(t.N)} ${sc.gegeven(pA, s, f)}</p><p>Noem ${sc.A}: ${sc.Akort} en ${sc.B}: ${sc.Bkort}. Rond af op 4 cijfers na de komma.</p>` +
+      `<p>a)&nbsp; Vul de kruistabel volledig in.</p>${pxKruistabel(sc, Object.assign({ leeg: true }, t))}` +
       `<p>b)&nbsp; Bereken de kans dat ${sc.b}.</p>${pxLijnen(2)}<p>c)&nbsp; Bereken de kans dat ${sc.a}, als je weet dat ${sc.b}.</p>${pxLijnen(3)}`,
-      `a) <div class="px-midden">${svgBayesBoom(sc.A, sc.B, pA, s, f, true)}</div>(4)<br>` +
-      `b) P(${sc.B}) = ${k(pA)} · ${k(s)} + ${k(1 - pA)} · ${k(f)} = ${k(PAB)} + ${k(PnAB)} = ${k(PB)} (3)<br>` +
-      `c) P(${sc.A} | ${sc.B}) = P(${sc.A} ∩ ${sc.B}) / P(${sc.B}) = ${k(PAB)} / ${k(PB)} ≈ ${k(PAB / PB)} (5)`]);
+      `a) ${pxKruistabel(sc, t)}(4)<br>b) P(${sc.B}) = ${B}/${t.N} = ${br(B, t.N)} (2)<br>` +
+      `c) je kijkt enkel naar de kolom ${sc.B}: P(${sc.A} | ${sc.B}) = ${t.AB}/${B} = ${br(t.AB, B)} (4)`]);
   }
   return { titel:'Kansrekenen', vragen,
     hulp:'Rekentoestel toegelaten. Noteer al je tussenstappen: een antwoord zonder berekening levert geen punten op. Geef kansen als breuk of afgerond op 4 cijfers na de komma.' };
