@@ -1,7 +1,7 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Gymnasion Trainer</title>
 <!-- versie van de app: bij elke nieuwe versie aanpassen, dan herlaadt een geopende app (bv. op het beginscherm van een iPhone) zichzelf -->
-<meta name="app-versie" content="2026-11-23-1645">
+<meta name="app-versie" content="2026-11-23-1845">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -555,6 +555,7 @@
   .px-grafrooster{ margin:6px auto; border-collapse:collapse; } .px-grafrooster td{ text-align:center; vertical-align:top; padding:4px 12px; }
   .px-grafrooster svg{ width:5.5cm; height:auto; }
   .px-nulgraad{ margin:8px 0 12px; } .px-nulgraad td, .px-nulgraad th{ height:46px; text-align:center; } .px-nulgraad tr > th:first-child{ text-align:left; width:150px; }
+  .px-pt{ display:inline-block; margin-left:2.5em; white-space:nowrap; }
   .px-tekenvak{ height:300px; margin:4px 0 8px 18px; } .px-tekenvak-klein{ height:250px; }
   .px-leeg{ display:none; }
   .px-reflectie{ margin-top:30px; }
@@ -6370,6 +6371,45 @@ const INTEGRAAL_BEGRIPPEN = [
 ];
 
 /* ---------- uitleg ---------- */
+/* ---------- integralen met negatieve exponenten, wortels en 1/x ---------- */
+function genIntMachten(soort){
+  soort = soort || randChoice(['neg2', 'neg3', 'kwad', 'derde', 'ln']);
+  const br = (t, n) => dqBreuk(t, n), dec = v => String(Math.round(v * 100) / 100).replace('.', ',').replace('-', '−');
+  const antw = (t, n) => Object.assign({ answerType:'kort', checkKind:'number', checkData:{ value: t / n, tol: Number.isInteger(t / n) ? 1e-6 : 0.006 },
+    hint:'Geef je antwoord als breuk (bv. 45/4) of afgerond op 2 cijfers na de komma.' }, { correct: Number.isInteger(t / n) ? mFmt(t / n) : `${br(t, n)} ≈ ${dec(t / n)}` });
+  const basis = { kind:'functie', catId:'int_machten', catLabel:'Negatieve exponenten, wortels en 1/x' };
+  if(soort === 'neg2' || soort === 'neg3'){
+    const m = soort === 'neg2' ? 2 : 3, k = randInt(1, 6) * (m === 3 ? 2 : 1), a = randInt(1, 3), b = randInt(a + 1, 4);
+    /* ∫ k·x⁻ᵐ dx = k·x^(1−m)/(1−m) = −k/((m−1)·x^(m−1)) */
+    const t = k * (b ** (m - 1) - a ** (m - 1)), n = (m - 1) * a ** (m - 1) * b ** (m - 1);
+    const xm = m === 2 ? 'x²' : 'x³', expr = Math.random() < 0.5 ? `${k}/${xm}` : `${k}x${m === 2 ? '⁻²' : '⁻³'}`;
+    const F = m === 2 ? `−${k}/x` : `−${k / 2}/x²`;
+    return Object.assign(basis, { promptHtml:`Bereken ${intHtml(a, b, expr)}` }, antw(t, n), {
+      explanation:`Schrijf als macht: ${k}/${xm} = ${k}x${m === 2 ? '⁻²' : '⁻³'}. De regel xⁿ → xⁿ⁺¹/(n + 1) geldt ook voor negatieve n (behalve n = −1):\n` +
+        `${k}x${m === 2 ? '⁻²' : '⁻³'} → ${k}·x${m === 2 ? '⁻¹' : '⁻²'}/(${mFmt(1 - m)}) = ${F}, dus F(x) = ${F}\n` +
+        `F(${b}) − F(${a}) = ${m === 2 ? `−${k}/${b} + ${k}/${a}` : `−${k / 2}/${b * b} + ${k / 2}/${a * a}`} = ${br(t, n)}` + (Number.isInteger(t / n) ? '' : ` ≈ ${dec(t / n)}`) });
+  }
+  if(soort === 'kwad' || soort === 'derde'){
+    const kw = soort === 'kwad', k = randChoice([1, 1, 2, 3]);
+    const grenzen = kw ? [0, 1, 4, 9, 16] : [0, 1, 8, 27];
+    const i = randInt(0, grenzen.length - 2), j = randInt(i + 1, grenzen.length - 1), a = grenzen[i], b = grenzen[j];
+    const r = v => Math.round(v ** (kw ? 0.5 : 1 / 3));   /* √a of ∛a (gehele getallen) */
+    const macht = v => r(v) ** (kw ? 3 : 4);             /* a^(3/2) of a^(4/3) */
+    const t = k * (kw ? 2 : 3) * (macht(b) - macht(a)), n = kw ? 3 : 4;
+    const wortel = kw ? '√x' : '∛x', exp = kw ? '¹ᐟ²' : '¹ᐟ³', nexp = kw ? '³ᐟ²' : '⁴ᐟ³', fac = kw ? '2/3' : '3/4';
+    return Object.assign(basis, { promptHtml:`Bereken ${intHtml(a, b, (k === 1 ? '' : k) + wortel)}` }, antw(t, n), {
+      explanation:`Schrijf de wortel als macht: ${wortel} = x${exp}. Dan x${exp} → x${nexp}/(${kw ? '3/2' : '4/3'}) = ${fac}·x${nexp}.\n` +
+        `F(x) = ${k === 1 ? '' : k + '·'}${fac}·x${nexp}\n` +
+        `x${nexp} = (${wortel.replace('x', '')}x)${kw ? '³' : '⁴'}: in ${b} is dat ${r(b)}${kw ? '³' : '⁴'} = ${macht(b)}, in ${a} is dat ${r(a)}${kw ? '³' : '⁴'} = ${macht(a)}\n` +
+        `F(${b}) − F(${a}) = ${k === 1 ? '' : k + '·'}${fac}·(${macht(b)} − ${macht(a)}) = ${br(t, n)}` + (Number.isInteger(t / n) ? '' : ` ≈ ${dec(t / n)}`) });
+  }
+  const k = randInt(1, 5), a = randInt(1, 3), b = randChoice([2, 3, 4, 5, 6, 8].filter(x => x > a)), v = k * Math.log(b / a);
+  return Object.assign(basis, { promptHtml:`Bereken ${intHtml(a, b, k === 1 ? '1/x' : k + '/x')}`,
+    answerType:'kort', checkKind:'number', checkData:{ value: v, tol: 0.006 }, hint:'Rond af op 2 cijfers na de komma.',
+    correct: `${k === 1 ? '' : k + '·'}ln(${b}${a === 1 ? '' : '/' + a}) ≈ ${dec(v)}`,
+    explanation:`De regel xⁿ⁺¹/(n + 1) werkt niet voor 1/x = x⁻¹ (je zou door 0 delen). Een primitieve van 1/x is ln x (voor x > 0).\n` +
+      `F(x) = ${k === 1 ? '' : k + '·'}ln x\nF(${b}) − F(${a}) = ${k === 1 ? '' : k + '·'}(ln ${b} − ln ${a})` + (a === 1 ? ` = ${k === 1 ? '' : k + '·'}ln ${b}` : ` = ${k === 1 ? '' : k + '·'}ln(${b}/${a})`) + ` ≈ ${dec(v)}` });
+}
 function theorieIntegralen(){
   const f1 = x => -x * x + 4, f2 = x => x * x - 2 * x - 3, f3 = x => x + 2;
   const svg1 = intSvg({ xMin:-3, xMax:3, yMin:-2, yMax:5 }, [{ fn: f1, naam:'f' }], [{ boven: f1, a:-2, b:2 }]);
@@ -6402,7 +6442,13 @@ function theorieIntegralen(){
     <div class="theorie-svg">${svg3}</div>
     <div class="formule">f(x) = -x² + 4 en g(x) = x + 2<br>f(x) = g(x) ⇔ -x² - x + 2 = 0 ⇔ x = −2 of x = 1<br>Oppervlakte = ${intHtml(-2, 1, '-x² - x + 2')} = [−x³/3 − x²/2 + 2x]<sub>−2</sub><sup>1</sup> = 7/6 − (−10/3) = 9/2 = 4,5</div>
     <p>Twijfel je welke bovenaan ligt? Vul een x-waarde tussen de snijpunten in beide functies in. Kom je toch een negatief getal uit, dan heb je ze verwisseld: neem de absolute waarde.</p>
-    <h3>6. Vraagstukken</h3>
+    <h3>6. Negatieve exponenten, wortels en 1/x</h3>
+    <p>Schrijf eerst alles als een <b>macht van x</b>. Dan werkt dezelfde regel xⁿ → xⁿ⁺¹/(n + 1), ook als n negatief of een breuk is.</p>
+    <div class="formule">3/x² = 3x⁻² → 3·x⁻¹/(−1) = −3/x<br>√x = x^(1/2) → x^(3/2)/(3/2) = (2/3)·x^(3/2)<br>∛x = x^(1/3) → x^(4/3)/(4/3) = (3/4)·x^(4/3)</div>
+    <p><b>Voorbeeld:</b> ∫ van 1 tot 8 van ∛x dx = [(3/4)·x^(4/3)] van 1 tot 8 = (3/4)·(16 − 1) = 45/4, want 8^(4/3) = (∛8)⁴ = 2⁴ = 16.</p>
+    <p><b>Opgepast bij 1/x = x⁻¹:</b> de regel geeft x⁰/0, en door 0 delen kan niet. Een primitieve van 1/x is <b>ln x</b> (voor x > 0).</p>
+    <div class="formule">∫ van 1 tot 4 van 2/x dx = [2·ln x] van 1 tot 4 = 2·(ln 4 − ln 1) = 2·ln 4 ≈ 2,77</div>
+    <h3>7. Vraagstukken</h3>
     <p>Is een grootheid een <b>veranderingssnelheid</b>, dan geeft de bepaalde integraal de <b>totale verandering</b> over dat interval.</p>
     <div class="formule">snelheid v(t) → afgelegde weg = ∫ v(t) dt<br>debiet q(t) → hoeveelheid water = ∫ q(t) dt<br>marginale kost K'(q) → stijging van de totale kost = ∫ K'(q) dq<br>groeisnelheid h'(t) → groei = ∫ h'(t) dt</div>
     <div class="formule">v(t) = 2t + 3 m/s, van t = 0 tot t = 4:<br>${intHtml(0, 4, '2t + 3', 't')} = [t² + 3t]<sub>0</sub><sup>4</sup> = 28 − 0 = 28 m</div>
@@ -7299,9 +7345,11 @@ function pxBreuk(t, n){ return stBreuk(t, n); }
 function pxLijn(label){ return `<div class="px-lijn"><span class="px-label">${label || ''}</span><span class="px-in" contenteditable="true"></span></div>`; }
 function pxLijnen(n){ return pxLijn().repeat(n); }
 function pxLijn2(l1, l2){ return `<div class="px-twee">${pxLijn(l1)}${pxLijn(l2)}</div>`; }
+/* de punten achteraan een oplossingsregel, bv. " (2)", apart zetten zodat er ruimte voor komt */
+function pxPunten(html){ return html.replace(/(\s|<\/div>|<\/table>)\((\d+)\)(?=\s*(<br>|<div|$))/g, '$1<span class="px-pt">($2)</span>'); }
 function pxVraag(nr, titel, punten, inhoud, oplossing){
   return `<div class="px-vraag"><div class="px-kop"><span><b>Vraag ${nr}</b>&nbsp;&nbsp;${titel}</span><span>…… / ${punten}</span></div>${inhoud}` +
-    `<div class="px-opl"><b>Oplossing</b><br>${oplossing}</div></div>`;
+    `<div class="px-opl"><b>Oplossing</b><br>${pxPunten(oplossing)}</div></div>`;
 }
 function pxDeel(t){ return `<p class="px-deel">${t}</p>`; }
 function pxZ(n){ return `z<sub>${n}</sub>`; }
@@ -7325,9 +7373,11 @@ function examenComplex(){
     const [p, q] = randChoice([[3, 4], [4, 3], [6, 8], [8, 6], [5, 12]]);
     const a = randChoice([1, -1]) * p, b = randChoice([1, -1]) * q, z = formatComplex(a, b).replace(/-/g, '−');
     vragen.push(['Begrippen', 6,
-      `<p>Gegeven: z = ${z}</p>${pxLijn2('a)&nbsp; Re(z) =', 'Im(z) =')}${pxLijn('b)&nbsp; z̄ =')}<p>c)&nbsp; Bereken de modulus |z|.</p>${pxLijnen(2)}` +
-      `<p>d)&nbsp; Stel z voor in het complexe vlak.</p><div class="px-midden">${pxVlak()}</div>`,
-      `a) Re(z) = ${mFmt(a)}, Im(z) = ${mFmt(b)} (1)<br>b) z̄ = ${formatComplex(a, -b).replace(/-/g, '−')} (1)<br>c) |z| = √((${mFmt(a)})² + (${mFmt(b)})²) = √${a * a + b * b} = ${Math.hypot(a, b)} (2)<br>d) het punt (${mFmt(a)}, ${mFmt(b)}) (2)`]);
+      `<p>Gegeven: z = ${z}</p><p>a)&nbsp; Bepaal het reële gedeelte van z.</p>${pxLijn('&nbsp;&nbsp;&nbsp;&nbsp; Re(z) =')}` +
+      `<p>b)&nbsp; Bepaal het imaginaire gedeelte van z.</p>${pxLijn('&nbsp;&nbsp;&nbsp;&nbsp; Im(z) =')}` +
+      `<p>c)&nbsp; Bepaal het toegevoegde getal van z.</p>${pxLijn('&nbsp;&nbsp;&nbsp;&nbsp; z̄ =')}<p>d)&nbsp; Bereken de modulus |z|.</p>${pxLijnen(2)}` +
+      `<p>e)&nbsp; Stel z voor in het complexe vlak.</p><div class="px-midden">${pxVlak()}</div>`,
+      `a) Re(z) = ${mFmt(a)} (1)<br>b) Im(z) = ${mFmt(b)} (1)<br>c) z̄ = ${formatComplex(a, -b).replace(/-/g, '−')} (1)<br>d) |z| = √(${a < 0 ? `(${mFmt(a)})` : a}² + ${b < 0 ? `(${mFmt(b)})` : b}²) = √${a * a + b * b} = ${Math.hypot(a, b)} (2)<br>e) het punt (${mFmt(a)}, ${mFmt(b)}) (1)`]);
   }
   /* 2. rekenen in algebraïsche vorm */
   {
@@ -7842,9 +7892,78 @@ function examenDF(){
       `<p>c)&nbsp; ${nl(qv.promptHtml)}</p>${pxLijnen(4)}`,
       `a) ${nl(qg.explanation)} (2)<br>b) ${nl(qt.explanation)} (2)<br>c) ${nl(qv.explanation)} (2)`]);
   }
+  /* volgorde: eerst "is dit een functie?", dan symmetrie en gedrag op oneindig, dan de rest */
+  const eerst = ['Is dit een functie?', 'Symmetrie', 'Gedrag op oneindig en asymptoten'];
+  const plaats = v => (eerst.includes(v[0]) ? eerst.indexOf(v[0]) : eerst.length);
+  vragen.sort((a, b) => plaats(a) - plaats(b));
   return { titel:'Wiskunde DF: functies', vragen };
 }
-const EXAMENS = { complex: examenComplex, onderzoek: examenOnderzoek, combinatoriek: examenKans, binomium: examenKans, kansrekenen: examenKans, bayes: examenKans, functies: examenDF, dfplus: examenDF, diffq: examenDF };
+/* ---------- examen 5 DS – functies (100 punten): een selectie DF-vragen (altijd "is dit een functie?"),
+   afgeleiden van veeltermfuncties en de analyse van een derdegraadsfunctie met één geheel nulpunt ---------- */
+function examen5DS(){
+  const mn = t => t.replace(/-/g, '−');
+  /* deel A: uit het DF-examen, met altijd minstens één vraag uit Functies extra */
+  const df = examenDF().vragen, extra = ['Symmetrie', 'Gedrag op oneindig en asymptoten', 'Periodieke functies'];
+  const functie = df.find(v => v[0] === 'Is dit een functie?'), rest = df.filter(v => v !== functie);
+  let keuze, A;
+  do{
+    keuze = shuffle(rest.slice()).slice(0, randInt(4, 6));
+    A = functie[1] + keuze.reduce((t, v) => t + v[1], 0);
+  } while(A < 30 || A > 40 || A % 2 || !keuze.some(v => extra.includes(v[0])));
+  const deelA = df.filter(v => v === functie || keuze.includes(v)).map(v => v.slice(0, 4));
+  deelA[0][4] = `<p class="px-deel">Deel A – Functies (${A} punten)</p>`;
+  /* deel B: afgeleiden (2 punten per functie) */
+  const P = 50 - A, n = P / 2, L = 'abcdefghij';
+  const fs = [];
+  while(fs.length < n){
+    const gr = randInt(2, 4), c = [randNonZero(-6, 6)];
+    for(let i = 1; i <= gr; i++) c.push(Math.random() < 0.3 ? 0 : randInt(-9, 9));
+    if(!fs.some(f => f.join() === c.join())) fs.push(c);
+  }
+  const afg = [`Afgeleiden`, P,
+    `<p>Bereken de afgeleide functie.</p>` + fs.map((c, i) => `<p>${L[i]})&nbsp; f(x) = ${mn(fmtPoly(c))}</p>${pxLijn("&nbsp;&nbsp;&nbsp;&nbsp; f'(x) =")}`).join(''),
+    fs.map((c, i) => `${L[i]}) f'(x) = ${mn(fmtPoly(afgeleide(c)))} (2)`).join('<br>'),
+    `<p class="px-deel px-nieuw">Deel B – Afgeleiden en analyse (${P + 50} punten)</p>`];
+  /* analyse: de derdegraadsfunctie uit het examen analyse */
+  const ana = examenOnderzoek().vragen.slice(0, 4).map(v => [v[0].replace('Functie 1: ', ''), v[1], v[2], v[3], v[4] ? v[4].replace('<p class="px-deel">Functie 1</p>', '<p class="px-deel">Analyse van een functie</p>') : undefined]);
+  return { titel:'Wiskunde 5 DS: functies', vragen: [...deelA, afg, ...ana],
+    verdeling: [['Deel A – Functies', A], ['Deel B – Afgeleiden', P], ['Deel B – Analyse van een functie', 50]] };
+}
+/* ---------- examen 5 DS – asymptoten en limieten (20 punten, extra deel) ---------- */
+function examen5DSAsym(){
+  const nl = t => t.replace(/(^|[\s(=·/])-/g, '$1−').replace(/lim \(x → ([^)]*)\)/g, '<span class="lim">lim<sub> x → $1 </sub></span>').replace(/\n/g, '<br>');
+  const vraag = q => q.promptHtml.replace(/(^|[\s(=·/])-/g, '$1−').replace(/: [xy] = \?$/, '.').replace(/<br>/g, ' ');
+  const L = [genLvInvullen(), genLvOneindig(), genLrNul(), genLrANul(), genLrOneindig()];
+  const As = [genAsVA(), genAsHA(), genAsSchuin()];
+  let gq; do{ gq = genAsGrafiek(); } while(!/HA/.test(gq.explanation) || !/VA/.test(gq.explanation));
+  const r = 'abcde';
+  return { titel:'Wiskunde 5 DS: asymptoten en limieten', vragen: [
+    ['Limieten', 10, L.map((q, i) => `<p>${r[i]})&nbsp; ${vraag(q)}</p>${pxLijnen(i < 2 ? 2 : 3)}`).join(''),
+      L.map((q, i) => `${r[i]}) ${nl(q.explanation)} (2)`).join('<br>')],
+    ['Asymptoten berekenen', 6, As.map((q, i) => `<p>${r[i]})&nbsp; ${vraag(q)}</p>${pxLijnen(3)}`).join(''),
+      As.map((q, i) => `${r[i]}) ${nl(q.explanation)} (2)`).join('<br>')],
+    ['Asymptoten op een grafiek', 4, `<p>Geef de vergelijkingen van alle asymptoten van deze grafiek.</p><div class="px-midden px-graf">${gq.svg}</div>${pxLijnen(2)}`,
+      `${nl(gq.explanation)} (4)`],
+  ] };
+}
+/* ---------- examen bepaalde integralen (20 punten, extra deel) ---------- */
+function examenIntegralen(){
+  const nl = t => t.replace(/(^|[\s(=·\/])-/g, '$1−').replace(/\n/g, '<br>');
+  const vraag = q => q.promptHtml.replace(/(^|[\s(=·\/])-/g, '$1−').replace(/<br>/g, ' ');
+  const maak = groep => genIntMachten(randChoice(groep));
+  const B = [genIntBerekenen(), maak(['neg2', 'neg3']), maak(['kwad', 'derde']), maak(['ln'])];
+  const O1 = genIntOppervlakte();
+  let O2; do{ O2 = genIntOppervlakte(); } while(O2.promptHtml.includes('grafieken') === O1.promptHtml.includes('grafieken'));
+  const V = genIntVraagstuk(), r = 'abcd';
+  return { titel:'Bepaalde integralen', vragen: [
+    ['Integralen berekenen', 8, `<p>Bereken. Schrijf je tussenstappen op.</p>` + B.map((q, i) => `<p>${r[i]})&nbsp; ${vraag(q).replace(/^Bereken /, '')}</p>${pxLijnen(3)}`).join(''),
+      B.map((q, i) => `${r[i]}) ${nl(q.explanation)} (2)`).join('<br>')],
+    ['Oppervlakte', 7, [O1, O2].map((q, i) => `<p>${r[i]})&nbsp; ${vraag(q)}</p><div class="px-midden px-graf">${q.svg}</div>${pxLijnen(5)}`).join(''),
+      [O1, O2].map((q, i) => `${r[i]}) ${nl(q.explanation)} (${i ? 4 : 3})`).join('<br>')],
+    ['Vraagstuk', 5, `<p>${vraag(V)}</p>${pxLijnen(6)}`, `${nl(V.explanation)} (5)`],
+  ] };
+}
+const EXAMENS = { complex: examenComplex, onderzoek: examenOnderzoek, combinatoriek: examenKans, binomium: examenKans, kansrekenen: examenKans, bayes: examenKans, functies: examenDF, analyse: examen5DS, limveelterm: examen5DSAsym, limrationaal: examen5DSAsym, asymptoten: examen5DSAsym, integralen: examenIntegralen, dfplus: examenDF, diffq: examenDF };
 /* logo's van de school (verkleind uit de officiële examenhoofding) */
 const PX_LOGO_GYM = 'data:image/jpeg;base64,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';
 const PX_LOGO_SSO = 'data:image/png;base64,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';
@@ -7889,7 +8008,7 @@ function examenHtml(px, inst){
 <table class="px-punten"><tr><th colspan="2"><i>Hulpmiddelen of opmerkingen bij dit examen</i></th></tr>
 <tr><td colspan="2">${px.hulp || 'Rekentoestel toegelaten. Noteer al je tussenstappen: een antwoord zonder berekening levert geen punten op. Rond niet-gehele waarden af op 1 cijfer na de komma, tenzij een exacte waarde gevraagd wordt.'}</td></tr>
 <tr><th colspan="2"><i>Puntenverdeling</i></th></tr>
-${px.vragen.map((v, i) => `<tr><td>Vraag ${i + 1} – ${v[0]}</td><td class="px-r">/ ${v[1]}</td></tr>`).join('')}
+${(px.verdeling || px.vragen.map((v, i) => [`Vraag ${i + 1} – ${v[0]}`, v[1]])).map(([t, pt]) => `<tr><td>${t}</td><td class="px-r">/ ${pt}</td></tr>`).join('')}
 <tr class="px-tot"><td><b>Totaal</b></td><td class="px-r"><b>/ ${totaal}</b></td></tr></table>
 <p class="px-todo"><b>TO DO</b></p><ul class="px-todo-lijst"><li>Vul eerst je naam in.</li><li>Lees aandachtig de vragen en begin met de gemakkelijke opdrachten.</li><li>Verzorg je handschrift: schrijf duidelijk!</li><li>Gebruik geen potlood, tenzij expliciet gevraagd.</li><li>Vul alle vragen in, ook de reflectievragen.</li><li>Lees je antwoorden aandachtig na voor je afgeeft.</li></ul>
 <p class="px-succes"><b>SUCCES!</b></p>
@@ -8018,9 +8137,47 @@ async function wxPng(a){
 }
 
 /* HTML van een vraag of oplossing → runs en alinea's */
+function wxFormule(t){
+  t = t.trim().replace(/-/g, '−');
+  if(!/=/.test(t)){
+    let d = 0;
+    for(let i = 0; i < t.length; i++){
+      d += t[i] === '(' ? 1 : t[i] === ')' ? -1 : 0;
+      if(t[i] === '/' && d === 0){
+        const weg = x => (/^\(.*\)$/.test(x.trim()) ? x.trim().slice(1, -1) : x.trim());
+        return wxBreukM(wxOmml(weg(t.slice(0, i))), wxOmml(weg(t.slice(i + 1))));
+      }
+    }
+  }
+  return wxOmml(t);
+}
 function wxInline(nodes, b, i){
-  const uit = [];
-  nodes.forEach(k => {
+  const uit = [], overslaan = new Set();
+  nodes.forEach((k, nr) => {
+    if(overslaan.has(nr)) return;
+    if(k.nodeType === 1 && (k.getAttribute('class') || '').split(' ').includes('lim')){
+      /* lim met x → a eronder; de tekst erna (tot de volgende regel) is de uitdrukking */
+      const onder = (k.querySelector('sub') || k).textContent.trim().replace(/-/g, '−');
+      const volgend = nodes[nr + 1];
+      let uitdr = '', staart = '';
+      if(volgend && volgend.nodeType === 3){
+        overslaan.add(nr + 1);
+        const tekst = volgend.nodeValue, m = tekst.match(/^(.*?)(\s\(\d+\)\s*)?$/s);
+        uitdr = m[1]; staart = m[2] || '';
+      }
+      uit.push({ t:'M', x: wxM(`<m:func><m:fName><m:limLow><m:e>${wxMr('lim', true)}</m:e><m:lim>${wxOmml(onder)}</m:lim></m:limLow></m:fName><m:e>${wxFormule(uitdr)}</m:e></m:func>`) });
+      if(staart) uit.push({ t:'t', s: staart, b, i });
+      return;
+    }
+    if(k.nodeType === 1 && (k.getAttribute('class') || '').split(' ').includes('intg')){
+      /* integraal met de grenzen; de tekst erna (tot de volgende regel) is de integrand met dx */
+      const g = [...k.querySelectorAll('.intg-g > span')].map(x => x.textContent.trim().replace(/-/g, '−'));
+      const volgend = nodes[nr + 1];
+      let uitdr = '';
+      if(volgend && volgend.nodeType === 3){ overslaan.add(nr + 1); uitdr = volgend.nodeValue; }
+      uit.push({ t:'M', x: wxM(`<m:nary><m:naryPr><m:limLoc m:val="subSup"/></m:naryPr><m:sub>${wxOmml(g[1] || '')}</m:sub><m:sup>${wxOmml(g[0] || '')}</m:sup><m:e>${wxOmml(uitdr.trim().replace(/-/g, '−'))}</m:e></m:nary>`) });
+      return;
+    }
     if(k.nodeType === 3){ uit.push({ t:'t', s:k.nodeValue, b, i }); return; }
     if(k.nodeType !== 1) return;
     const tag = k.tagName.toLowerCase(), cls = k.getAttribute('class') || '';
@@ -8031,12 +8188,13 @@ function wxInline(nodes, b, i){
     else if(cls.includes('st-breuk')){ const d = [...k.children].map(c => c.textContent); uit.push({ t:'M', x: wxM(wxBreukM(wxOmml(d[0]), wxOmml(d[1] || ''))) }); }
     else if(tag === 'span' && /overline/.test(k.getAttribute('style') || '')) uit.push({ t:'t', s:[...k.textContent].map(c => c + '̅').join(''), b, i });
     else if(tag === 'svg') uit.push({ t:'svg', el:k });
+    else if(cls.includes('px-pt')) uit.push({ t:'tab' }, { t:'tab' }, { t:'t', s:k.textContent, b, i });
     else uit.push(...wxInline([...k.childNodes], b, i));
   });
   return uit;
 }
 function wxRuns(items){
-  return items.map(it => it.t === 't' ? wxR(it.s.replace(/ /g, ' '), it.b, it.i) : it.t === 'M' ? it.x : it.t === 'v' ? wxR(it.s, it.b, it.i, 24, it.va) : '').join('');
+  return items.map(it => it.t === 't' ? wxR(it.s.replace(/ /g, ' '), it.b, it.i) : it.t === 'M' ? it.x : it.t === 'v' ? wxR(it.s, it.b, it.i, 24, it.va) : it.t === 'tab' ? wxTab() : '').join('');
 }
 function wxAlineas(ctx, items, keep){
   const out = [];
@@ -8129,7 +8287,9 @@ function wxHoofding(x, px, periode){
   const onderdeel = rijen.filter(m => m[0].includes('Examenonderdeel')), totaalLeeg = rijen.filter(m => m[0].includes('>Totaal<') && !m[0].includes('/100'));
   let model = onderdeel[0][0].replace(new RegExp(WX_GRIJS.source, 'gs'), '');
   if(px.vragen.length > 3) model = model.replace('<w:trHeight w:val="419"/>', '<w:trHeight w:val="340"/>');
-  const nieuw = px.vragen.map((v, k) => model.replace('<w:t xml:space="preserve">Examenonderdeel </w:t>', `<w:t xml:space="preserve">${wxEsc(`Vraag ${k + 1} – ${v[0]}`)}</w:t>`).replace('/……</w:t>', `/ ${v[1]}</w:t>`)).join('');
+  const rijenPV = px.verdeling || px.vragen.map((v, k) => [`Vraag ${k + 1} – ${v[0]}`, v[1]]);
+  if(rijenPV.length <= 3) model = model.replace('<w:trHeight w:val="340"/>', '<w:trHeight w:val="419"/>');
+  const nieuw = rijenPV.map(([t, pt]) => model.replace('<w:t xml:space="preserve">Examenonderdeel </w:t>', `<w:t xml:space="preserve">${wxEsc(t)}</w:t>`).replace('/……</w:t>', `/ ${pt}</w:t>`)).join('');
   const vervang = [[onderdeel[0].index, onderdeel[0][0].length, nieuw], ...onderdeel.slice(1).concat(totaalLeeg).map(m => [m.index, m[0].length, ''])].sort((a, b) => b[0] - a[0]);
   vervang.forEach(([i, l, s]) => { x = x.slice(0, i) + s + x.slice(i + l); });
   return x.replace('/100</w:t>', `/ ${px.vragen.reduce((t, v) => t + v[1], 0)}</w:t>`);
@@ -8158,7 +8318,7 @@ function wxDocument(sj, px, periode, ctx){
   if(px.intro) sl += wxBlokken(ctx, px.intro, false).join('');
   px.vragen.forEach((v, k) => {
     if(v[4]) sl += wxBlokken(ctx, v[4].replace(/<p><b>Samenvattende tabel[\s\S]*?<\/table>/, ''), false).join('');
-    sl += wxVraagkop(k + 1, v[0], v[1]) + wxBlokken(ctx, v[3], false).join('') + wxEind();
+    sl += wxVraagkop(k + 1, v[0], v[1]) + wxBlokken(ctx, pxPunten(v[3]), false).join('') + wxEind();
   });
   const sect1 = sj.sect1;
   const oneven = s => s.replace(/<w:type [^>]*\/>/, '').replace('<w:pgSz', '<w:type w:val="oddPage"/><w:pgSz');
@@ -8311,6 +8471,13 @@ const WISK_EXTRA = {
       { id:'extrema', label:'Stijgen, dalen & extrema berekenen', gen: genExtremaBerekenen, uitleg: theorieAnExtrema },
       { id:'buigpunt', label:'Hol, bol & buigpunten berekenen', gen: genBuigpuntBerekenen, uitleg: theorieAnBuigpunt },
       { id:'begrippen', label:'Begrippen', gen: genAnalyseBegrip, uitleg: theorieAnBegrippen },
+      /* basisleerstof uit Wiskunde DF – Functies extra: dezelfde vragen en dezelfde uitleg */
+      { id:'symmetrie', label:'Symmetrie (uit DF)', gen: genDpSymmetrie,
+        uitleg: () => uitlegKies(theorieDfPlus(), ['Even en oneven functies', 'Symmetrie herkennen']) },
+      { id:'oneindig', label:'Gedrag op oneindig (uit DF)', gen: genDpOneindig,
+        uitleg: () => uitlegKies(theorieDfPlus(), ['Gedrag op oneindig', 'Asymptoten op een grafiek']) },
+      { id:'periodiek', label:'Periodieke functies (uit DF)', gen: genDpPeriodiek,
+        uitleg: () => uitlegKies(theorieDfPlus(), ['Periodieke functies', 'De periode aflezen en gebruiken']) },
     ],
   },
   asymptoten: {
@@ -8335,6 +8502,8 @@ const WISK_EXTRA = {
         uitleg: () => uitlegKies(theorieIntegralen(), ['Primitieve functie']) },
       { id:'berekenen', label:'Bepaalde integraal berekenen', gen: genIntBerekenen,
         uitleg: () => uitlegKies(theorieIntegralen(), ['Primitieve functie', 'De bepaalde integraal berekenen', 'Rekenregels']) },
+      { id:'machten', label:'Negatieve exponenten, wortels en 1/x', gen: () => genIntMachten(),
+        uitleg: () => uitlegKies(theorieIntegralen(), ['Negatieve exponenten, wortels en 1/x']) },
       { id:'oppervlakte', label:'Oppervlakte', gen: genIntOppervlakte,
         uitleg: () => uitlegKies(theorieIntegralen(), ['Integraal en oppervlakte', 'Oppervlakte tussen twee grafieken']) },
       { id:'vraagstuk', label:'Vraagstukken', gen: genIntVraagstuk,
@@ -10688,7 +10857,7 @@ const WISK_INTRO = {
   limveelterm: '<p>In dit onderdeel bereken je <b>limieten van veeltermfuncties</b>: voor x → a (invullen) en voor x → ±∞ (de hoogstegraadsterm). Daarna volgen de rationale functies in een apart onderdeel.</p>',
   limrationaal: '<p>In dit onderdeel bereken je <b>limieten van rationale functies</b> (breuken van veeltermen): invullen, de vormen 0/0 en a/0, en limieten voor x → ±∞.</p>',
   functies: '<p>In dit onderdeel lees je alles af <b>op de grafiek</b>. Je hoeft geen afgeleiden te berekenen.</p>',
-  analyse: "<p>In dit onderdeel <b>bereken</b> je het verloop van een functie met de afgeleide f' en de tweede afgeleide f''. Het aflezen op een grafiek vind je bij Functies basis (Wiskunde DF).</p>",
+  analyse: "<p>In dit onderdeel <b>bereken</b> je het verloop van een functie met de afgeleide f' en de tweede afgeleide f''. Het aflezen op een grafiek vind je bij Functies basis (Wiskunde DF).</p><p>Ook de basisleerstof uit <b>Wiskunde DF → Functies extra</b> hoort hierbij: <b>symmetrie</b>, <b>gedrag op oneindig</b> en <b>periodieke functies</b>. Je kan ze hier oefenen (de soorten met \"uit DF\"), ze komen in de toets en op het examen.</p>",
   asymptoten: '<p>In dit onderdeel zoek je de <b>verticale, horizontale en schuine asymptoten</b> (en gaten) van een functie, met het voorschrift of op een grafiek.</p>',
   onderzoek: "<p>In dit onderdeel onderzoek je <b>één functie stap voor stap</b>: de nulwaarden van f, f' en f'', stijgen en dalen, hol en bol, extrema en buigpunt. Op het einde plaats je de belangrijke punten op een rooster en tekent de app de grafiek.</p>",
   integralen: '<p>In dit onderdeel zoek je een <b>primitieve functie</b> van een veelterm, bereken je <b>bepaalde integralen</b> met F(b) − F(a), bereken je <b>oppervlaktes</b> (tussen een grafiek en de x-as, ook onder de x-as, en tussen twee grafieken) en los je <b>vraagstukken</b> op.</p>',
