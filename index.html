@@ -1,7 +1,7 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Gymnasion Trainer</title>
 <!-- versie van de app: bij elke nieuwe versie aanpassen, dan herlaadt een geopende app (bv. op het beginscherm van een iPhone) zichzelf -->
-<meta name="app-versie" content="2026-11-23-1845">
+<meta name="app-versie" content="2026-11-23-1900">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -3520,6 +3520,54 @@ function theorieFuncties(){
 }
 
 /* Uitleg per soort vragen (elk aanvinkbaar onderdeel heeft zijn eigen deel). */
+/* ---------- afgeleiden met negatieve en gebroken exponenten ----------
+   eerst omzetten naar een macht van x, dan de machtsregel; exponenten in de vorm ^(−2/3) worden superscript */
+function afgSup(t){
+  const S = { '0':'⁰', '1':'¹', '2':'²', '3':'³', '4':'⁴', '5':'⁵', '6':'⁶', '7':'⁷', '8':'⁸', '9':'⁹', '−':'⁻', '/':'ᐟ' };
+  return t.replace(/\^\(([^)]*)\)/g, (m, e) => [...e].map(c => S[c] || c).join(''));
+}
+function afgMachtItem(soort){
+  const k = randChoice([1, 2, 3, 4, 5]), K = k === 1 ? '' : String(k);
+  const red = (t, n) => { const g = ggd(t, n); return [t / g, n / g]; };
+  /* coëfficiënt voor een macht: '' (1), '3', '½', '⅓', '⅔' of '5/2·' */
+  const c = (t, n) => { const [a, b] = red(t, n); if(b === 1) return a === 1 ? '' : String(a);
+    const sym = { '1/2':'½', '1/3':'⅓', '2/3':'⅔' }[`${a}/${b}`]; return sym || `${a}/${b}·`; };
+  const xp = e => (e === '1' ? 'x' : `x^(${e})`);
+  /* t / (n · onder), vereenvoudigd */
+  const deel = (t, n, onder) => { const [a, b] = red(t, n); return b === 1 ? (onder === 'x√x' ? `${a}/(x√x)` : `${a}/${onder}`) : `${a}/(${b}${onder})`; };
+  const s = {
+    neg: () => { const n = randChoice([2, 3, 4]);
+      return { f:`${k}/${xp(String(n))}`, macht:`${K}x^(−${n})`, fp:`${mFmt(-n * k)}x^(−${n + 1}) = −${n * k}/${xp(String(n + 1))}`,
+        fout:[`−${n * k}/${xp(String(n - 1))}`, `${n * k}/${xp(String(n + 1))}`, `${deel(k, n, xp(String(n - 1)))}`] }; },
+    wortel: () => ({ f:`${K}√x`, macht:`${K}x^(1/2)`, fp:`${c(k, 2)}x^(−1/2) = ${deel(k, 2, '√x')}`,
+      fout:[deel(k, 2, 'x'), `${2 * k}√x`, `${c(k, 2)}x^(1/2)`] }),
+    derde: () => ({ f:`${K}∛x`, macht:`${K}x^(1/3)`, fp:`${c(k, 3)}x^(−2/3) = ${deel(k, 3, '∛x^(2)')}`,
+      fout:[deel(k, 3, '∛x'), `${c(k, 3)}x^(2/3)`, `${3 * k}∛x^(2)`] }),
+    derdeKw: () => ({ f:`${K}∛x^(2)`, macht:`${K}x^(2/3)`, fp:`${c(2 * k, 3)}x^(−1/3) = ${deel(2 * k, 3, '∛x')}`,
+      fout:[`${c(2 * k, 3)}x^(1/3)`, `${2 * k}∛x`, `${c(3 * k, 2)}x^(−1/3)`] }),
+    invWortel: () => ({ f:`${k}/√x`, macht:`${K}x^(−1/2)`, fp:`−${c(k, 2)}x^(−3/2) = −${deel(k, 2, 'x√x')}`,
+      fout:[`−${c(k, 2)}x^(−1/2)`, deel(k, 2, '√x'), `−${deel(k, 2, '√x')}`] }),
+    xWortel: () => ({ f:`${K}x√x`, macht:`${K}x^(3/2)`, fp:`${c(3 * k, 2)}x^(1/2) = ${c(3 * k, 2)}√x`,
+      fout:[`${c(k, 2)}x^(−1/2)`, `${c(3 * k, 2)}x`, `${K}√x`] }),
+  };
+  const it = s[soort || randChoice(Object.keys(s))]();
+  return { f: afgSup(it.f), macht: afgSup(it.macht), fp: afgSup(it.fp), fout: it.fout.map(afgSup) };
+}
+function genAfgeleideMachten(){
+  const it = afgMachtItem(), juist = it.fp.split(' = ').pop();
+  return { kind:'functie', catId:'an_afgmacht', catLabel:'Afgeleiden met negatieve en gebroken exponenten',
+    promptHtml: `Bereken de afgeleide van f(x) = ${it.f}.`,
+    answerType:'lang', options: uniqOpts(juist, it.fout), correct: juist,
+    explanation: `Schrijf eerst als macht van x: f(x) = ${it.f} = ${it.macht}.\nMachtsregel (xⁿ)' = n·xⁿ⁻¹, ook voor negatieve en gebroken n.\nf'(x) = ${it.fp}` };
+}
+function theorieAnAfgeleideMachten(){
+  return `
+    <h3>Afgeleiden met negatieve en gebroken exponenten</h3>
+    <p>Schrijf breuken en wortels eerst als een <b>macht van x</b>. Dan gebruik je gewoon de machtsregel (xⁿ)' = n·xⁿ⁻¹, ook als n negatief of een breuk is.</p>
+    <div class="formule">1/xⁿ = x⁻ⁿ &nbsp;&nbsp; √x = x^(1/2) &nbsp;&nbsp; ∛x = x^(1/3) &nbsp;&nbsp; ∛x² = x^(2/3) &nbsp;&nbsp; 1/√x = x^(−1/2) &nbsp;&nbsp; x√x = x^(3/2)</div>
+    <div class="formule">f(x) = 4/x³ = 4x⁻³ → f'(x) = 4·(−3)·x⁻⁴ = −12x⁻⁴ = −12/x⁴<br>f(x) = √x = x^(1/2) → f'(x) = ½·x^(−1/2) = 1/(2√x)<br>f(x) = ∛x² = x^(2/3) → f'(x) = ⅔·x^(−1/3) = 2/(3∛x)</div>
+    <p>Opgepast: de exponent wordt <b>1 kleiner</b>. Bij −3 is dat −4 (niet −2), bij ½ is dat −½.</p>`;
+}
 function theorieAnAfgeleide(){
   return `
     <h3>1. Wat is de afgeleide?</h3>
@@ -7920,9 +7968,14 @@ function examen5DS(){
     for(let i = 1; i <= gr; i++) c.push(Math.random() < 0.3 ? 0 : randInt(-9, 9));
     if(!fs.some(f => f.join() === c.join())) fs.push(c);
   }
+  /* de laatste functies zijn moeilijker: eerst omzetten naar een macht met een negatieve of gebroken exponent */
+  const nMoeilijk = n >= 7 ? 3 : 2;
+  const moeilijk = shuffle(['neg', 'wortel', 'derde', 'derdeKw', 'invWortel', 'xWortel']).slice(0, nMoeilijk).map(afgMachtItem);
+  const veel = fs.slice(0, n - nMoeilijk);
   const afg = [`Afgeleiden`, P,
-    `<p>Bereken de afgeleide functie.</p>` + fs.map((c, i) => `<p>${L[i]})&nbsp; f(x) = ${mn(fmtPoly(c))}</p>${pxLijn("&nbsp;&nbsp;&nbsp;&nbsp; f'(x) =")}`).join(''),
-    fs.map((c, i) => `${L[i]}) f'(x) = ${mn(fmtPoly(afgeleide(c)))} (2)`).join('<br>'),
+    `<p>Bereken de afgeleide functie.</p>` + veel.map((c, i) => `<p>${L[i]})&nbsp; f(x) = ${mn(fmtPoly(c))}</p>${pxLijn("&nbsp;&nbsp;&nbsp;&nbsp; f'(x) =")}`).join('') +
+      moeilijk.map((it, i) => `<p>${L[veel.length + i]})&nbsp; f(x) = ${it.f}</p>${pxLijn('')}${pxLijn("&nbsp;&nbsp;&nbsp;&nbsp; f'(x) =")}`).join(''),
+    veel.map((c, i) => `${L[i]}) f'(x) = ${mn(fmtPoly(afgeleide(c)))} (2)`).concat(moeilijk.map((it, i) => `${L[veel.length + i]}) f(x) = ${it.macht}, dus f'(x) = ${it.fp} (2)`)).join('<br>'),
     `<p class="px-deel px-nieuw">Deel B – Afgeleiden en analyse (${P + 50} punten)</p>`];
   /* analyse: de derdegraadsfunctie uit het examen analyse */
   const ana = examenOnderzoek().vragen.slice(0, 4).map(v => [v[0].replace('Functie 1: ', ''), v[1], v[2], v[3], v[4] ? v[4].replace('<p class="px-deel">Functie 1</p>', '<p class="px-deel">Analyse van een functie</p>') : undefined]);
@@ -8467,6 +8520,7 @@ const WISK_EXTRA = {
   analyse: {
     categories: [
       { id:'afgeleide', label:'Afgeleiden berekenen', gen: genAfgeleide, uitleg: theorieAnAfgeleide },
+      { id:'afgmacht', label:'Afgeleiden met negatieve en gebroken exponenten', gen: genAfgeleideMachten, uitleg: theorieAnAfgeleideMachten },
       { id:'tekenschema', label:"Tekenschema's (f, f', f'')", gen: () => randChoice([genTekenVoorschrift, genVerloopAfgeleide, genHolBolAfgeleide])(), uitleg: theorieAnTekenschema },
       { id:'extrema', label:'Stijgen, dalen & extrema berekenen', gen: genExtremaBerekenen, uitleg: theorieAnExtrema },
       { id:'buigpunt', label:'Hol, bol & buigpunten berekenen', gen: genBuigpuntBerekenen, uitleg: theorieAnBuigpunt },
