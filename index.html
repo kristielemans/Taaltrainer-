@@ -1,7 +1,7 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Gymnasion Trainer</title>
 <!-- versie van de app: bij elke nieuwe versie aanpassen, dan herlaadt een geopende app (bv. op het beginscherm van een iPhone) zichzelf -->
-<meta name="app-versie" content="2026-11-23-1900">
+<meta name="app-versie" content="2026-11-23-1930">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -555,7 +555,8 @@
   .px-grafrooster{ margin:6px auto; border-collapse:collapse; } .px-grafrooster td{ text-align:center; vertical-align:top; padding:4px 12px; }
   .px-grafrooster svg{ width:5.5cm; height:auto; }
   .px-nulgraad{ margin:8px 0 12px; } .px-nulgraad td, .px-nulgraad th{ height:46px; text-align:center; } .px-nulgraad tr > th:first-child{ text-align:left; width:150px; }
-  .px-pt{ display:inline-block; margin-left:2.5em; white-space:nowrap; }
+  .px-pt{ display:inline-block; margin-left:2.5em; white-space:nowrap; color:#808080; }
+  .px-kop > span:last-child{ color:#808080; }
   .px-tekenvak{ height:300px; margin:4px 0 8px 18px; } .px-tekenvak-klein{ height:250px; }
   .px-leeg{ display:none; }
   .px-reflectie{ margin-top:30px; }
@@ -6536,6 +6537,33 @@ function stKwartielen(sorted){
 function stGemiddelde(w){ return stSom(w) / w.length; }
 function stStdev(w){ const m = stGemiddelde(w); return Math.sqrt(stSom(w.map(v => (v - m) ** 2)) / (w.length - 1)); }
 function stWortel(binnen){ return `<span class="st-wortel"><span class="st-wt">√</span><span class="st-wr">${binnen}</span></span>`; }
+/* breuken in de tekst van een vraag met een echte breukstreep tonen: 2/(x − 4) + 3 en (x + 5)/(x + 1) zijn op één
+   regel verwarrend (staat de + 3 onder of naast de breuk?). Enkel als teller of noemer tussen haakjes staat. */
+function mooieBreuken(html){
+  if(!html || html.indexOf('/') < 0) return html;
+  const doos = document.createElement('div');
+  doos.innerHTML = html;
+  const H = '\\((?:[^()]|\\([^()]*\\))*\\)';
+  const re = new RegExp(`(${H}|\\d+)\\/(${H}[²³⁴]?)|(${H})\\/(\\d+|x[²³⁴]?)`, 'g');
+  const weg = t => (/^\(.*\)$/.test(t) ? t.slice(1, -1) : t);   /* (x − 2)² houdt zijn haakjes */
+  const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const loop = el => [...el.childNodes].forEach(k => {
+    if(k.nodeType === 1){ if(!/^(svg|script|style)$/i.test(k.tagName) && !(k.className || '').toString().includes('st-breuk')) loop(k); return; }
+    if(k.nodeType !== 3 || !re.test(k.nodeValue)) return;
+    re.lastIndex = 0;
+    let uit = '', vanaf = 0, m;
+    while((m = re.exec(k.nodeValue))){
+      uit += esc(k.nodeValue.slice(vanaf, m.index)) + stBreuk(esc(weg(m[1] || m[3])), esc(weg(m[2] || m[4])));
+      vanaf = m.index + m[0].length;
+    }
+    uit += esc(k.nodeValue.slice(vanaf));
+    const tmp = document.createElement('span');
+    tmp.innerHTML = uit;
+    k.replaceWith(...tmp.childNodes);
+  });
+  loop(doos);
+  return doos.innerHTML;
+}
 function stBreuk(t, n){ return `<span class="st-breuk"><span>${t}</span><span>${n}</span></span>`; }
 function stTabel(koppen, rijen){
   return `<table class="functie-table compact st-tabel"><tr>${koppen.map(k => `<th>${k}</th>`).join('')}</tr>` +
@@ -7973,9 +8001,9 @@ function examen5DS(){
   const moeilijk = shuffle(['neg', 'wortel', 'derde', 'derdeKw', 'invWortel', 'xWortel']).slice(0, nMoeilijk).map(afgMachtItem);
   const veel = fs.slice(0, n - nMoeilijk);
   const afg = [`Afgeleiden`, P,
-    `<p>Bereken de afgeleide functie.</p>` + veel.map((c, i) => `<p>${L[i]})&nbsp; f(x) = ${mn(fmtPoly(c))}</p>${pxLijn("&nbsp;&nbsp;&nbsp;&nbsp; f'(x) =")}`).join('') +
-      moeilijk.map((it, i) => `<p>${L[veel.length + i]})&nbsp; f(x) = ${it.f}</p>${pxLijn('')}${pxLijn("&nbsp;&nbsp;&nbsp;&nbsp; f'(x) =")}`).join(''),
-    veel.map((c, i) => `${L[i]}) f'(x) = ${mn(fmtPoly(afgeleide(c)))} (2)`).concat(moeilijk.map((it, i) => `${L[veel.length + i]}) f(x) = ${it.macht}, dus f'(x) = ${it.fp} (2)`)).join('<br>'),
+    `<p>Bereken de afgeleide functie.</p>` + veel.map((c, i) => `<p>${L[i]})&nbsp; <span class="wx-m">f(x) = ${mn(fmtPoly(c))}</span></p>${pxLijn("&nbsp;&nbsp;&nbsp;&nbsp; f'(x) =")}`).join('') +
+      moeilijk.map((it, i) => `<p>${L[veel.length + i]})&nbsp; <span class="wx-m">f(x) = ${it.f}</span></p>${pxLijn('')}${pxLijn("&nbsp;&nbsp;&nbsp;&nbsp; f'(x) =")}`).join(''),
+    veel.map((c, i) => `${L[i]}) <span class="wx-m">f'(x) = ${mn(fmtPoly(afgeleide(c)))}</span> (2)`).concat(moeilijk.map((it, i) => `${L[veel.length + i]}) <span class="wx-m">f(x) = ${it.macht}</span>, dus <span class="wx-m">f'(x) = ${it.fp}</span> (2)`)).join('<br>'),
     `<p class="px-deel px-nieuw">Deel B – Afgeleiden en analyse (${P + 50} punten)</p>`];
   /* analyse: de derdegraadsfunctie uit het examen analyse */
   const ana = examenOnderzoek().vragen.slice(0, 4).map(v => [v[0].replace('Functie 1: ', ''), v[1], v[2], v[3], v[4] ? v[4].replace('<p class="px-deel">Functie 1</p>', '<p class="px-deel">Analyse van een functie</p>') : undefined]);
@@ -7985,7 +8013,7 @@ function examen5DS(){
 /* ---------- examen 5 DS – asymptoten en limieten (20 punten, extra deel) ---------- */
 function examen5DSAsym(){
   const nl = t => t.replace(/(^|[\s(=·/])-/g, '$1−').replace(/lim \(x → ([^)]*)\)/g, '<span class="lim">lim<sub> x → $1 </sub></span>').replace(/\n/g, '<br>');
-  const vraag = q => q.promptHtml.replace(/(^|[\s(=·/])-/g, '$1−').replace(/: [xy] = \?$/, '.').replace(/<br>/g, ' ');
+  const vraag = q => mooieBreuken(q.promptHtml.replace(/(^|[\s(=·/])-/g, '$1−').replace(/: [xy] = \?$/, '.').replace(/<br>/g, ' '));
   const L = [genLvInvullen(), genLvOneindig(), genLrNul(), genLrANul(), genLrOneindig()];
   const As = [genAsVA(), genAsHA(), genAsSchuin()];
   let gq; do{ gq = genAsGrafiek(); } while(!/HA/.test(gq.explanation) || !/VA/.test(gq.explanation));
@@ -8002,7 +8030,7 @@ function examen5DSAsym(){
 /* ---------- examen bepaalde integralen (20 punten, extra deel) ---------- */
 function examenIntegralen(){
   const nl = t => t.replace(/(^|[\s(=·\/])-/g, '$1−').replace(/\n/g, '<br>');
-  const vraag = q => q.promptHtml.replace(/(^|[\s(=·\/])-/g, '$1−').replace(/<br>/g, ' ');
+  const vraag = q => mooieBreuken(q.promptHtml.replace(/(^|[\s(=·\/])-/g, '$1−').replace(/<br>/g, ' '));
   const maak = groep => genIntMachten(randChoice(groep));
   const B = [genIntBerekenen(), maak(['neg2', 'neg3']), maak(['kwad', 'derde']), maak(['ln'])];
   const O1 = genIntOppervlakte();
@@ -8091,11 +8119,11 @@ async function wxLaadSjabloon(){
 }
 const WX_TW = 8504;
 const wxEsc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-function wxRpr(b, i, sz, va){
+function wxRpr(b, i, sz, va, kleur){
   sz = sz || 24;
-  return `<w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:cs="Calibri"/>${b ? '<w:b/>' : ''}${i ? '<w:i/>' : ''}<w:sz w:val="${sz}"/><w:szCs w:val="${sz}"/>${va ? `<w:vertAlign w:val="${va}"/>` : ''}<w:lang w:val="nl-BE"/></w:rPr>`;
+  return `<w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:cs="Calibri"/>${b ? '<w:b/>' : ''}${i ? '<w:i/>' : ''}${kleur ? `<w:color w:val="${kleur}"/>` : ''}<w:sz w:val="${sz}"/><w:szCs w:val="${sz}"/>${va ? `<w:vertAlign w:val="${va}"/>` : ''}<w:lang w:val="nl-BE"/></w:rPr>`;
 }
-const wxR = (t, b, i, sz, va) => (t ? `<w:r>${wxRpr(b, i, sz, va)}<w:t xml:space="preserve">${wxEsc(t)}</w:t></w:r>` : '');
+const wxR = (t, b, i, sz, va, kleur) => (t ? `<w:r>${wxRpr(b, i, sz, va, kleur)}<w:t xml:space="preserve">${wxEsc(t)}</w:t></w:r>` : '');
 const wxTab = () => `<w:r>${wxRpr()}<w:tab/></w:r>`;
 function wxP(inhoud, o){
   o = o || {};
@@ -8114,42 +8142,78 @@ const wxBreukM = (t, n) => `<m:f><m:num>${t}</m:num><m:den>${n}</m:den></m:f>`;
 const wxM = x => `<m:oMath>${x}</m:oMath>`;
 const WX_SUPS = { '⁰':'0', '¹':'1', '²':'2', '³':'3', '⁴':'4', '⁵':'5', '⁶':'6', '⁷':'7', '⁸':'8', '⁹':'9', 'ⁿ':'n', '⁻':'−' };
 /* letters cursief, de rest rechtop */
-function wxTekstMath(t){ return (t.match(/[A-Za-z]|[^A-Za-z]+/g) || []).map(s => (/^[A-Za-z]$/.test(s) ? wxMr(s) : wxMr(s, true))).join(''); }
-/* eenvoudige tekst als vergelijking: machten als exponent, √ als wortelteken */
+function wxTekstMath(t){ return (t.match(/[A-Za-z]+|[^A-Za-z]+/g) || []).map(s => (/^[A-Za-z]$/.test(s) ? wxMr(s) : wxMr(s, true))).join(''); }
+/* lineaire wiskundetekst als Word-vergelijking: breuken (a/b, (…)/(…)) met een breukstreep, √ en ∛ als
+   wortelteken, exponenten (ook ⁻²ᐟ³) als macht, ½ ⅓ ⅔ als breuk, letters cursief en woorden (ln, dx) rechtop */
 function wxOmml(t){
-  t = t.replace(/ /g, ' ');
-  let uit = '', i = 0;
-  while(i < t.length){
-    if(t[i] === '√'){
-      let j = i + 1;
-      if(t[j] === '('){
-        let d = 0, k = j;
-        for(; k < t.length; k++){ d += t[k] === '(' ? 1 : t[k] === ')' ? -1 : 0; if(d === 0) break; }
-        uit += wxRad(wxOmml(t.slice(j + 1, k))); i = k + 1; continue;
-      }
-      let k = j;
-      while(k < t.length && /[\d,.]/.test(t[k])) k++;
-      uit += wxRad(wxMr(t.slice(j, k), true)); i = k; continue;
+  t = String(t).replace(/ /g, ' ').replace(/-/g, '−');
+  let i = 0;
+  const BREUK = { '½':['1', '2'], '⅓':['1', '3'], '⅔':['2', '3'], '¼':['1', '4'], '¾':['3', '4'] };
+  const exponent = e => {
+    const m = e.match(/^(−?)([0-9a-z]+)\/([0-9a-z]+)$/);
+    return m ? (m[1] ? wxMr('−', true) : '') + `<m:f><m:fPr><m:type m:val="skw"/></m:fPr><m:num>${wxMr(m[2], true)}</m:num><m:den>${wxMr(m[3], true)}</m:den></m:f>` : wxTekstMath(e);
+  };
+  const zonderHaakjes = a => (a.inner !== undefined && !a.macht ? wxOmml(a.inner) : a.x);
+  function atoom(){
+    const c = t[i];
+    if(c === '('){
+      let d = 0, k = i;
+      for(; k < t.length; k++){ d += t[k] === '(' ? 1 : t[k] === ')' ? -1 : 0; if(d === 0) break; }
+      const inner = t.slice(i + 1, k); i = k + 1;
+      return { x: wxMr('(', true) + wxOmml(inner) + wxMr(')', true), inner };
     }
-    let j = i;
-    while(j < t.length && !WX_SUPS[t[j]] && t[j] !== '√') j++;
-    const stuk = t.slice(i, j);
-    if(j < t.length && WX_SUPS[t[j]]){
-      let k = j;
-      while(k < t.length && WX_SUPS[t[k]]) k++;
-      const exp = [...t.slice(j, k)].map(c => WX_SUPS[c]).join('');
-      uit += wxTekstMath(stuk.slice(0, -1)) + wxSup(wxTekstMath(stuk.slice(-1)), wxMr(exp, true)); i = k; continue;
+    if(c === '√' || c === '∛'){
+      i++;
+      const a = metMacht();
+      if(!a) return { x: wxMr(c, true) };
+      const deg = c === '∛' ? `<m:radPr></m:radPr><m:deg>${wxMr('3', true)}</m:deg>` : '<m:radPr><m:degHide m:val="1"/></m:radPr><m:deg/>';
+      return { x: `<m:rad>${deg}<m:e>${zonderHaakjes(a)}</m:e></m:rad>` };
     }
-    uit += wxTekstMath(stuk); i = j;
+    if(BREUK[c]){ i++; return { x: wxBreukM(wxMr(BREUK[c][0], true), wxMr(BREUK[c][1], true)) }; }
+    if(/[0-9]/.test(c)){ let k = i; while(k < t.length && /[0-9,.]/.test(t[k])) k++; const g = t.slice(i, k).replace(/[,.]$/, ''); i += g.length; return { x: wxMr(g, true) }; }
+    if(/[A-Za-z]/.test(c)){
+      let k = i; while(k < t.length && /[A-Za-z]/.test(t[k])) k++;
+      const w = t.slice(i, k);
+      if(w.length > 1 && !/^[a-z]$/.test(w)){ i = k; return { x: wxMr(w, true) }; }
+      i++; return { x: wxMr(c) };
+    }
+    return null;
   }
-  return uit;
+  function metMacht(){
+    const a = atoom();
+    if(!a) return null;
+    if(i < t.length && (WX_SUPS[t[i]] !== undefined || t[i] === 'ᐟ')){
+      let k = i, e = '';
+      while(k < t.length && (WX_SUPS[t[k]] !== undefined || t[k] === 'ᐟ')){ e += t[k] === 'ᐟ' ? '/' : WX_SUPS[t[k]]; k++; }
+      i = k;
+      return { x: wxSup(a.x, exponent(e)), macht: true };
+    }
+    return a;
+  }
+  const stukken = [];
+  let tekst = '';
+  const flush = () => { if(tekst){ stukken.push({ x: wxTekstMath(tekst) }); tekst = ''; } };
+  while(i < t.length){
+    const c = t[i];
+    if(c === '/' && !tekst && stukken.length && stukken[stukken.length - 1].atoom){
+      const start = i; i++;
+      const noemer = metMacht();
+      if(noemer){ const teller = stukken.pop(); stukken.push({ x: wxBreukM(zonderHaakjes(teller), zonderHaakjes(noemer)), atoom: true }); continue; }
+      i = start + 1; tekst += '/'; continue;
+    }
+    const begin = i, a = metMacht();
+    if(a){ flush(); a.atoom = true; stukken.push(a); continue; }
+    i = begin + 1; tekst += c;
+  }
+  flush();
+  return stukken.map(s => s.x).join('');
 }
 /* antwoordruimte en koppen */
 const WX_LEADER = `<w:tab w:val="right" w:leader="dot" w:pos="${WX_TW}"/>`;
 const wxLijn = (label, keep) => wxP((label || '') + wxTab(), { keep, na:0, tabs: WX_LEADER, regel:480 });
 const wxLijn2 = (l, r, keep) => wxP(l + wxTab() + wxTab() + r + wxTab(), { keep, na:0, regel:480,
   tabs:`<w:tab w:val="right" w:leader="dot" w:pos="${WX_TW / 2 - 200}"/><w:tab w:val="left" w:pos="${WX_TW / 2}"/>` + WX_LEADER });
-const wxVraagkop = (nr, titel, pt) => wxP(wxR(`Vraag ${nr}`, true) + wxR('   ' + titel, true) + wxTab() + wxR(`…… / ${pt}`, true), { voor:240, na:80, tabs:`<w:tab w:val="right" w:pos="${WX_TW}"/>` });
+const wxVraagkop = (nr, titel, pt) => wxP(wxR(`Vraag ${nr}`, true) + wxR('   ' + titel, true) + wxTab() + wxR(`…… / ${pt}`, true, false, 24, null, '808080'), { voor:240, na:80, tabs:`<w:tab w:val="right" w:pos="${WX_TW}"/>` });
 const wxDeelkop = (t, o) => wxP(wxR(t, true, false, 30), Object.assign({ voor:200, na:120 }, o || {}));
 const wxEind = () => wxP('', { keep:false, na:0 });
 
@@ -8190,20 +8254,7 @@ async function wxPng(a){
 }
 
 /* HTML van een vraag of oplossing → runs en alinea's */
-function wxFormule(t){
-  t = t.trim().replace(/-/g, '−');
-  if(!/=/.test(t)){
-    let d = 0;
-    for(let i = 0; i < t.length; i++){
-      d += t[i] === '(' ? 1 : t[i] === ')' ? -1 : 0;
-      if(t[i] === '/' && d === 0){
-        const weg = x => (/^\(.*\)$/.test(x.trim()) ? x.trim().slice(1, -1) : x.trim());
-        return wxBreukM(wxOmml(weg(t.slice(0, i))), wxOmml(weg(t.slice(i + 1))));
-      }
-    }
-  }
-  return wxOmml(t);
-}
+function wxFormule(t){ return wxOmml(String(t).trim()); }
 function wxInline(nodes, b, i){
   const uit = [], overslaan = new Set();
   nodes.forEach((k, nr) => {
@@ -8241,13 +8292,14 @@ function wxInline(nodes, b, i){
     else if(cls.includes('st-breuk')){ const d = [...k.children].map(c => c.textContent); uit.push({ t:'M', x: wxM(wxBreukM(wxOmml(d[0]), wxOmml(d[1] || ''))) }); }
     else if(tag === 'span' && /overline/.test(k.getAttribute('style') || '')) uit.push({ t:'t', s:[...k.textContent].map(c => c + '̅').join(''), b, i });
     else if(tag === 'svg') uit.push({ t:'svg', el:k });
-    else if(cls.includes('px-pt')) uit.push({ t:'tab' }, { t:'tab' }, { t:'t', s:k.textContent, b, i });
+    else if(cls.includes('px-pt')) uit.push({ t:'tab' }, { t:'tab' }, { t:'t', s:k.textContent, b, i, kleur:'808080' });
+    else if(cls.includes('wx-m')) uit.push({ t:'M', x: wxM(wxOmml(k.textContent)) });
     else uit.push(...wxInline([...k.childNodes], b, i));
   });
   return uit;
 }
 function wxRuns(items){
-  return items.map(it => it.t === 't' ? wxR(it.s.replace(/ /g, ' '), it.b, it.i) : it.t === 'M' ? it.x : it.t === 'v' ? wxR(it.s, it.b, it.i, 24, it.va) : it.t === 'tab' ? wxTab() : '').join('');
+  return items.map(it => it.t === 't' ? wxR(it.s.replace(/ /g, ' '), it.b, it.i, 24, null, it.kleur) : it.t === 'M' ? it.x : it.t === 'v' ? wxR(it.s, it.b, it.i, 24, it.va) : it.t === 'tab' ? wxTab() : '').join('');
 }
 function wxAlineas(ctx, items, keep){
   const out = [];
@@ -10970,7 +11022,7 @@ function ozLeegRooster(){
 }
 function afdrukVraag(q, nr){
   let h = `<div class="pv"><div class="pv-kop"><b>${nr}.</b> <span class="pv-cat">${q.catLabel || ''}</span></div>`;
-  h += `<div class="pv-tekst">${q.promptHtml}</div>`;
+  h += `<div class="pv-tekst">${mooieBreuken(q.promptHtml)}</div>`;
   if(q.svg) h += `<div class="pv-svg">${q.svg}</div>`;
   if(q.extraHtml) h += `<div class="pv-extra">${q.extraHtml}</div>`;
   if(q.answerType === 'lang'){
@@ -11113,7 +11165,7 @@ function afdrukUitleg(mode){
 /* een uitgewerkt voorbeeld: de vraag met meteen de oplossing en de uitleg */
 function afdrukVoorbeeld(q, nr){
   let h = `<div class="pv"><div class="pv-kop"><b>Voorbeeld ${nr}.</b> <span class="pv-cat">${q.catLabel || ''}</span></div>`;
-  h += `<div class="pv-tekst">${q.promptHtml}</div>`;
+  h += `<div class="pv-tekst">${mooieBreuken(q.promptHtml)}</div>`;
   if(q.svg) h += `<div class="pv-svg">${q.svg}</div>`;
   if(q.extraHtml) h += `<div class="pv-extra">${q.extraHtml}</div>`;
   if(q.answerType === 'lang') h += '<div class="pv-opties">' + q.options.map((o, i) => `<div class="pv-optie"><b>${AFDRUK_LETTERS[i]}</b> ${o}</div>`).join('') + '</div>';
@@ -12181,7 +12233,7 @@ function renderQuestion(){
     fbadge.style.display = 'inline-flex';
     fbadge.textContent = q.catLabel;
     promptEl.textContent = '';
-    termEl.innerHTML = q.promptHtml;
+    termEl.innerHTML = mooieBreuken(q.promptHtml);
     termEl.className = 'source-term long-text';
     metaEl.textContent = '';
     if(q.svg || q.extraHtml){
