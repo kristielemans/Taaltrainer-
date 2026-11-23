@@ -1,7 +1,7 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Gymnasion Trainer</title>
 <!-- versie van de app: bij elke nieuwe versie aanpassen, dan herlaadt een geopende app (bv. op het beginscherm van een iPhone) zichzelf -->
-<meta name="app-versie" content="2026-11-23-0930">
+<meta name="app-versie" content="2026-11-23-1215">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -497,6 +497,62 @@
   .st-breuk{ white-space:nowrap; }
   .st-data{ font-family:'IBM Plex Mono', monospace; font-size:0.92rem; line-height:1.7; word-spacing:2px; }
   .st-tabel{ margin:6px auto 10px; }
+  /* examen: opgemaakt zoals het examen van de school (hoofding, puntenverdeling, reflectiekader) */
+  .btn-proef{ background:#1C2541; color:#fff; border-color:#1C2541; }
+  .px{ font-family:Calibri, Carlito, Arial, sans-serif; font-size:12pt; color:#000; }
+  .px-logos{ display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+  .px-logos img:first-child{ height:34px; } .px-logos img:last-child{ height:30px; }
+  .px-kader{ border:1px solid #38807E; margin:0 auto 16px; max-width:560px; }
+  .px-band{ background:#9FB3B0; color:#fff; text-align:center; padding:10px; font-size:13pt; }
+  .px-info{ width:100%; border-collapse:collapse; } .px-info td{ padding:5px 8px; vertical-align:bottom; }
+  .px-veld{ display:inline-block; min-width:120px; width:95%; border-bottom:1.5px dotted #444; min-height:1.2em; outline:none; }
+  .px-punten{ width:100%; max-width:560px; margin:0 auto; border-collapse:collapse; border:1px solid #38807E; }
+  .px-punten th{ background:#DCEAF2; font-weight:400; padding:4px; border:1px solid #38807E; }
+  .px-punten td{ padding:5px 8px; border:1px solid #38807E; } .px-r{ text-align:right; white-space:nowrap; width:70px; }
+  .px-tot td{ font-size:13pt; }
+  .px-todo{ margin:18px 0 4px; } .px-todo-lijst{ margin:0; padding-left:22px; } .px-todo-lijst li{ margin:1px 0; padding:0; line-height:1.35; }
+  .px-succes{ text-align:right; font-size:15pt; margin:10px 30px 0 0; }
+  .px-voet{ margin-top:18px; text-align:center; font-size:9pt; border-top:1px solid #9FB3B0; padding-top:4px; }
+  .px-adres{ display:flex; justify-content:center; align-items:center; gap:14px; font-style:italic; margin-top:4px; } .px-adres img{ height:26px; }
+  .px-deel{ font-size:14pt; font-weight:700; margin:28px 0 6px; }
+  .px-vraag{ margin:18px 0 10px; break-inside:avoid; page-break-inside:avoid; }
+  .px-kop{ display:flex; justify-content:space-between; font-weight:700; margin-bottom:6px; }
+  .px-vraag p{ margin:8px 0 4px; }
+  .px-lijn{ display:flex; align-items:flex-end; min-height:30px; border-bottom:1.5px dotted #444; margin:0 0 2px 18px; }
+  .px-label{ white-space:nowrap; margin-right:6px; padding-bottom:2px; }
+  .px-in{ flex:1; min-width:40px; outline:none; padding:0 4px 2px; font-family:'IBM Plex Mono', monospace; font-size:11pt; color:#1C2541; }
+  .px-twee{ display:flex; gap:24px; } .px-twee .px-lijn{ flex:1; }
+  .px-midden{ text-align:center; } .px-vlak{ max-width:100%; height:auto; cursor:pointer; }
+  .px-opl{ display:none; margin:8px 0 0 18px; padding:8px 10px; border-left:3px solid #2E7D4F; background:#EEF6F0; }
+  .px.px-toon .px-opl{ display:block; }
+  .px-refl{ width:100%; border-collapse:collapse; border:1px solid #38807E; font-size:9.5pt; line-height:1.25; margin-top:6px; }
+  .px-refl td, .px-refl th{ border:1px solid #38807E; padding:4px 6px; vertical-align:top; }
+  .px-refl .px-veld{ width:230px; min-width:0; } .px-refl-lijst .px-veld{ width:330px; }
+  .px-refl th{ background:#DCEAF2; font-weight:400; text-align:center; }
+  .px-refl .px-refl-band{ background:#9FB3B0; color:#fff; letter-spacing:0.05em; }
+  .px-refl-naam{ font-size:11pt; } .px-rechts{ float:right; }
+  .px-rk{ text-align:center; margin:1px 0 3px; }
+  .px-vink{ display:block; margin:1px 0 1px 14px; cursor:pointer; } .px-vink input{ margin:0 4px 0 0; vertical-align:-1px; }
+  .px-refl-lijst .px-vink{ margin-left:30px; }
+  .px-refl-vier > div{ display:flex; } .px-refl-vier > div > div{ flex:1; padding:0 6px; border-right:1px solid #38807E; } .px-refl-vier > div > div:last-child{ border-right:none; }
+  .px-refl .px-kort{ min-width:0; width:50px; }
+  .px-sam{ width:100%; border-collapse:collapse; margin:6px 0 10px; } .px-sam th, .px-sam td{ border:1px solid #000; height:30px; }
+  .px-sam th{ text-align:left; font-weight:700; padding:0 6px; width:110px; background:#fff; font-size:10.5pt; }
+  .px-functie{ text-align:center; font-size:14pt; margin:6px 0 12px; } .px-schuin{ font-style:italic; font-size:10.5pt; }
+  .px-groot svg{ width:100%; max-width:520px; height:auto; }
+  .px-veel .px-punten td{ padding:2px 8px; } .px-veel .px-todo{ margin-top:10px; } .px-veel .px-voet{ margin-top:8px; } .px-veel .px-kader{ margin-bottom:10px; }
+  .px-tekenvak{ height:300px; margin:4px 0 8px 18px; } .px-tekenvak-klein{ height:250px; }
+  .px-leeg{ display:none; }
+  .px-reflectie{ margin-top:30px; }
+  @media print{
+    .px-eerste{ break-after:page; page-break-after:always; }
+    /* het reflectiekader komt altijd op een eigen pagina; een lege pagina ervoor indien gevraagd */
+    .px-nieuw{ break-before:page; page-break-before:always; margin-top:0; }
+    .px-leeg{ display:block; break-before:page; page-break-before:always; height:1px; }
+    .px-reflectie{ break-before:page; page-break-before:always; break-inside:avoid; page-break-inside:avoid; margin-top:0; }
+    .px-opl{ background:#fff !important; }
+    .px-vlak{ cursor:default; }
+  }
   .intg{ display:inline-flex; align-items:center; vertical-align:middle; margin:0 1px; }
   .intg-s{ font-family:'Times New Roman', serif; font-size:1.8em; line-height:1; }
   .intg-g{ display:inline-flex; flex-direction:column; justify-content:space-between; font-size:0.62em; line-height:1.2; margin:0 2px 0 1px; }
@@ -730,6 +786,7 @@
             <button class="btn btn-green" id="btn-complex-uitleg" type="button">Eerst wat uitleg</button>
             <button class="btn btn-dossier js-dossier" type="button">Dossier afdrukken</button>
             <button class="btn btn-toets js-toetsafdruk" type="button">Toets afdrukken</button>
+            <button class="btn btn-proef" type="button" data-examen="complex">Examen</button>
           </div>
           <div class="filter-group">
             <label>Aantal vragen</label>
@@ -748,6 +805,7 @@
             <button class="btn btn-dossier js-dossier" type="button">Dossier afdrukken</button>
             <button class="btn btn-toets js-toetsafdruk" type="button">Toets afdrukken</button>
             <button class="btn btn-green" id="btn-open-boomtool" type="button">Boom op maat tekenen</button>
+            <button class="btn btn-proef" type="button" data-examen="combinatoriek">Examen</button>
           </div>
           <div class="filter-group">
             <label>Aantal vragen</label>
@@ -763,6 +821,7 @@
           </div>
           <div class="filter-group">
             <button class="btn btn-green" id="btn-wgen-uitleg" type="button">Eerst wat uitleg</button>
+            <button class="btn btn-proef" id="btn-wgen-examen" type="button" style="display:none;">Examen</button>
             <button class="btn btn-dossier js-dossier" type="button">Dossier afdrukken</button>
             <button class="btn btn-toets js-toetsafdruk" type="button">Toets afdrukken</button>
           </div>
@@ -1239,6 +1298,8 @@ const COMPLEX_CATEGORIES = [
   { id:'som', label:'Som', uitleg: () => uitlegComplex('som') },
   { id:'vermenigvuldiging', label:'Vermenigvuldiging', uitleg: () => uitlegComplex('vermenigvuldiging') },
   { id:'macht', label:'Macht', uitleg: () => uitlegComplex('macht') },
+  { id:'omzetten', label:'Omzetten (algebraïsch ↔ goniometrisch)', uitleg: () => uitlegComplex('omzetten') },
+  { id:'gonio', label:'Rekenen in goniometrische vorm', uitleg: () => uitlegComplex('gonio') },
   { id:'wortel', label:'n-de machtswortel', uitleg: () => uitlegComplex('wortel') },
   { id:'vraagstuk', label:'Vraagstukken (met formule)', uitleg: () => uitlegComplex('vraagstuk') },
 ];
@@ -1469,6 +1530,12 @@ function checkFunctieAnswer(q, userAnswer){
   }
   if(q.checkKind === 'tabel'){
     return userAnswer === q.correct;
+  }
+  if(q.checkKind === 'cis'){
+    const gv = parseGonioVorm(userAnswer);
+    if(!gv) return false;
+    const d = ((gv.arg - q.checkData.arg) % 360 + 360) % 360;
+    return Math.abs(gv.r - q.checkData.r) < 0.051 && (d < 0.01 || d > 359.99);
   }
   if(q.checkKind === 'statgraf'){
     return stCheckGrafiek(userAnswer, q.checkData.hoogtes);
@@ -7014,6 +7081,437 @@ const DQ_UITLEG = {
 };
 function dqUitlegVan(id){ return () => uitlegKies(theorieDiffq(), DQ_UITLEG[id]); }
 
+/* ==================================================================
+   COMPLEXE GETALLEN: OMZETTEN EN REKENEN IN GONIOMETRISCHE VORM
+   (twee extra soorten vragen, zodat alles wat in het examen
+   gevraagd wordt ook in de app geoefend kan worden)
+   ================================================================== */
+/* mooie getallen in goniometrische vorm: r geheel, φ een veelvoud van 30° of 45° (geen veelvoud van 90°) */
+function cxMooieHoek(){ return randChoice([30, 45, 60, 120, 135, 150, 210, 225, 240, 300, 315, 330]); }
+/* een complex getal "r cis φ" als antwoord: modulus en argument (modulo 360°) moeten kloppen */
+function cxCisVraag(r, arg){
+  return { answerType:'kort', checkKind:'cis', checkData:{ r, arg }, hint:'Typ in de vorm r cis φ, bv. 6 cis 120°', correct: cis(r, arg) };
+}
+function cxRadTxt(r){ /* √2-veelvouden mooi tonen */
+  const k = r / Math.SQRT2;
+  if(Math.abs(k - Math.round(k)) < 1e-9 && !Number.isInteger(r)) return (Math.round(k) === 1 ? '' : Math.round(k)) + '√2';
+  return cNum(r);
+}
+function genCxNaarGonio(){
+  for(;;){
+    const phi = cxMooieHoek(), r = randChoice([2, 4, 6]);
+    const alg = exactAlg(r, phi);
+    if(!alg) continue;
+    const soort = randChoice(['vol', 'vol', 'arg', 'mod']);
+    const kwadrant = phi < 90 ? '1e' : phi < 180 ? '2e' : phi < 270 ? '3e' : '4e';
+    const uitleg = `z = ${alg}\nr = |z| = √(a² + b²) = ${r}\nz ligt in het ${kwadrant} kwadrant → φ = ${phi}°\nz = ${cis(r, phi)}`;
+    const basis = { kind:'functie', catId:'complex_omzetten', catLabel:'Omzetten', explanation: uitleg };
+    if(soort === 'mod') return Object.assign(basis, { promptHtml:`Gegeven z = ${alg}.<br>Bereken de modulus r = |z|.`, answerType:'kort', checkKind:'number', checkData:{ value:r }, correct:String(r) });
+    if(soort === 'arg') return Object.assign(basis, { promptHtml:`Gegeven z = ${alg}.<br>Bereken het argument φ (in graden, tussen 0° en 360°).`, answerType:'kort', checkKind:'number', checkData:{ value:phi, gonio:{ r, arg:phi } }, correct: phi + '°' });
+    return Object.assign(basis, { promptHtml:`Schrijf z = ${alg} in goniometrische vorm.` }, cxCisVraag(r, phi));
+  }
+}
+function genCxNaarAlgebraisch(){
+  for(;;){
+    const phi = randChoice([30, 45, 60, 90, 120, 135, 150, 180, 210, 225, 240, 270, 300, 315, 330]), r = randChoice([2, 4, 6, 8]);
+    const juist = exactAlg(r, phi);
+    if(!juist) continue;
+    const fout = [exactAlg(r, hoek360(180 - phi)), exactAlg(r, hoek360(-phi)), exactAlg(r, hoek360(phi + 180)), exactAlg(r, hoek360(90 - phi))].filter(Boolean);
+    if(new Set(fout.filter(f => f !== juist)).size < 2) continue;
+    const cs = exactCosSin(phi);
+    return { kind:'functie', catId:'complex_omzetten', catLabel:'Omzetten',
+      promptHtml:`Schrijf w = ${cis(r, phi)} in algebraïsche vorm (exact).`, answerType:'lang', options: uniqOpts(juist, fout), correct: juist,
+      explanation: `w = ${r}(cos ${phi}° + i sin ${phi}°)\ncos ${phi}° = ${exactDeel(1, cs[0]) ? (exactDeel(1, cs[0]).teken + exactDeel(1, cs[0]).txt) : '0'}, sin ${phi}° = ${exactDeel(1, cs[1]) ? (exactDeel(1, cs[1]).teken + exactDeel(1, cs[1]).txt) : '0'}\nw = ${juist}` };
+  }
+}
+function genCxGonioRekenen(){
+  const soort = randChoice(['maal', 'deel', 'macht', 'moivre']);
+  const basis = { kind:'functie', catId:'complex_gonio', catLabel:'Rekenen in goniometrische vorm' };
+  if(soort === 'maal' || soort === 'deel'){
+    const r2 = randChoice([2, 3, 4]), r1 = r2 * randChoice([2, 3, 5]), p1 = 5 * randInt(2, 60), p2 = 5 * randInt(2, 30);
+    if(soort === 'maal') return Object.assign(basis, { promptHtml:`Gegeven z₁ = ${cis(r1, p1)} en z₂ = ${cis(r2, p2)}.<br>Bereken z₁ · z₂ in goniometrische vorm.` }, cxCisVraag(r1 * r2, p1 + p2),
+      { explanation:`Moduli vermenigvuldigen, argumenten optellen:\nz₁ · z₂ = ${r1}·${r2} cis(${p1}° + ${p2}°) = ${cis(r1 * r2, p1 + p2)}` });
+    return Object.assign(basis, { promptHtml:`Gegeven z₁ = ${cis(r1, p1)} en z₂ = ${cis(r2, p2)}.<br>Bereken z₁ / z₂ in goniometrische vorm.` }, cxCisVraag(r1 / r2, p1 - p2),
+      { explanation:`Moduli delen, argumenten aftrekken:\nz₁ / z₂ = ${r1}/${r2} cis(${p1}° − ${p2}°) = ${cis(r1 / r2, p1 - p2)}` });
+  }
+  if(soort === 'macht'){
+    const r = randChoice([2, 3]), n = r === 2 ? randInt(3, 5) : randInt(2, 4), p = 5 * randInt(2, 30);
+    return Object.assign(basis, { promptHtml:`Bereken (${cis(r, p)})${'⁰¹²³⁴⁵⁶⁷⁸'[n]} met de formule van De Moivre.` }, cxCisVraag(r ** n, n * p),
+      { explanation:`De Moivre: (r cis φ)ⁿ = rⁿ cis(n·φ)\n= ${r}${'⁰¹²³⁴⁵⁶⁷⁸'[n]} cis(${n}·${p}°) = ${r ** n} cis ${n * p}°` + (hoek360(n * p) !== n * p ? ` = ${cis(r ** n, n * p)}` : '') });
+  }
+  /* (a + bi)ⁿ met de formule van De Moivre, uitkomst in algebraïsche vorm (geheel) */
+  const keuze = randChoice([[1, 1, Math.SQRT2, 45], [1, -1, Math.SQRT2, 315], [-1, 1, Math.SQRT2, 135], [-1, -1, Math.SQRT2, 225]]);
+  const [a, b, r, p] = keuze, n = randChoice([2, 4, 6, 8]);
+  const R = Math.round(r ** n), hoek = hoek360(n * p);
+  const re = Math.round(R * Math.cos(hoek * Math.PI / 180)), im = Math.round(R * Math.sin(hoek * Math.PI / 180));
+  return Object.assign(basis, { promptHtml:`Bereken (${formatComplex(a, b)})${'⁰¹²³⁴⁵⁶⁷⁸'[n]} met de formule van De Moivre. Schrijf het resultaat in de vorm a + bi.`,
+    answerType:'kort', checkKind:'complex', checkData:{ re, im }, correct: formatComplex(re, im),
+    explanation:`${formatComplex(a, b)} = √2 cis ${p}°\n(√2 cis ${p}°)${'⁰¹²³⁴⁵⁶⁷⁸'[n]} = (√2)${'⁰¹²³⁴⁵⁶⁷⁸'[n]} cis(${n}·${p}°) = ${R} cis ${hoek}° = ${formatComplex(re, im)}` });
+}
+const OMZETTEN_COMPLEX_GENS = [genCxNaarGonio, genCxNaarAlgebraisch];
+const GONIO_COMPLEX_GENS = [genCxGonioRekenen];
+
+/* ==================================================================
+   EXAMEN
+   Een volledig examen over één onderdeel, opgemaakt volgens de
+   richtlijnen van de school: hoofding, puntenverdeling, TO DO,
+   stippellijnen en het reflectiekader op een eigen pagina. Elke klik
+   geeft een nieuw examen van dezelfde opbouw, zodat leerlingen weten
+   welke soort vragen ze krijgen. Afdrukken, of op het scherm invullen;
+   de oplossingen kunnen getoond worden (verbeteringssleutel).
+   ================================================================== */
+function pxBreuk(t, n){ return stBreuk(t, n); }
+function pxLijn(label){ return `<div class="px-lijn"><span class="px-label">${label || ''}</span><span class="px-in" contenteditable="true"></span></div>`; }
+function pxLijnen(n){ return pxLijn().repeat(n); }
+function pxLijn2(l1, l2){ return `<div class="px-twee">${pxLijn(l1)}${pxLijn(l2)}</div>`; }
+function pxVraag(nr, titel, punten, inhoud, oplossing){
+  return `<div class="px-vraag"><div class="px-kop"><span><b>Vraag ${nr}</b>&nbsp;&nbsp;${titel}</span><span>…… / ${punten}</span></div>${inhoud}` +
+    `<div class="px-opl"><b>Oplossing</b><br>${oplossing}</div></div>`;
+}
+function pxDeel(t){ return `<p class="px-deel">${t}</p>`; }
+function pxZ(n){ return `z<sub>${n}</sub>`; }
+function pxVlak(){
+  const n = 6, W = 260, pad = 14, s = (W - 2 * pad) / (2 * n);
+  const x = v => pad + (v + n) * s, y = v => W - pad - (v + n) * s;
+  let g = `<svg class="px-vlak" viewBox="0 0 ${W} ${W}" width="${W}" height="${W}" xmlns="http://www.w3.org/2000/svg" font-family="Calibri, Arial, sans-serif">`;
+  for(let k = -n; k <= n; k++){
+    g += `<line x1="${x(k)}" y1="${y(-n)}" x2="${x(k)}" y2="${y(n)}" stroke="#bbb" stroke-width="0.6"/><line x1="${x(-n)}" y1="${y(k)}" x2="${x(n)}" y2="${y(k)}" stroke="#bbb" stroke-width="0.6"/>`;
+    if(k) g += `<text x="${x(k)}" y="${y(0) + 10}" font-size="7" text-anchor="middle">${k}</text><text x="${x(0) - 3}" y="${y(k) + 2.5}" font-size="7" text-anchor="end">${k}</text>`;
+  }
+  g += `<line x1="${x(-n)}" y1="${y(0)}" x2="${x(n)}" y2="${y(0)}" stroke="#000" stroke-width="1.2"/><line x1="${x(0)}" y1="${y(-n)}" x2="${x(0)}" y2="${y(n)}" stroke="#000" stroke-width="1.2"/>`;
+  g += `<text x="${x(n) - 2}" y="${y(0) - 4}" font-size="9" text-anchor="end">Re</text><text x="${x(0) + 4}" y="${y(n) + 8}" font-size="9">Im</text>`;
+  return g + '<g class="px-punten"></g></svg>';
+}
+/* ---------- examen complexe getallen (50 punten) ---------- */
+function examenComplex(){
+  const vragen = [];
+  /* 1. begrippen */
+  {
+    const [p, q] = randChoice([[3, 4], [4, 3], [6, 8], [8, 6], [5, 12]]);
+    const a = randChoice([1, -1]) * p, b = randChoice([1, -1]) * q, z = formatComplex(a, b).replace(/-/g, '−');
+    vragen.push(['Begrippen', 6,
+      `<p>Gegeven: z = ${z}</p>${pxLijn2('a)&nbsp; Re(z) =', 'Im(z) =')}${pxLijn('b)&nbsp; z̄ =')}<p>c)&nbsp; Bereken de modulus |z|.</p>${pxLijnen(2)}` +
+      `<p>d)&nbsp; Stel z voor in het complexe vlak.</p><div class="px-midden">${pxVlak()}</div>`,
+      `a) Re(z) = ${mFmt(a)}, Im(z) = ${mFmt(b)} (1)<br>b) z̄ = ${formatComplex(a, -b).replace(/-/g, '−')} (1)<br>c) |z| = √((${mFmt(a)})² + (${mFmt(b)})²) = √${a * a + b * b} = ${Math.hypot(a, b)} (2)<br>d) het punt (${mFmt(a)}, ${mFmt(b)}) (2)`]);
+  }
+  /* 2. rekenen in algebraïsche vorm */
+  {
+    const a = randNonZero(-5, 5), b = randNonZero(-5, 5), c = randNonZero(-5, 5), d = randNonZero(-5, 5), k = randChoice([2, 3]);
+    const N = randInt(2001, 2099);
+    const f = (x, y) => formatComplex(x, y).replace(/-/g, '−');
+    const iM = ['1', 'i', '−1', '−i'][N % 4];
+    vragen.push(['Rekenen in algebraïsche vorm', 12,
+      `<p>Gegeven: ${pxZ(1)} = ${f(a, b)} en ${pxZ(2)} = ${f(c, d)}. Schrijf elke uitkomst in de vorm a + bi.</p>` +
+      `${pxLijn(`a)&nbsp; ${pxZ(1)} + ${pxZ(2)} =`)}${pxLijn(`b)&nbsp; ${k}${pxZ(1)} − ${pxZ(2)} =`)}${pxLijn()}${pxLijn(`c)&nbsp; ${pxZ(1)} · ${pxZ(2)} =`)}${pxLijnen(3)}` +
+      `${pxLijn(`d)&nbsp; ${pxZ(1)}<sup>2</sup> =`)}${pxLijnen(3)}${pxLijn(`e)&nbsp; i<sup>${N}</sup> =`)}${pxLijn()}`,
+      `a) ${f(a + c, b + d)} (2)<br>b) ${f(k * a - c, k * b - d)} (2)<br>c) (${f(a, b)})(${f(c, d)}) = ${f(a * c - b * d, a * d + b * c)} (3)<br>d) ${f(a * a - b * b, 2 * a * b)} (3)<br>e) ${N} = 4 · ${Math.floor(N / 4)} + ${N % 4}, dus i<sup>${N}</sup> = ${iM} (2)`]);
+  }
+  /* 3. omzetten */
+  {
+    let phi, r, alg, phi2, r2, alg2;
+    do{ phi = cxMooieHoek(); r = randChoice([2, 4]); alg = exactAlg(r, phi); } while(!alg);
+    do{ phi2 = randChoice([30, 60, 120, 135, 150, 210, 225, 240, 300, 330]); r2 = randChoice([2, 4, 6]); alg2 = exactAlg(r2, phi2); } while(!alg2 || phi2 === phi);
+    vragen.push(['Algebraïsche en goniometrische vorm', 8,
+      `<p>a)&nbsp; Schrijf z = ${alg} in goniometrische vorm (argument tussen 0° en 360°).</p>${pxLijnen(3)}${pxLijn('&nbsp;&nbsp;&nbsp;&nbsp; z =')}` +
+      `<p>b)&nbsp; Schrijf w = ${cis(r2, phi2)} in algebraïsche vorm. Geef de exacte waarde.</p>${pxLijnen(2)}${pxLijn('&nbsp;&nbsp;&nbsp;&nbsp; w =')}`,
+      `a) r = √(a² + b²) = ${r}; z ligt in het ${phi < 90 ? '1e' : phi < 180 ? '2e' : phi < 270 ? '3e' : '4e'} kwadrant → φ = ${phi}°, dus z = ${cis(r, phi)} (4)<br>b) w = ${r2}(cos ${phi2}° + i sin ${phi2}°) = ${alg2} (4)`]);
+  }
+  /* 4. goniometrische vorm en De Moivre */
+  {
+    const r2 = randChoice([2, 3]), r1 = r2 * randChoice([2, 3]), p1 = 5 * randInt(8, 30), p2 = 5 * randInt(2, 8), n = r2 === 2 ? randChoice([3, 4, 5]) : randChoice([2, 3]);
+    const [a, b, p] = randChoice([[1, 1, 45], [1, -1, 315], [-1, 1, 135], [-1, -1, 225]]), m = randChoice([4, 6, 8]);
+    const R = 2 ** (m / 2), hoek = hoek360(m * p), re = Math.round(R * Math.cos(hoek * Math.PI / 180)), im = Math.round(R * Math.sin(hoek * Math.PI / 180));
+    const s = '⁰¹²³⁴⁵⁶⁷⁸';
+    vragen.push(['Rekenen in goniometrische vorm en machten', 10,
+      `<p>Gegeven: ${pxZ(1)} = ${cis(r1, p1)} en ${pxZ(2)} = ${cis(r2, p2)}. Schrijf je antwoord in goniometrische vorm.</p>` +
+      `${pxLijn(`a)&nbsp; ${pxZ(1)} · ${pxZ(2)} =`)}${pxLijn(`b)&nbsp; ${pxBreuk(pxZ(1), pxZ(2))} =`)}${pxLijn(`c)&nbsp; ${pxZ(2)}<sup>${n}</sup> =`)}` +
+      `<p>d)&nbsp; Bereken (${formatComplex(a, b).replace(/-/g, '−')})<sup>${m}</sup> met de formule van De Moivre. Schrijf het resultaat in algebraïsche vorm.</p>${pxLijnen(4)}`,
+      `a) ${cis(r1 * r2, p1 + p2)} (2)<br>b) ${cis(r1 / r2, p1 - p2)} (2)<br>c) ${r2}${s[n]} cis(${n}·${p2}°) = ${cis(r2 ** n, n * p2)} (2)<br>d) ${formatComplex(a, b).replace(/-/g, '−')} = √2 cis ${p}°, dus (√2)${s[m]} cis(${m}·${p}°) = ${R} cis ${hoek}° = ${formatComplex(re, im).replace(/-/g, '−')} (4)`]);
+  }
+  /* 5. n-de machtswortels */
+  {
+    const n = randChoice([2, 3, 4]), rho = n === 4 ? randChoice([1, 2]) : randChoice([2, 3]), R = rho ** n;
+    const theta0 = 5 * randInt(1, Math.floor((360 / n - 1) / 5)), phi = n * theta0;
+    const hoeken = wortelHoeken(phi, n);
+    vragen.push(['De n-de machtswortel', 6,
+      `<p>Bereken de ${RANGTELWOORD[n]}wortels van z = ${cis(R, phi)}. Schrijf ze in goniometrische vorm.</p>${pxLijnen(n + 2)}`,
+      `modulus: ${WORTELTEKEN(n)}${R} = ${rho}; eerste argument ${phi}° / ${n} = ${cNum(phi / n)}°; telkens 360° / ${n} = ${cNum(360 / n)}° erbij (2)<br>${hoeken.map((h, k) => `w<sub>${k}</sub> = ${cis(rho, h)}`).join(';&nbsp; ')} (4)`]);
+  }
+  /* 6. vraagstuk wisselstroom */
+  {
+    const Zm = randChoice([20, 25, 40, 50]), za = 5 * randInt(2, 12), Im = randChoice([2, 3, 4, 5]), ia = -5 * randInt(1, 6);
+    const [a1, b1] = randChoice([[30, 40], [40, 30], [60, 80], [20, 50]]), [a2, b2] = randChoice([[20, -10], [10, -20], [30, -20], [15, 10]]);
+    const A = a1 + a2, B = b1 + b2, mod = Math.hypot(A, B), arg = Math.atan2(B, A) * 180 / Math.PI;
+    const r1 = n => String(Math.round(n * 10) / 10).replace('.', ','), r2 = n => String(Math.round(n * 100) / 100).replace('.', ',');
+    vragen.push(['Vraagstuk: wisselstroom', 8,
+      `<p>In de elektriciteit schrijft men j in plaats van i (j² = −1) en r∠φ voor r cis φ.</p>` +
+      `<p>a)&nbsp; Een toestel heeft impedantie Z = ${pol(Zm, za)} Ω. Er loopt een stroom I = ${pol(Im, ia)} A. Bereken de spanning met U = Z · I.</p>${pxLijn()}${pxLijn('&nbsp;&nbsp;&nbsp;&nbsp; U =')}` +
+      `<p>b)&nbsp; Twee toestellen staan in serie: Z<sub>1</sub> = ${a1} + ${b1}j Ω en Z<sub>2</sub> = ${a2} ${b2 < 0 ? '−' : '+'} ${Math.abs(b2)}j Ω. Bereken Z<sub>tot</sub> = Z<sub>1</sub> + Z<sub>2</sub> en schrijf het ook in de vorm r∠φ.</p>${pxLijnen(2)}${pxLijn2('&nbsp;&nbsp;&nbsp;&nbsp; Z<sub>tot</sub> =', '=')}` +
+      `<p>c)&nbsp; De arbeidsfactor is cos φ, met φ het argument van Z<sub>tot</sub>. Bereken de arbeidsfactor (2 cijfers na de komma).</p>${pxLijn()}`,
+      `a) U = ${Zm} · ${Im} ∠ (${za}° + (${mFmt(ia)}°)) = ${pol(Zm * Im, za + ia)} V (3)<br>b) Z<sub>tot</sub> = ${A} ${B < 0 ? '−' : '+'} ${Math.abs(B)}j Ω; r = √(${A}² + ${B}²) ≈ ${r1(mod)}, φ ≈ ${r1(arg)}°, dus Z<sub>tot</sub> ≈ ${r1(mod)}∠${r1(arg)}° Ω (3)<br>c) cos φ = ${A} / ${r1(mod)} ≈ ${r2(A / mod)} (2)`]);
+  }
+  return { titel:'Complexe getallen', vragen };
+}
+/* ---------- examen analyse: functieonderzoek van een derdegraadsfunctie met één geheel nulpunt
+   en een vierdegraadsfunctie met twee gehele nulpunten (2 × 50 punten) ---------- */
+/* vierdegraadsfunctie a(x − r1)(x − r2)(x² + px + q): twee gehele nulwaarden, de andere twee via de discriminant */
+function maakVierdeTweeNul(){
+  for(let poging = 0; poging < 20000; poging++){
+    const a = randChoice([1, -1]), r1 = randInt(-3, 3), r2 = randInt(-3, 3), p = randInt(-4, 4), q = randInt(-4, 4);
+    const D = p * p - 4 * q;
+    if(r1 === r2 || D <= 0 || Number.isInteger(Math.sqrt(D))) continue;
+    const x1 = (-p - Math.sqrt(D)) / 2, x2 = (-p + Math.sqrt(D)) / 2, nul = [r1, r2, x1, x2].sort((u, v) => u - v);
+    if(nul.some((x, i) => i && x - nul[i - 1] < 0.6)) continue;
+    const f = [[1, -r1], [1, -r2], [1, p, q]].reduce((c, d) => c.concat(Array(d.length - 1).fill(0)).map((_, i) => d.reduce((t, v, j) => t + v * (c[i - j] || 0), 0)), [a]);
+    const g = vierdeGegevens(f, nul.map(x => (ozIsGeheel(x) ? Math.round(x) : x)), [], 2, { wortels: [r1, r2].sort((u, v) => u - v) });
+    if(ozVierdePast(g)) return g;
+  }
+  return null;
+}
+/* "]−∞, −1[ en ]2, +∞[": de intervallen tussen de punten waar het teken gelijk is aan t */
+function ozIvMet(punten, tekens, t){
+  const grens = [-Infinity, ...punten, Infinity];
+  const iv = tekens.map((s, i) => (s === t ? ozIv(grens[i], grens[i + 1]) : null)).filter(Boolean);
+  return iv.length > 1 ? iv.slice(0, -1).join(', ') + ' en ' + iv[iv.length - 1] : iv[0];
+}
+function pxSamTabel(kolommen){
+  const leeg = '<td></td>'.repeat(kolommen);
+  return `<table class="px-sam">${['x', 'y', "y'", 'stijgen / dalen', "y''", 'bol / hol'].map(r => `<tr><th>${r}</th>${leeg}</tr>`).join('')}</table>`;
+}
+function pxOnderzoekIntro(nr, fTxt, kolommen){
+  return `<p class="px-deel${nr > 1 ? ' px-nieuw' : ''}">Functie ${nr}</p><p>Onderzoek de functie</p><p class="px-functie">f(x) = ${fTxt}</p><p><b>Samenvattende tabel</b></p>` +
+    `<p class="px-schuin">Deze tabel vul je bij elke vraag verder aan. Laat tussen de x-waarden voldoende kolommen vrij: in de volgende vragen komen er nog x-waarden bij.</p>${pxSamTabel(kolommen)}`;
+}
+function examenOnderzoek(){
+  const mn = t => t.replace(/-/g, '−'), br = t => mn(t).replace(/x−waarden/g, 'x-waarden').replace(/\n/g, '<br>');
+  /* functie 1: derde graad met één geheel nulpunt */
+  const g = maakOnderzoekSter3();
+  const tekensF = tekensVan(x => evalPoly(g.f, x), g.nulF), t1 = ozTekensF1(g), t2 = ozTekensF2(g);
+  const stijgIv = t1[0] === '+' ? `${ozIv(-Infinity, g.m1)} en ${ozIv(g.m2, Infinity)}` : ozIv(g.m1, g.m2);
+  const daalIv = t1[0] === '+' ? ozIv(g.m1, g.m2) : `${ozIv(-Infinity, g.m1)} en ${ozIv(g.m2, Infinity)}`;
+  const holIv = t2[0] === '+' ? ozIv(-Infinity, g.s) : ozIv(g.s, Infinity), bolIv = t2[0] === '+' ? ozIv(g.s, Infinity) : ozIv(-Infinity, g.s);
+  /* functie 2: vierde graad met twee gehele nulpunten */
+  const h = maakVierdeTweeNul();
+  const exX = h.extrema.map(e => e.x), bpX = h.bps.map(b => b.x);
+  const hF = tekensVan(h.waarde, h.nulF), h1 = ozTekensTussen(x => evalPoly(h.d1, x), exX), h2 = ozTekensTussen(x => evalPoly(h.d2, x), bpX);
+  const [A2, B2, C2] = h.d2, D2 = B2 * B2 - 4 * A2 * C2;
+  const vragen = [
+    ['Functie 1: nulwaarden en tekenschema', 12,
+      `<p>a)&nbsp; Bepaal de nulwaarden van f.</p>${pxLijnen(8)}<p>b)&nbsp; Vul in de samenvattende tabel de rij x en de rij y (tekenschema van f) aan.</p>`,
+      `a) ${br(ozNulwaardenFUitleg(g))} (9)<br>b) tekenschema f: ${tekenRij(tekensF)} (nulwaarden ${ozLijst(g.nulF)}) (3)`,
+      pxOnderzoekIntro(1, mn(fmtPoly(g.f)), 13)],
+    ['Functie 1: stijgen en dalen', 18,
+      `<p>a)&nbsp; Onderzoek waar f stijgt en waar f daalt.</p>${pxLijnen(8)}<p>b)&nbsp; Bepaal de coördinaten van de extrema van f.</p>${pxLijnen(4)}` +
+      `<p>c)&nbsp; Vul in de samenvattende tabel de nieuwe x- en y-waarden, de rij y' en de rij stijgen / dalen aan.</p>`,
+      `a) f'(x) = ${mn(fmtPoly(g.d1))} (3)<br>${br(ozNulwaardenUitleg(g))} (5)<br>f': ${tekenRij(t1)} → f stijgt op ${stijgIv}, daalt op ${daalIv} (2)<br>` +
+      `b) maximum ${ozPunt(g.xMax, g.yMax)}, minimum ${ozPunt(g.xMinW, g.yMinW)} (4)<br>c) tabel aanvullen (4)`],
+    ['Functie 1: hol en bol', 12,
+      `<p>a)&nbsp; Onderzoek waar de grafiek van f hol en waar ze bol is.</p>${pxLijnen(6)}<p>b)&nbsp; Bepaal de coördinaten van de buigpunten van f.</p>${pxLijnen(3)}` +
+      `<p>c)&nbsp; Vul in de samenvattende tabel de nieuwe x- en y-waarden, de rij y'' en de rij bol / hol aan.</p>`,
+      `a) f''(x) = ${mn(fmtPoly(g.d2))} = 0 ⇔ x ${ozIs(g.s)}; f'': ${tekenRij(t2)} → hol (∪) op ${holIv}, bol (∩) op ${bolIv} (5)<br>b) buigpunt ${ozPunt(g.s, g.yB)} (3)<br>c) tabel aanvullen (4)`],
+    ['Functie 1: grafiek', 8,
+      `<p>Teken de grafiek van f met behulp van de samenvattende tabel. Kies zelf een geschikte schaalverdeling. Duid alle bijzondere punten duidelijk aan.</p><div class="px-midden px-groot">${ozLeegRooster()}</div>`,
+      `Punten: ${ozSleutelpunten(g).map(p => ozPunt(p[0], p[1])).join(', ')} (8)<div class="px-midden">${ozRoosterSvg(g, true, [])}</div>`],
+    ['Functie 2: nulwaarden en tekenschema', 14,
+      `<p>a)&nbsp; Bepaal de nulwaarden van f.</p>${pxLijnen(10)}<p>b)&nbsp; Vul in de samenvattende tabel de rij x en de rij y (tekenschema van f) aan.</p>`,
+      `a) ${br(ozVierdeNulUitleg(h))} (11)<br>b) tekenschema f: ${tekenRij(hF)} (nulwaarden ${ozLijst(h.nulF)}) (3)`,
+      pxOnderzoekIntro(2, mn(fmtPoly(h.f)), 19)],
+    ['Functie 2: stijgen en dalen', 16,
+      `<p>a)&nbsp; Onderzoek waar f stijgt en waar f daalt.</p>${pxLijnen(8)}<p>b)&nbsp; Bepaal de coördinaten van de extrema van f.</p>${pxLijnen(4)}` +
+      `<p>c)&nbsp; Vul in de samenvattende tabel de nieuwe x- en y-waarden, de rij y' en de rij stijgen / dalen aan.</p>`,
+      `a) f'(x) = ${mn(fmtPoly(h.d1))} (3)<br>${br(ozVierdeAfgUitleg(h))} (4)<br>f': ${tekenRij(h1)} → f stijgt op ${ozIvMet(exX, h1, '+')}, daalt op ${ozIvMet(exX, h1, MIN)} (2)<br>` +
+      `b) ${h.extrema.map(e => `${e.soort === 'max' ? 'maximum' : 'minimum'} ${ozPunt(e.x, e.y)}`).join(', ')} (5)<br>c) tabel aanvullen (2)`],
+    ['Functie 2: hol en bol', 12,
+      `<p>a)&nbsp; Onderzoek waar de grafiek van f hol en waar ze bol is.</p>${pxLijnen(6)}<p>b)&nbsp; Bepaal de coördinaten van de buigpunten van f.</p>${pxLijnen(3)}` +
+      `<p>c)&nbsp; Vul in de samenvattende tabel de nieuwe x- en y-waarden, de rij y'' en de rij bol / hol aan.</p>`,
+      `a) f''(x) = ${mn(fmtPoly(h.d2))} = 0: D = ${mn(tussenHaakjes(B2))}² − 4·${mn(tussenHaakjes(A2))}·${mn(tussenHaakjes(C2))} = ${D2} → x ${ozIs(bpX[0])} of x ${ozIs(bpX[1])} (3)<br>` +
+      `f'': ${tekenRij(h2)} → hol (∪) op ${ozIvMet(bpX, h2, '+')}, bol (∩) op ${ozIvMet(bpX, h2, MIN)} (2)<br>b) buigpunten ${h.bps.map(b => ozPunt(b.x, b.y)).join(' en ')} (4)<br>c) tabel aanvullen (3)`],
+    ['Functie 2: grafiek', 8,
+      `<p>Teken de grafiek van f met behulp van de samenvattende tabel. Kies zelf een geschikte schaalverdeling. Duid alle bijzondere punten duidelijk aan.</p><div class="px-midden px-groot">${ozLeegRooster()}</div>`,
+      `Punten: ${h.sleutelpunten.map(p => ozPunt(p[0], p[1])).join(', ')} (8)<div class="px-midden">${ozRoosterSvg(h, true, [])}</div>`],
+  ];
+  return { titel:'Analyse: functieonderzoek', vragen };
+}
+/* ---------- examen kansrekenen: combinatieleer, kansen, kortste wegen, boomdiagram en Bayes (50 punten) ---------- */
+function pxGetal(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+/* stratenrooster voor kortste wegen: A linksonder, B rechtsboven, P een kruispunt ertussen */
+function pxStratenSvg(m, n, P){
+  const s = 34, pad = 22, W = m * s + 2 * pad, H = n * s + 2 * pad, x = i => pad + i * s, y = j => H - pad - j * s;
+  let g = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" font-family="Calibri, Arial, sans-serif" style="max-width:100%;height:auto;">`;
+  for(let i = 0; i <= m; i++) g += `<line x1="${x(i)}" y1="${y(0)}" x2="${x(i)}" y2="${y(n)}" stroke="#000" stroke-width="1.2"/>`;
+  for(let j = 0; j <= n; j++) g += `<line x1="${x(0)}" y1="${y(j)}" x2="${x(m)}" y2="${y(j)}" stroke="#000" stroke-width="1.2"/>`;
+  const punt = (i, j, t, dx, dy) => `<circle cx="${x(i)}" cy="${y(j)}" r="4" fill="#000"/><text x="${x(i) + dx}" y="${y(j) + dy}" font-size="14" font-weight="700" text-anchor="middle">${t}</text>`;
+  return g + punt(0, 0, 'A', -11, 15) + punt(m, n, 'B', 11, -7) + punt(P[0], P[1], 'P', 10, -7) + '</svg>';
+}
+/* boomdiagram van drie herhalingen met twee uitkomsten (R/M), met de kansen en de eindkansen */
+function pxBoom3Svg(p, R, M){
+  const k = v => bKomma(v, 4), X = [16, 105, 195, 285], H = 8 * 26 + 10;
+  const tx = (x, y, t, a, e) => `<text x="${x}" y="${y}" font-size="12" text-anchor="${a || 'middle'}"${e || ''}>${t}</text>`;
+  let g = `<svg viewBox="0 0 470 ${H}" width="470" height="${H}" xmlns="http://www.w3.org/2000/svg" font-family="Calibri, Arial, sans-serif" style="max-width:100%;height:auto;"><circle cx="${X[0]}" cy="${H / 2}" r="3.5" fill="#000"/>`;
+  const tak = (niv, x0, y0, pad, kans, span) => {
+    [[R, p, -1], [M, 1 - p, 1]].forEach(([letter, q, z]) => {
+      const y1 = y0 + z * span, x1 = X[niv];
+      g += `<line x1="${x0 + 5}" y1="${y0}" x2="${x1 - 9}" y2="${y1}" stroke="#000" stroke-width="1"/>` + tx((x0 + x1) / 2 - 4, (y0 + y1) / 2 + (z < 0 ? -4 : 12), k(q), 'end', ' font-size="10.5"') + tx(x1, y1 + 4, letter, 'middle', ' font-weight="700"');
+      if(niv < 3) tak(niv + 1, x1, y1, pad + letter, kans * q, span / 2);
+      else g += tx(x1 + 14, y1 + 4, `${pad + letter}: ${k(kans * q)}`, 'start');
+    });
+  };
+  tak(1, X[0], H / 2, '', 1, 52);
+  return g + '</svg>';
+}
+function examenKans(){
+  const vragen = [], k = v => bKomma(v, 4), br = (t, n) => `${bBreuk(t, n)} ≈ ${k(t / n)}`;
+  /* 1. combinatieleer: vijf telproblemen, zonder te zeggen welk soort */
+  {
+    const nA = randInt(5, 8), nB = randInt(12, 25), ringen = randChoice([3, 4, 5]), nD = randInt(14, 22), pD = randChoice([4, 5, 6]), sm = randChoice([4, 5, 6]), bol = randChoice([3, 4]);
+    vragen.push(['Combinatieleer', 10,
+      `<p>a)&nbsp; Op hoeveel manieren kunnen ${nA} vrienden naast elkaar op een rij gaan zitten in de cinema?</p>${pxLijnen(2)}` +
+      `<p>b)&nbsp; Een jeugdbeweging met ${nB} leiders kiest een hoofdleider, een kassier en een materiaalmeester. Op hoeveel manieren kan dat?</p>${pxLijnen(2)}` +
+      `<p>c)&nbsp; Een fietsslot heeft ${ringen} ringen met elk de cijfers 0 tot en met 9. Hoeveel codes zijn er mogelijk?</p>${pxLijnen(2)}` +
+      `<p>d)&nbsp; Een trainer kiest ${pD} spelers uit een kern van ${nD} spelers voor een tornooi. Op hoeveel manieren kan dat?</p>${pxLijnen(2)}` +
+      `<p>e)&nbsp; In een ijssalon kies je ${bol} bolletjes uit ${sm} smaken. Je mag meerdere bolletjes van dezelfde smaak nemen en de volgorde speelt geen rol. Hoeveel verschillende bekers zijn er mogelijk?</p>${pxLijnen(2)}`,
+      `a) permutatie: ${nA}! = ${pxGetal(factorial(nA))} (2)<br>b) variatie zonder herhaling van 3 uit ${nB}: ${nB} · ${nB - 1} · ${nB - 2} = ${pxGetal(nPr(nB, 3))} (2)<br>` +
+      `c) variatie met herhaling van ${ringen} uit 10: 10<sup>${ringen}</sup> = ${pxGetal(10 ** ringen)} (2)<br>d) combinatie van ${pD} uit ${nD}: C(${nD}, ${pD}) = ${pxGetal(nCr(nD, pD))} (2)<br>` +
+      `e) herhalingscombinatie van ${bol} uit ${sm}: C(${sm + bol - 1}, ${bol}) = ${pxGetal(nCrHerhaling(sm, bol))} (2)`]);
+  }
+  /* 2. kansen met combinatieleer: knikkers tegelijk uit een vaas */
+  {
+    const r = randInt(4, 8), w = randInt(3, 7), N = r + w, T = nCr(N, 3);
+    const alleR = nCr(r, 3), tweeR = nCr(r, 2) * w, minW = T - alleR;
+    vragen.push(['Kansen', 10,
+      `<p>Een vaas bevat ${r} rode en ${w} witte knikkers. Je neemt in één greep 3 knikkers uit de vaas. Geef je antwoord als breuk en afgerond op 4 cijfers na de komma.</p>` +
+      `<p>a)&nbsp; Hoeveel verschillende grepen zijn er mogelijk?</p>${pxLijnen(1)}<p>b)&nbsp; Bereken de kans dat de 3 knikkers rood zijn.</p>${pxLijnen(2)}` +
+      `<p>c)&nbsp; Bereken de kans dat er precies 2 rode knikkers bij zijn.</p>${pxLijnen(3)}<p>d)&nbsp; Bereken de kans dat er minstens 1 witte knikker bij is.</p>${pxLijnen(3)}`,
+      `a) C(${N}, 3) = ${T} (2)<br>b) C(${r}, 3) / C(${N}, 3) = ${alleR}/${T} = ${br(alleR, T)} (2)<br>c) C(${r}, 2) · C(${w}, 1) / C(${N}, 3) = ${nCr(r, 2)} · ${w} / ${T} = ${br(tweeR, T)} (3)<br>` +
+      `d) tegengestelde gebeurtenis van "3 rode": 1 − ${alleR}/${T} = ${br(minW, T)} (3)`]);
+  }
+  /* 3. kortste wegen in een stratenrooster */
+  {
+    const m = randInt(5, 7), n = randInt(3, 5), P = [randInt(2, m - 2), randInt(1, n - 1)];
+    const tot = nCr(m + n, n), via1 = nCr(P[0] + P[1], P[1]), via2 = nCr(m - P[0] + n - P[1], n - P[1]), via = via1 * via2;
+    vragen.push(['Kortste wegen', 8,
+      `<p>Je wandelt langs de straten van het rooster van A naar B en neemt altijd een kortste weg (enkel naar rechts of naar boven).</p><div class="px-midden">${pxStratenSvg(m, n, P)}</div>` +
+      `<p>a)&nbsp; Hoeveel kortste wegen zijn er van A naar B?</p>${pxLijnen(2)}<p>b)&nbsp; Hoeveel van die kortste wegen gaan langs het kruispunt P?</p>${pxLijnen(3)}` +
+      `<p>c)&nbsp; Je kiest willekeurig een kortste weg van A naar B. Hoe groot is de kans dat die langs P gaat?</p>${pxLijnen(2)}`,
+      `a) ${m} stappen naar rechts en ${n} naar boven: C(${m + n}, ${n}) = ${tot} (2)<br>b) van A naar P: C(${P[0] + P[1]}, ${P[1]}) = ${via1}; van P naar B: C(${m - P[0] + n - P[1]}, ${n - P[1]}) = ${via2}; samen ${via1} · ${via2} = ${via} (4)<br>` +
+      `c) ${via}/${tot} = ${br(via, tot)} (2)`]);
+  }
+  /* 4. boomdiagram bij een herhaald experiment */
+  {
+    const p = randChoice([0.6, 0.65, 0.7, 0.75, 0.8, 0.85]), q = 1 - p;
+    const ctx = randChoice([
+      { wie:'Een basketbalspeler', wat:'vrijworp', doe:'neemt 3 vrijworpen', r:'raak', m:'mis', kort:['R', 'M'] },
+      { wie:'Een voetballer', wat:'strafschop', doe:'trapt 3 strafschoppen', r:'raak', m:'mis', kort:['R', 'M'] },
+      { wie:'Een boogschutter', wat:'pijl', doe:'schiet 3 pijlen', r:'in de roos', m:'naast de roos', kort:['R', 'N'] },
+    ]);
+    const [R, M] = ctx.kort, alle = p ** 3, twee = 3 * p * p * q, min1 = 1 - q ** 3;
+    vragen.push(['Boomdiagram', 10,
+      `<p>${ctx.wie} heeft bij elke ${ctx.wat} een kans van ${bKomma(p, 2)} op ${ctx.r} (${R}), los van de vorige pogingen. Hij ${ctx.doe}. Een poging die niet ${ctx.r} is, noteer je met ${M}. Rond af op 4 cijfers na de komma.</p>` +
+      `<p>a)&nbsp; Teken een volledig boomdiagram met alle kansen.</p><div class="px-tekenvak"></div>` +
+      `<p>b)&nbsp; Bereken de kans dat alle 3 pogingen ${ctx.r} zijn.</p>${pxLijnen(1)}<p>c)&nbsp; Bereken de kans dat precies 2 pogingen ${ctx.r} zijn.</p>${pxLijnen(2)}` +
+      `<p>d)&nbsp; Bereken de kans dat minstens 1 poging ${ctx.r} is.</p>${pxLijnen(2)}`,
+      `a) <div class="px-midden">${pxBoom3Svg(p, R, M)}</div>(3)<br>b) P(${R}${R}${R}) = ${bKomma(p, 2)}³ ≈ ${k(alle)} (2)<br>` +
+      `c) drie takken: ${R}${R}${M}, ${R}${M}${R}, ${M}${R}${R} → 3 · ${bKomma(p, 2)}² · ${bKomma(q, 2)} ≈ ${k(twee)} (3)<br>d) 1 − P(${M}${M}${M}) = 1 − ${bKomma(q, 2)}³ ≈ ${k(min1)} (2)`]);
+  }
+  /* 5. voorwaardelijke kans: de methode (boom, kruistabel, formule) kiest de leerling zelf */
+  {
+    const { sc, pA, s, f } = bayesSituatie();
+    const PAB = pA * s, PnAB = (1 - pA) * f, PB = PAB + PnAB;
+    vragen.push(['Voorwaardelijke kans', 12,
+      `<p>${sc.gegeven(pA, s, f)}</p><p>Noem ${sc.A}: ${sc.Akort} en ${sc.B}: ${sc.Bkort}. Rond af op 4 cijfers na de komma.</p>` +
+      `<p>a)&nbsp; Stel de situatie voor in een boomdiagram.</p><div class="px-tekenvak px-tekenvak-klein"></div>` +
+      `<p>b)&nbsp; Bereken de kans dat ${sc.b}.</p>${pxLijnen(2)}<p>c)&nbsp; Bereken de kans dat ${sc.a}, als je weet dat ${sc.b}.</p>${pxLijnen(3)}`,
+      `a) <div class="px-midden">${svgBayesBoom(sc.A, sc.B, pA, s, f, true)}</div>(4)<br>` +
+      `b) P(${sc.B}) = ${k(pA)} · ${k(s)} + ${k(1 - pA)} · ${k(f)} = ${k(PAB)} + ${k(PnAB)} = ${k(PB)} (3)<br>` +
+      `c) P(${sc.A} | ${sc.B}) = P(${sc.A} ∩ ${sc.B}) / P(${sc.B}) = ${k(PAB)} / ${k(PB)} ≈ ${k(PAB / PB)} (5)`]);
+  }
+  return { titel:'Kansrekenen', vragen,
+    hulp:'Rekentoestel toegelaten. Noteer al je tussenstappen: een antwoord zonder berekening levert geen punten op. Geef kansen als breuk of afgerond op 4 cijfers na de komma.' };
+}
+const EXAMENS = { complex: examenComplex, onderzoek: examenOnderzoek, combinatoriek: examenKans, bayes: examenKans };
+/* logo's van de school (verkleind uit de officiële examenhoofding) */
+const PX_LOGO_GYM = 'data:image/jpeg;base64,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';
+const PX_LOGO_SSO = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABwCAYAAACZ8XsCAAAlxUlEQVR42u19abgdVZX2W3XOvTcDgSQEEiGBADIkEEiYwiRDENAWELEjtHza0g7YqNgobbdt27bDBw4foGjTwheFBgUFJSICAg0kDE1MCCQQJgkkkECADJCJ5N4zVP/Y7+a8WdlVp87NuedGOPU89dxza9i19t5rr3mtDbwzj4h/hwJ4FUDC8wJeL/bBN2P+3RtAGUCF3/wQrw/g388KPG8A2NHAdLPcf9C0PRDAi3L/3/qwP005+gqwbQAM4SCs4IC3j3xHQuSE/NWjKterf+mdjfsIob8N4FkATwN4dx996+16dAEo8Bwm1Nofg+T+4L/0zjabAvoVuQ8HJ+FAtY98lA8A/gzgFo7lmwA2mvuPEzEB4LF3AgJG0vk8CBgB2FlYSYLey2kJmifzJeg7ebIZbXu2+keeafcvyEDetwUCFjioVZ6JsNDYyCihtrYFMJJtxGyvyN/lFLnFP1vvu9UGBrsgiyJvH/IgW7PhDMFdFMQqmbaKwpaTLZSvowCHKvcXAsZGwNVnyjLgkIFOAoB3AdheOriqTqcK/Gae7yqc9TTcSuAb2lahF4jRTDizKGHW4ig3mXKXtwYKqIN1HID3ATgAwCiaB0oAXgEwF8DvAfxP4L0z+PxuZnK/AOAlAB18f6a8F3OwBwI4AcAUAPsB2IGIXKIW/TiAO8iaKoIMWezwJABTAewPYDsA3QCWAZgD4DcA5vH5KKeyVqF2fxLhHAdgBOHsBrAcwHzCeKf0r9qgQrg/gOPZjx4AV1MW9G2dCmAPPvsygF/3Uvms0gz1cRm3AQCmkWhErWLtvuMHAbhfKFvWeROAnQwSP5LjvZ/y2Q5B0r8B8EzO784F8J4UCqa2vd/WaacbwDcIx7I6dkA/Pp8EsCgnnA8BONi8n9cO+EXT1igD091y7/Fe2AEjYfN3mW9dbuamZceRANYZxaEC4DUASwGsESC9TPIUKZXv/NwcE/OffLaTf78h9yry+3V+d5Vc6xHkOdEgoZfNBgJ4wDyfkIK8RGqq8FwB4AWR2SwC+vYvlXeq8nsV4Xw9MD7rABwh7eRFwM+wDU/9rSH6Jrl/X4MIGMnvq/jMev6dZhZyy45BRCY/uWUA3wIwgSxmW2q17wfw33xug0ygB/rDAM7lKlKE+jacdf88AEfJYJ0piFKhueESTtoofncUgKMB/FLgS7gwRggL9YjyA97fyL/z+Z2xZMM7AjiWk5gEkEYR0Lf59+bb6wBcCOBQKlvbAngXgPcCmG6+vwjOIK8w9qcnxP/9ppnHO8S22HIE/IChGP9aR3C9j896mWqIeeZYEW6rAEYH2tgGwBJOQgnAWgDH1IHzmwYRvm6o6WhSuhK/+2gANj2uEDgtAnbw7whRosqkSAfVgfMSg4SfN3D2FwL69z9l4JvHRRT1h7MgptDvDcYJqU0nJyGSs4v3r+K9TlKoUTKARVIaPYbxeifPBMDJRJgy732TykmXrMJIWEaB7PpxaWMqr3sh/3ROQML3/pGI3RVoLwbwJbLlQkBR8NRqKuEv89o/U9ToEnOMbfefADwvcJ6R4VZrpbJZpgJ1BRdcF8WHUyhixf3h2otJzfwARZQHewhkLAhR4t97AZzP8zyyQwiVqATMCvbeX3FyigBWU9PrkPuxsat5JPyN2L/2BjBGzAhTeL0DwHMAZhDeHsNuy2x3PYBfpfhUEwNnJ60AvxI4owCc/t7vhZXtR7NUpR8DLzbSqnGDIORaatRLMqwKLVkZf5LBqlKGGwrgWiKHfX4xgB/2whofycRNFMrxEFlbHi/BQ/J/J2W7xfy9j/TjMaFalRRYIyLplwNyT4lt7if37qX8lwfOWfL/UAC7AljZD/PrudoYsu5tReQ4g2JKsT9tgUVO6k1kYSXKZz8mu5kB4B7a/Z4WQDvEG9Cou80L7f7YCOBwwlKpY4fb02hqI8X0sqM8v7iORuep4UL2oRBwKe7AMxEOkAfOMm2huih36Kf53ci+3cxF0E3W+30At3OR9WwNhuhPEJiTZQJ2BnAWzxLlr7sA/E5WeNwA8nlk2A61KI4EwGk88x7KygeiFv41SIy/ryOf4381NcFBgWeG8Lo3yH6cZyNwVoXlo5+ina4AMImI5uf7VADfpRgS9acv2Q/MWgqjH6cyYElyB4ADKWA/RMp4qEx4o0gfb+Gi6ZK/XsPUNtflbKtEqhClmKeiLbCNKZyd6J/omi/RgF4mDAX+3g/AV3o5f02ngIkM8LU896Fd63iaHcZIp6o0mcwE8BG40KG4wZAt9SPPo8xWzLkSY2Gbz6T4RzsaWIAFMwaKnCovzqG9tDdwvtBPCDic/eig3B7BeVpKNDn9Ai78K+6v4Fa1D/mVXqa89zSAn5C9HUJ71cfJQks0u/wCzif6stFis9jeelIdb/f6g9j0enusZZuDhc3nccQPMKYb22aPRJ/8ija+LeE2rZ7kCuflJ7RaDKNINYzXL6Wm329UMBYTiRpkYzF9rKMGeB6cf3Muge+mQvHhBiOeXzca4UR+p1Os8fYsyjN7Een3lcDMtWxXlZMohzy6E9usBO6vZJu+X5MIQ1cOOLtoJhoHYDwXcasPT30vhAsI6WJ/vsPrJTjv1mkS4NEvCPj/qBVdTBtgZIT9SCZ/IYCzSRk869qnAZbgEf5ZoYgHS8RNVcKR7OmjN2ZRIXoMzosDOA+IsrlxdWL+vAloUoqR2NvJFsm1yaINZ8FYJWJ70eJxuACKaj9wt58B+Bp/e7vuT8ndvAH+Eolej/oDAb8M5zX4EpylPDEyVCIusyKR53VhTXFO7Vep5L283g3nSTlVDL6ho4P395Q8iRjOk+GP2QLrRGrxUUrUTCTelJCS4d+Zwb89/PbxnLTOOjL1eC4qb6R+tZ843EJsGkDrx/yfjMnoq/2lkMRwFn7v+TiVg9htopkLAvABcD5SL6QvykA4iEFYZc0bhYpWAVxEROw24UIF8WaAsmIi2XaPyPd+JwM9iHbMqrCXgvTD9/WYFPbjqdX1QhkSykxDCU8anEU4f7pXthYDeKI/qAvZrkZn+77+Hi6sq5Pz82VysmqrWXFMI3QnP34AgdtXJq8sLOZYANcY+9+tZtJKJj9kEt/tEWR8HsCVnKweGknvhQuzis13E7ggzVtIobvZxpW043mkepAmog62+Xki7JAAm5wK4L9kkaXJT48BuE5k3nGcuKONm9HDeQhcZMlhssAu57vFfkx0Cl37isA9gFpyv9gDd6AqrpEmPZzQnwP4EVwAwp8C4Us/NL5bwLnHSiIrvQHn6/0xnLfFO+63EbbZbYIsb6AB9Zf8bslE7NxP7TU2bHYSalEevs2lXFT/nyYmDZydQ5moLJQARrzYnhTMwjmPmvGVpJQPC7Xx8P6ByBubeMBuWZCnmWiYcwSelWg8GmaRvP/1lNwfP17TUIuXTASWlisku7MzSQPnj4T6RAbwawPBmwkRUUOThsMFGDTy3WupfafJl3+FTQNZ084nqSycLtf+JZCqADjX4e0NwnmFicSJjYKUGDl0gKQwaODEyAYRcKXc/04KAvoFsZMEIieC8HlTFZrqDYlp57sDLsKlYgZqA4Xan8P5RLOyxoZSztsgA/kqTTkIBD5+AC634QVDZTzVW0xqOCVD1tQFsDsp2wtmEWwgNfu62AonkqLeD5ceYCmACuYfhAv3XxqIsumGi8L5OVzgrYXTt7MLjfj38ZtHm0V5msDzRzE15UHALsLn3z87g6L5a+fCRZHfQxHmrFZSwSjFSDqc3o8hIv8shwt27G7AsLobtVFvJlmZ8v1E3F9jyPZ8UtJKvvtmRkZemsF3MFwCz1D+/xq1+EqDOb0Wzm0I53Bx6K/gQunOCSd6mZV3MxUowAWJHLkF/txoa8opjkzuQtZAxDnzZ1FHQ9Y2Czm+W2jQxZbVVmRgjXOwnWbBGWd808YZwgS8hihglLPterDE/ZmYnhjKYOWApIGE7kQMz5FhVVlxdFv6XWtGse2F2mqESjULzmqOsbPXygFkKzXYNprwfEtKczSLdVR7YTZoJktodnt93W4aN+kSefVw8VAtEarbrkDWPtDsaGbQBvosFcCSMQf1m9mkfbxzEPAIpBcH6Be5rS862T623mM9zUdr4Nym8wBcBmezrLaHp320jybYAdvH1j1HBWG9kWQYJgFzClpYZq1gLAyV9nS1jzYFbB9odURTFS6Hx1fkWoFasaG+rAr716jVAH8atZC4pD0t75yjaCJbfARQXxIZDdj137y1N4ptsT1/b5tjrch9K1r0zddRCxZ+Y2vaJ6R99A8rLrZ4XgeiFsUzsI2A7QMtzLgDXADvhfy9vDfu12LGakpztld7uTqb2V6UEu1RzeGnjXqxvUG9d6KUeyE4e1NF37aTNMEfHSE9qKIefP7eE3XSAKKUa2/1pZhSTamaA5kqOQetmgPJ8pYH029X6rRXrZMTgS3Mrci6H0luS2UL+py3nXIviEG9olJxDooW1RmHJEVjryBQO1iRame43IVRcJHD6+GqHzyFWipkoU6VKP3QrnAJ5TuwvTdJsv8M52SvZFCRUKDpNnCh7buiVntvJVw+xFOoBYVGgdXXESggVA8JOuR3KbAdQ1HSNyMxyg6Aq8OyG+F8Ey5o9VEqDXnMKxW4LMSJcEGwRSoZzwJYIBmMjQS1epltb7gcHh9Y+wacu+8p1FJJswKPCwZRQyVSYgmiqIp/ey//rmLxh+AqYK1OcYCvhguIPCajGkIsyH0OXNDk+pT2NsIlmn8yZ6j9rgD+Ay4MKdRelUj9ddQqXimLGUN71XNwmXmnZpgOfD/24rPP8u8p2DSEfiqvP49adMoQuIquzwTyYhLC/9UUFqjfHgaXe7M80EYPXFLXmXz2Mrm3ICMl4N18dlEKbL74+k2opV4UMpKafN+vMve2g6uisQguIQxciDOsCBFzMK9pMOnmqwEkjAVRGk1yuoWULU5JNjoxZSLSzlmkHEqhdjfPfCxDFvbfnWDeOUvyLwDg03LvfFL5+RlwleX3VRljOJqIlKevXwTwfzMQUAvDr2lgDCtwRdotjAXZVsw/e7cZy+Gk8glcxuAQKYa/0WcGFrkKfsDJ6CEyvsrGF8JFYoyCK882RVbNhaQKvzF1lreH26hlLymIuBYuEWcB2ccwuDi3E8imuuFqE15LKhxLRHVCJPgd2YaH8Xm4RJqF/P4eRNLRbG8yJ/gUGTyfmNQphZjyyH+a4G7fKcuYHAdXMWx/3nuYK34ZXGbdkaQqnl19gv262YxhJ1xy0b6crAEUMe4gBe8mJTuRi/0SGp+TFGpa4XevEzGigxT0IYpXXvQ6DK70nq9reDlFhlkBsatHYO4OjNtGcqKBcPUI9zGLF6AsVZLGZknhcXuczBXkt3OYK3KAXxU/M1sA3EQ5I3RMEGrh83k/aOoIRkK2fSDmxQhvVToMziKv7R1jkqQ2CsJ8NAcF3M9QrjPNIP6dyQX2Wzn8bUqfP8/v90g9abtH3OdMH25JmZOhhnNVAhSwKJUjqjJ3n8lYdOfKswlchqNSPv/3Fvn27eZ7w2T/lJLAtgyuEsbJ4KZDnzUD+B5ZhUU5vSB+kZG5xgjge3JgeyRpJjIDbNsbS+HXU5I/mhp/k01S+m8D5eW0COTORICy1LxuFQL6hPAPGQWlaPYeuVPGcLG05ZOPnhDrwUIx8naY9iC1CysyRguweYkO3b7hupQ5URhvlzleLOMb9QIB/dg9gNoOW28N0DBT/2SlfEjLc/hyFXcRoOeluKFHsg8bLfNrpnq8LQXXybZ+LZ06jGy8LHmyWuT8WzKx2p4vhfESJwR8fgJaV4vP112ZLgWVFEYfMnW3sKntJW00IdsdJ5aBn5KbdBgkL8s3LqyThdglHKSb348D5fkUxpnSxhBk77mSx+a4Bq4w+staiq9IjSwSBLuI8uCalK1PZ5CXJ5KZFRnq2UHEmiWyTZxhDL+XLKFC7Wlv1DZEnCzPPQ1XuiNtl0evUb4mMI+XDQVbcVydkRPsKcpyA7NS4ENMJuEMmR8gvHPmvdRchyO8G8Bayp++uPxygaUYKKFXkTxsNMlNeAeJQ1ELoxfJDlZIxatTKdtNI1l90ky27r2hgBekij1IhTbWAcwD8oyxAY6RchW7yvNPyEKpZJT/vYkTgt46ydE7t2aVill1Cwzde8kiXg2XlJ/mHPAI9gYX5xEZ7S/NSDMNXWv2gn08ZGIrklp8htqsJ/PvptZyEdnsLLLeGWKI1gpZCSnXMPn/cMpzWZX0/crezgzWMNnSYajce6lOiJGfpF9j021MWxH3GKUYYxs9VNlYndNgXTG1ErNCqCpShWJPcpvdKJttT+VuAGXzZhatXB3CAy90TqdK/z1suhdaRAD3pla3hkh4pcR/eQTrkgI73o41upc+46IMUpdZ6Wgg279ZftNWHtuYhKSenH7q1Tk2CQJcWd4zaR3YpQ6CJa1gG154vpv2nxOoxR0v0a4QinQqz+vowejJoEbVXuQ9aMejFJa9NSWOo4+KReV1FdbLAfGUeRTl05NythW3gnMUzX5sZQqLd5Dy7A9X6ekEuCpOg6WjHyXFm2qKNfpO/xyu9nTeQAPd+/cV/t5g/MTbNoCAlZRJ3dqPjSberiOlBIc9BmdQx20oz08UIzRoiJ5NOf8lWkA2ku1/DNk7pzZVcFb5qSBC6Byel1ImOA/O3eQNqaeTUt5FdrFGZLYuyo9bKjesE8TbPkf1+4TyzH5iTH3oLyiHdoXZrWlAHQSsytayafLhOUQ+71WZDVeHcHZGuy+3SnMbK8CuIBJFprCiN0Z+iZbs7wubUwRcQrkClCWLddih7tfxA0Heq9nmRn5vJ3GkJ3WiM8pcGD9GLVBylxQWVS8cKUFtX7tWbWWgWu9wuAKVa1OSfSIxpeyZgZynSXH11+DqMa4IyMoaMTOmVfKGt609CeD/mN2DqsYIXaBhdJVU/xxuTC/eRrcXjaqJDJQ9E3EpnUu2/lFB4sQ45A8QDTnKQOrR8o1FKX5Kr+TEdRbHya0SyHnMl/HqYJ/TSnD46/tQk60G4O/geMRSS3uF1AXXrXSr4nyY0so8gsFEKN3/rRCoHVfFpvvjJkb7usUYtb8mg1I0bRVEBDjV+CnnSJt/FAf6UGpwVbGmx9IPD9P7hYI/ajYnXC+TOVFgVbg6+b3dqf23ciOXOXAuLP+9s6Xge9HA6Y3856Lm1ahXq3FASm3AonCQj8I5ACopzzb1+BM7UaLQf0qd579nAgM+bEw6D5v79QTZ4yj8el/0XFN7eluy4bJUTD0ko71/ML7jY4xsO1dW+XK4KJrQMdaEVdXzBfu9VPbMUHyK5p0qZdydjP97mhnDT2X090PyXNX4giNRNjy1W02zWtpxptSNrkh84ICAwpjXF5xIeebN/O6nYNOIhSrcFgYfhPNJjoVzZ30EwG0mSmMhqafa7o6QdvzA3Edj96GcoAlE3GvkWd/ZKYFKo58xE7KOMuPxZD/j4IqTXx2IIrFRy98wzyylbHso2zoKwDeJ9H7wn5PJ7UsE9KUu9iCl1gCDaygOjJfNJC+X+wsl8HeB+d53TYTSEi7UyUTGSaT0twnCvGJ2hfoHilW7NRsBQSplQ3o8Uq4zoUZVCVqYbAa7ICaa7kAAZmKiURLzrU8GInD978tTgiZ7DHwe/j/T9hWZpKgRVKiSlELjFqYTAfy7yEpnGAQ8G7VgiI05EfBsoeirBQE10mRqYFsMP54WzkeJSK/w/nzjGx8lUeSVQJ/tfDzMfiw049INt3dKLAXT/bjcGkDAFXL/C2kI6Bv76zqRvIpAN2YMdEGc6rcHOhyKur1TkLmQIcP8vWiJSUZY/k1wYVlp0cbjRFTIiqj21Ph8bB5F7RHws+a9vXMgoH1nZ8MyC+K1eCoDxh643QNGyE7xCVykEgKh+LfU6fMquODWbYU7bsTm6QS+zbvl+sxARLTO/QUhBIwCe9seBRfVshfcnhEdJO1Lif0zqDlnJayo8Xl/GrH340AP4kp6mdr3TLiad3kTnYaQ9R5OJcF39BWynrtIEdLgi8V0cRqRbCwRaiUp5z08/fMjRe6cS6Otb2cXKjNeU74nYydyf03fqXAiN6aMYRfNJseyvwMpu87nAp8ncE6GSwlYI/vc2eSsA+kNmcB+9cDFCj5MB8SL5vsTSI2HcXzuk7GZLPuYvMZFq9r3e0WuXcCFkVo7ptCg9hzn9OuigbzXZhXUrPftuBduMWylBUQbrYbfSMm1uNXVsSJT2R6mJl2jPt60wIDIGFKrvUzSTozfuJH2Qu3oTppV03ZsQr7SFk+epHP7TqWXcNq+FnK0ac1o9ebWIq66OW2yfDVjAVXRrprVPtpH+2gf7aN9tI/20T7aR/tAu0Z0S/vY1sLyjUvU6tD89tE+2hSwj/o3VGxd69C6/OCt+eiAc7dpmFpFbI2+nou3+a1uD1nvFtYIuIDUlTzPfoeXJvaG4WM5HivgXGh7mJJz35Yxm4VN9y1GK7ZrxduocPcOqCXsDGyvzbco4HDxUBQCCU7DJaoFrd4v+O10lITVtDf323zeQz7iDlPYqI2ATSjG3T5qC3EZXBEl759dY+4vRC1yfHF/a8FRH05is9q17fjfO8JVU/CO9882uPD6ou9v5wXR8HgV60RfVAMFueOcpfwLpmC3vZ4WyVFpUKDWau8KX2ULt39I242yXt8jU02sKtcsrLY6VTXHDgVxRgJ+Fiw6VrFhs7bYVMFEMJVzjFcWrlTyIuBmZfRNRlwIadIar6SsjkqgoyW5Xq9afhRov8OkFfZmM+5CYDuErL7HGRWryhnXOkyl/XKDG8RUG2S55ZR2uuvUOqw0UMU/VGKlIrBGaSXmioEJKMCFgr8PLpp5e7m3Ei6y9U64BJaeABJ6qjcVLvJ3OVwdGZ8bcgRcJtch1FCLcBHET8NVtLo5ZYsFe+2D/MZ4am0luNrWswHcABcVHTUQrOlrE34ALuJ6b2qA2vfH4KKQbwuUidOqDGfw/5kAHkGt7O1UuAjiMoAr4PJcPi+IPhuuimicguwH0YRS4ri9ItVOQ+O0DU1PBSme+SxcBPjphD0G8AvOk+/P0XA7b/ow/WsC3MDDdwLx5QCJoK/SxDOX8zlDKG81i50dzwHLU0H9CbhMNEtt/IQ/IjkkXVTrf52xNYA/b4BLAYxT5LoRAP5Qp40euESiwXVkQJtv8mIDFfgPTUnIOkaeu5TXpgfa8AXDF2PzvIo4hVBch80TikKJ+h6Wk8zz+6JW61uvH2Q03v+Uey8bO2AsOT95d0K4DbU6j1Ea8p0lMoJmsq2AywdZnpI59ykzaJFU7fRZdUdwdWvi0DK43IoeadP//mmgYFHMFT0nkMG2hjC+Zjp+FalEGgIWAgOu53K2u8Igd0KqfZT0vSBpqSWe/0HETuAqjmrbvvD3t1ArEr9KEoyiwDwt4LN+m4OKSWO1CPs9gWWm3H+vtFMi9VIE/IG8tyCwyI4M5A73yJyuwuYZfc+TO2yWfhHBJZ6UJLe1CuAncIk/O8IlAu0Al4RyqalVXDUZbX7g7hdEeU0Q+yck78OlHO+/yoD6tt8dmNzLTH7rXLj84tGEcQQH58ZAeqVFQN/mFw1CryZSHMz2hnAMjiF11pzixbyvedFHynefo1igGWV3kS2db573i95ylVj2OOkJ9OnfAuJUJEUHkkCBgBPMNycaBLxY3ntKYIjJnZ6RMSvD5VqPIzUeAldPZ4pwqg2S2xyUz39vGjyzjsx0sqmGP1MwOzYIWJYVckZGm58ziHAONnUPjfWbmxDpZ6O2G1LouEK+bxGw05hpPNK/Knt8pB0XGyT8nJm8I42m7Cnp36YU+u4idfDPXmIQqmjyhCuE2Y/9HQZR/d9dhOpWTeHR3iBgLGKaztM36ozXXRzfbo7DZiLDOEG8BK6uH6T2iq2U1WWokUeIiWbA7jeAXiTtaqK4F5CHUND3E/dDbFrL5MuGBR4lg6Yw+vopg2Xzlm6DgL7N88x9zfmNU9r1m+R4jfQ+0+8jBVHKZNUHGwG+YKo1XGmSzFV58s9cKs9cLGLBcilxrJT4b+T5Z2Tftt4iYEFymqvCKffimHSa8eoKwJFQaXxrocTUYDrlgSvNDo026dtXz7wStQiKiFozUtw6azmAsdlZKJHvrKUSEEktQHWfHYdavumf4Wr+RYEqAR6+9WSZIRdcVRK/E/b/JbiE9g7pV2zsWR1s/xbp934UJ8op2zZcB5dz22W2vlCY/iBmk/GypVgsWvZh8swNUr9vhMhwOvbHB6hQRxOMzWXpX0St3HPDWIiW3z3hPrjtzD5JjXypmtli6ZhX6x+vY2/y956Bq1JQlITntODGeZQD0/yxHunWBXJyy/zG3vLcfDEhZBlh700R6MukgvvKvf8m0pakXJk9fRmL/5F2hiK7lt6dgkhJiq30fqnq32kKKiUUFcahVsByrhQHgFTHj2W8jpb7tzYhsDSR7ce0buSlAP5RCgSUBUf8vi3TyFmvtm6/IlebP5ZkZPXbvSRKFMJ3F5kjzZOxzACNBo2vI6gEQUpQ1KuWn0hRoULg/o5sM5EtWU/IWZ1hH5MzPSIjqX2ZeENCY1mAK+Jzv2xTdjwnzL9zgLDZBZzkR6Q88jFwBYhUrNpDCnQ+2IRgDD+O8wBcT9Zagosw+j5FpBlwVR5mYdPtPYrGcJ2ouq7bIKzMMAKHKNYquTY8A8G2NCl5MDvq6xOuRP4SvxtSlJXthC0CteKYjbAiL5IMrONVyOM/vVUQ8ChS6B7DfiHINEuuTaIMvU7i/fwCmEmqU2hCUIEnPp8i7kyV6yOpZJ7B/58k658ucvJmMFifYKMrZIOR9aIWbouVh130iCyyJaVD0tyYXWafut5SloQiQLdwkwPMBs8Qdg16ZfyOSyNlW1mY6qa3NjEAIhGb5kd43pmyIdG+cCXdZlJePzokNhV76bQPxY1Vt9KA1DgHAvi90Z6ss7FOWpGjhTm4Rtb3I7jI7Udkk+gptONtJ0rGG1J4aRV/n8j/j6ZsOlQo5gapYFVtIhL6dm7kuRvFBl80alfDKQ6DK2h0Jmrb+1Y8Ar5pqrI3cugOR2sEw5uNjF7L6ghs5oI6vtABKSV2vcLhEfS3qBU2Ry/D3Stb8G4Zzs98uJhKLqKZY5TIf8sloOFBQcD3UA48UJ6fI+XUqk0qM1wMbICziIrGNIo7k+Aqj51Na4bXwP+LML3gYYoJoD92krrNUR0WGKFW184L231RUSnial8jMO2UY7sGcCI6UyJzllNG9JNysGGrWecgGnYPhvOJDm2Shnm7/D6EkzZe+vOQGeMHjBxo5cVbmzwnSWDHU61fXSBBe5Ca8UGUVTsoXgwSufEtO+A8YQW78sySGbzs9C44d1lVghP6AgELZCUvyLXxdeLMPPwHpogHRSKfFnI8LLDvrz29FreT7KEymzJatQky7Xxq7p7KT6CdEQbh/LfmUYP2i22sGL0r4iVpFkcaCBfkcTE9NsfKWJeN/bSTc/YJIp9XQPYJbaMJ2RbgdDG6ppHgBK6y/SB+OJKihUkfZXL9SZBuolDBQgryJRSS0xz7kCKOPWR1J0gF/qy+TzBBq0uaxNpK1Bwh0Sz7isjwiCBXTM7wmPTx/VKh9Smy7KgJCKj7Dn8Vrqb2+XB+a4sriXhKilzkK/g7ClGzB0m9vAxzAalgt0xwUSzcPdS6/kWE8BfFH1xB3+QxTJfBHAzgn4UixQbGElyQwpEp8l8i4U0qM15CdtoT6LtH1AHSd5iNu5vRz1vl2sfETfY0nBchMvsvPyDvf1rEorv6YHuJdeyrty58QPZiDuFKmfCPFJvgcxYBS3B5oP6FHak5vV+QsiwTPYX3x4j75Tvk/YU+oIB+sB+gDNTB736B7GCo2OP8gJ9FgThKmQD/3Hy4YEwvo4yD854cl9L3o2guOViCcS/jux1N6KdHqBViUB5p5L+CQdgH5f9JqNV3vq2JHCkRRWm6yNXj+Z2Djf9bdzy4XvYz0QVWtRb7KwMV2Z+kdngN1ecFgXCg6wOxe94A6mWnX9ZJBgq9c20gP2GShPZ4H/AyDsI1cAGvTwiMD8JFHfs2zxE4vKwyXPrVbQJuf0PN7UbUdmrXvk8X+DQesCwBHoc1kCJQEI28LHF/VYlQKgYSr1abb74sloJQoOp7zfMH5AhG8OO1nYxxtyDebM7Zj/n30cB4/Sg0Fhog+P0cEct6XiZulsh0eK48Nz0nAuo7v02JizvJBIimnfMpmOt2B19ImcR3cWXm7XeVfe8wUT3eHqfPHtUAAvqF8XeBb+6RUfV/DjaPKg990///PvP8gQ3EA4Lc754GxstHNxWsA6BoagV/hav90ySfo01icg+cc3kmKeZDGa67WeIpmZeTHeg788073o51B00UF8DFJe4sA/smXJDE9aR86ylz3M9nXjRtetfSMsozp1DumiwmHMg2qks48NPgnPII1Kp+nWy0wvF9owFWWJUYvxkyYS+i5v9OAgv3F7JPSRepdpacuZLcocxvrM0Jox+vJcSPM+H2FzwQzh/eERivGQB+RiWybnEiNaZ2cXJ3lL3TfIj6Rmy6o2TS4vomuu38WBo7q3DRPM9j0+LiSQNanm5iuLMMag9cNM9S8c8W3oaFt/2e0RdT0/XKz75i70sC47otx2s4x8VHwb8k45XbQRHnYBeFHFpfhMYTlfO+Uw/GohEJ4pxwFPqg79jC/OSoF2Md9SKJPJKg1TQWHAVSMOMtGa9ihjYW6kzSQNJ3byhD0qDGaGFMArmwjVDoSj/2HRkwJy0Ya42QjnO0nzRjvIoNDAK20lonyV9Qu9iKS2oMYZ/Hyva5QC2pKouFvtPGq300uY7iSCpvSyXZqjvPLpfto300AwFHp5hOZlIh67OCSoX2HLSRkBaONaR+y6n5ToPLmX5zC2Id6x7/CxjCCBW3brMAAAAAAElFTkSuQmCC';
+const PX_LOGO_A = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCABAAEADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDyGiiiuU/p4KKKfBBNOxWGKSVgMkIpY4/CgG7bjKKkngmgYLPDJESMgOpUkfjUdAJp7BRRRQAV0HgK10i911bbVgzB1xCm7Cu/oT1+nvTfBenaRqV9NDq94LZPL/dDzAhZyfU8celbuq/D25gU3Ol6hHMijeok+RsDnhhwf0rw8yzPCxcsJUqOnJrSVmt+z/r1OLE4mmm6UpcrfX/gnP8AjHQZdC1Qwjc1rLloJD3X0PuP89a+lP2OPC32DwjfeKbiIibVJfKgJH/LGM4JH1ct/wB8ivmr7Rrfi3WrDT3me5up5Ut7dMYG5iFBwO5PJNfY/wAR7u1+G3wMubbT38prSwWwsyOGMrDYG+vLP+Br1cvhXhQisQ05patdf6/M+R4vxFZ4ajlyd6lVpO3ZP/O33M5D9sXwv/aPg6y8T28RM+lTeXOQP+WEhAyfo+3/AL6NfNPgzQJNe1URNuW1iw07jsP7o9z/AImvs3wHd2nxJ+Clql8wkGoac1nd9ysigxsfrkbh+FfGLXGt+Edb1DTUme2uYJXtrhMZG5SVzg9x1BozCFedCSwzSm1o30/rp5k8H4mssLWy5u1Sk2lfs3+jv96JPHlrpFnrz22khlVBiZd2VV+4U9fr71gV3el/Dy5mUXOq6hHCjDcwi+dueeWPA/WsHxpp2kadqEUOkXguYzH+9HmByrg+o45rystzPCyccJTqOpJLWVm9u7/r1PsMPiabapRlzNdf+CYsEUs8qxQxvLI3Cqikk/gK6QaR4r0vQrm7LT2lps2yxGXBZW4PyenPtWNoGqTaPq0OoQKrvHn5WJAYEYIOPrWhrfi3WtWieCa4WG3cYaGFdqke56n866MZHGVK0YU4x9no25avfVJd7dTSsq0pqMUuXrc9M/ZE8L/2v8QZdenjzbaNDvUkcGaTKp+Q3n6gV9JfEzwDpHxA0y103WbvUYba2m85VtZVTc+0qC2VOcAnH1rnP2bfDS+FfhRZzXS+Vc6jnULksMbVYDYD9EC/iTXzP43+KvjDVfF2qahpnifWLKwmuXNtBDeOiJEDhAADgcAE+5Newmox16n5nWoYviDOqtXCVORUtE/vWnq7s+vfhp4F0rwDo9xpWj3eoT2s05n23civsYqAduFGAcCvmz9rzwv/AGR8QYdegjxbazDucgcCaPCt+a7D+dc38Pfit4t0vxtpF7rHifV7zTkuVF1DPdu6NE3ysSpODgHI9xX0p+0r4Y/4Sf4VX0lvH5l3pmL+AqMlggO8D6oW/ECm7Sjp0Jo0MXw/ndKpiqnMqujfrpr6OzPkt9I8Wapodtebp7y1KYjiEuWVRwPk/D3rm5opYZWimjeORThldcEfhW5oni7WtKjSCK4Wa3QYWKZdygex6j86zte1ObWNVn1CdVV5SPlUnCgDAAz7CvGwUcZTrShVjFU9WnHR77NenU/TqKrRm4yS5elijRRRXqHSWv7S1HZs+33e3G3b57Yx6daq0UUCUVHZBVv+09R2bP7Qu9uMY89sY9OtVKKAcVLdBRRRQM//2Q==';
+/* examenperiode en schooljaar (vanaf augustus geldt het nieuwe schooljaar) */
+function exPeriodeStandaard(){ const m = new Date().getMonth() + 1; return m >= 8 || m === 1 ? 'December' : 'Juni'; }
+function exSchooljaar(){ const d = new Date(), y = d.getFullYear(), start = d.getMonth() + 1 >= 8 ? y : y - 1; return [start, start + 1]; }
+const EX_VINK = t => `<label class="px-vink"><input type="checkbox"> ${t}</label>`;
+function exReflectie(periode, jaar){
+  const blok = (kop, opties, slot) => `<td><p class="px-rk">${kop}</p>${opties.map(EX_VINK).join('')}${slot ? `<p class="px-rk">${slot}</p>` : ''}</td>`;
+  return `<div class="px-pagina px-reflectie"><table class="px-refl">
+<tr><td colspan="3" class="px-refl-naam">Naam: <span class="px-veld" contenteditable="true"></span> &nbsp; Vak: Wiskunde &nbsp; <span class="px-rechts">${periode} ${jaar}</span></td></tr>
+<tr><th colspan="3" class="px-refl-band">REFLECTIE</th></tr>
+<tr><th colspan="3"><i>Hoe ervaarde je dit examen? Vink aan.</i></th></tr>
+<tr>${blok('Ik had verwacht dat het examen', ['moeilijker', 'gemakkelijker', 'zoals dit examen'], 'zou zijn.')}
+${blok('Ik vond de vragen van dit examen', ['heel vergelijkbaar', 'soms vergelijkbaar', 'bijna niet vergelijkbaar'], 'met vragen en oefeningen uit de les of op toetsen.')}
+<td rowspan="2"><p class="px-rk">Ik schat in dat ik deze score behaal op dit examen.</p>${['0 tot 19/100', '20 tot 40/100', '41 tot 49/100', '50 tot 55/100', '56 tot 65/100', '66 tot 75/100', '76 tot 85/100', 'meer dan 85/100'].map(EX_VINK).join('')}</td></tr>
+<tr>${blok('Bij het invullen van de vragen was ik', ['heel zeker', 'eerder zeker', 'eerder onzeker', 'heel onzeker'], 'over mijn antwoorden.')}
+${blok('Voor het invullen van dit examen had ik', ['ruim voldoende tijd', 'net voldoende tijd', 'niet voldoende tijd'], 'om alle vragen in te vullen.')}</tr>
+<tr><th colspan="3"><i>Hoe studeerde je? Vink aan.</i></th></tr>
+<tr><td colspan="3" class="px-refl-lijst">${['Ik heb de leerstof gelezen.', 'Ik heb de hoofdzaken onderlijnd of gemarkeerd.', 'Ik heb oefeningen opnieuw gemaakt.', 'Ik heb extra oefeningen gemaakt.',
+    'Ik heb de leerstof geschematiseerd (samenvatting, mindmap, Cornell, …).', 'Ik heb een vaktermenlijst gemaakt.', 'Ik heb mezelf getoetst (flashcards, toetsen opnieuw maken, zelf vragen bedenken).',
+    'Ik heb de leerstof hardop uitgelegd.'].map(EX_VINK).join('')}${EX_VINK('Andere, namelijk <span class="px-veld" contenteditable="true"></span>')}</td></tr>
+<tr><th colspan="3"><i>Terugblik op je studieproces. Vink aan en vul in.</i></th></tr>
+<tr><td colspan="3" class="px-refl-vier"><div>${[
+    ['Mijn studieproces begint in de les door actief te participeren en na te denken.', ['(Bijna) altijd', 'Soms', '(Bijna) nooit']],
+    ['Mijn cursus en notities voor dit vak zijn volledig en zitten op orde.', ['Ja, ik hou dit bij in de les', 'Ja, ik heb bijgeschreven', 'Nee, ik mis onderdelen', 'Nee, ik heb geen cursus']],
+    ['Ik heb de leerstof voor dit vak al vóór de examenperiode herhaald of samengevat.', ['Ja, meerdere keren', 'Ja, één keer', 'Nee, ik begon gisteren']],
+  ].map(([k, o]) => `<div><p class="px-rk">${k}</p>${o.map(EX_VINK).join('')}</div>`).join('')}<div><p class="px-rk">Ik heb <span class="px-veld px-kort" contenteditable="true"></span> uur gestudeerd voor dit examen.</p></div></div></td></tr>
+</table></div>`;
+}
+function examenHtml(px, inst){
+  const totaal = px.vragen.reduce((t, v) => t + v[1], 0);
+  const [sj0, sj1] = exSchooljaar(), jaar = inst.periode === 'December' ? sj0 : sj1;
+  const lijnVeld = '<span class="px-veld" contenteditable="true"></span>';
+  const kop = `<div class="px-pagina px-eerste${px.vragen.length > 6 ? ' px-veel' : ''}">
+<div class="px-logos"><img src="${PX_LOGO_GYM}" alt="Het Gymnasion"><img src="${PX_LOGO_SSO}" alt="Stedelijk secundair onderwijs"></div>
+<div class="px-kader"><div class="px-band"><b>EXAMEN ${inst.periode.toUpperCase()}</b><br><small>Schooljaar ${sj0}-${sj1}</small></div>
+<table class="px-info"><tr><td>Voornaam en naam:</td><td colspan="3">${lijnVeld}</td></tr>
+<tr><td>Klas:</td><td>${lijnVeld}</td><td>Datum:</td><td>${lijnVeld}</td></tr>
+<tr><td>Vak:</td><td>Wiskunde</td><td>Leerkracht:</td><td>${lijnVeld}</td></tr></table></div>
+<table class="px-punten"><tr><th colspan="2"><i>Hulpmiddelen of opmerkingen bij dit examen</i></th></tr>
+<tr><td colspan="2">${px.hulp || 'Rekentoestel toegelaten. Noteer al je tussenstappen: een antwoord zonder berekening levert geen punten op. Rond niet-gehele waarden af op 1 cijfer na de komma, tenzij een exacte waarde gevraagd wordt.'}</td></tr>
+<tr><th colspan="2"><i>Puntenverdeling</i></th></tr>
+${px.vragen.map((v, i) => `<tr><td>Vraag ${i + 1} – ${v[0]}</td><td class="px-r">/ ${v[1]}</td></tr>`).join('')}
+<tr class="px-tot"><td><b>Totaal</b></td><td class="px-r"><b>/ ${totaal}</b></td></tr></table>
+<p class="px-todo"><b>TO DO</b></p><ul class="px-todo-lijst"><li>Vul eerst je naam in.</li><li>Lees aandachtig de vragen en begin met de gemakkelijke opdrachten.</li><li>Verzorg je handschrift: schrijf duidelijk!</li><li>Gebruik geen potlood, tenzij expliciet gevraagd.</li><li>Vul alle vragen in, ook de reflectievragen.</li><li>Lees je antwoorden aandachtig na voor je afgeeft.</li></ul>
+<p class="px-succes"><b>SUCCES!</b></p>
+<div class="px-voet"><div>Durven denken, durven dromen, durven doen!</div><div class="px-adres"><span>Gloriantlaan 60 | 2050 Antwerpen | tel. 03 292 90 50 | Instellingsnr. 29306 311<br>het.gymnasion@stedelijkonderwijs.be | hetgymnasion.stedelijkonderwijs.be</span><img src="${PX_LOGO_A}" alt="Stad Antwerpen"></div></div>
+</div>`;
+  /* het reflectiekader staat altijd op een eigen pagina; met de lege pagina ervoor komt het bij recto-verso afdrukken op een rechterpagina */
+  return `<div class="px${inst.oplossingen ? ' px-toon' : ''}">${kop}<div class="px-pagina">${pxDeel(px.titel + ' (' + totaal + ' punten)')}${px.intro || ''}${px.vragen.map((v, i) => (v[4] || '') + pxVraag(i + 1, v[0], v[1], v[2], v[3])).join('')}</div>` +
+    (inst.legePagina ? '<div class="px-pagina px-leeg"></div>' : '') + exReflectie(inst.periode, jaar) + '</div>';
+}
+let exStaat = null;
+function showExamen(mode, nieuw){
+  const maak = EXAMENS[mode];
+  if(!maak) return;
+  if(nieuw !== false || !exStaat || exStaat.mode !== mode) exStaat = { mode, px: maak(), periode: (exStaat && exStaat.periode) || exPeriodeStandaard(), legePagina: !!(exStaat && exStaat.legePagina), oplossingen: false };
+  const st = exStaat;
+  const opties = `<button class="btn btn-ghost" type="button" id="px-nieuw">Nieuw examen</button>
+    <label class="afdruk-optie">Periode <select id="px-periode">${['December', 'Juni'].map(p => `<option${p === st.periode ? ' selected' : ''}>${p}</option>`).join('')}</select></label>
+    <label class="afdruk-optie"><input type="checkbox" id="px-leeg"${st.legePagina ? ' checked' : ''}> lege pagina vóór de reflectie</label>
+    <label class="afdruk-optie"><input type="checkbox" id="px-opl"${st.oplossingen ? ' checked' : ''}> oplossingen tonen</label>`;
+  toonAfdruk(examenHtml(st.px, st), opties);
+  document.getElementById('px-nieuw').addEventListener('click', () => showExamen(mode));
+  /* periode en lege pagina: opnieuw opmaken met dezelfde vragen */
+  document.getElementById('px-periode').addEventListener('change', e => { st.periode = e.target.value; showExamen(mode, false); });
+  document.getElementById('px-leeg').addEventListener('change', e => { st.legePagina = e.target.checked; showExamen(mode, false); });
+  document.getElementById('px-opl').addEventListener('change', e => { st.oplossingen = e.target.checked; document.querySelector('.px').classList.toggle('px-toon', e.target.checked); });
+  /* in het complexe vlak een punt aantikken (nog eens tikken haalt het weg) */
+  document.querySelectorAll('.px-vlak').forEach(svg => svg.addEventListener('click', ev => {
+    const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+    const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+    const n = 6, W = 260, pad = 14, s = (W - 2 * pad) / (2 * n);
+    const x = Math.round((p.x - pad) / s - n), y = Math.round((W - pad - p.y) / s - n);
+    if(Math.abs(x) > n || Math.abs(y) > n) return;
+    const g = svg.querySelector('.px-punten'), id = `p${x}_${y}`, oud = g.querySelector(`[data-id="${id}"]`);
+    if(oud){ oud.remove(); return; }
+    g.insertAdjacentHTML('beforeend', `<circle data-id="${id}" cx="${pad + (x + n) * s}" cy="${W - pad - (y + n) * s}" r="4" fill="#000"/>`);
+  }));
+}
+
 const WISK_EXTRA = {
   dfplus: {
     cursus: cursusDfPlus,
@@ -7961,6 +8459,8 @@ function generateForComplexCategory(catId){
     case 'vermenigvuldiging': return randChoice(VERMENIGVULDIGING_COMPLEX_GENS)();
     case 'macht': return randChoice(MACHT_COMPLEX_GENS)();
     case 'wortel': return randChoice(WORTEL_COMPLEX_GENS)();
+    case 'omzetten': return randChoice(OMZETTEN_COMPLEX_GENS)();
+    case 'gonio': return randChoice(GONIO_COMPLEX_GENS)();
     case 'vraagstuk': return genComplexVraagstuk();
     default: return genComplexOptellen();
   }
@@ -9081,6 +9581,8 @@ function refreshCombiUI(){
 function renderWiskExtraChips(){
   const mod = WISK_EXTRA[wiskundeSub];
   if(!mod) return;
+  /* de knop Examen enkel bij onderdelen waarvoor een examen bestaat */
+  document.getElementById('btn-wgen-examen').style.display = EXAMENS[wiskundeSub] ? '' : 'none';
   const st = wiskExtraStates[wiskundeSub];
   const el = document.getElementById('chips-wgen-cat');
   el.innerHTML = '';
@@ -9230,6 +9732,17 @@ function uitlegComplex(id){
       <p><b>Voorbeeld:</b> (1 + 2i)² = 1 − 4 + 4i = −3 + 4i, en (1 + 2i)³ = (−3 + 4i)(1 + 2i) = −3 − 6i + 4i + 8i² = −11 − 2i.</p>
       <p>Je kan ook gewoon herhaald vermenigvuldigen: (a + bi)³ = (a + bi)² · (a + bi).</p>`;
     case 'wortel': return uitlegKies(t, ['Goniometrische vorm', 'De n-de machtswortel']);
+    case 'omzetten': return uitlegKies(t, ['Goniometrische vorm']) + `
+      <h3>Van algebraïsche naar goniometrische vorm</h3>
+      <div class="formule">z = 1 − √3 i: r = √(1² + (−√3)²) = √4 = 2<br>z ligt in het 4e kwadrant, tan φ = −√3 → φ = 300°<br>z = 2 cis 300°</div>
+      <p>Teken z eerst ruw in het complexe vlak: zo zie je in welk kwadrant het argument ligt. Je rekentoestel geeft bij tan⁻¹ enkel hoeken tussen −90° en 90°.</p>
+      <h3>Van goniometrische naar algebraïsche vorm</h3>
+      <div class="formule">w = 4 cis 150° = 4(cos 150° + i sin 150°) = 4(−√3/2 + ½ i) = −2√3 + 2i</div>
+      <p>Gebruik de exacte waarden van cos en sin voor 30°, 45°, 60° en hun veelvouden.</p>`;
+    case 'gonio': return uitlegKies(t, ['Goniometrische vorm', 'Vermenigvuldigen, delen en machten']) + `
+      <h3>Voorbeelden</h3>
+      <div class="formule">6 cis 70° · 2 cis 25° = 12 cis 95° &nbsp;&nbsp; (6 cis 70°) / (2 cis 25°) = 3 cis 45°<br>(2 cis 25°)⁴ = 16 cis 100°<br>(1 + i)⁸ = (√2 cis 45°)⁸ = 16 cis 360° = 16</div>
+      <p>Een macht van a + bi bereken je het snelst door het getal eerst in goniometrische vorm te schrijven.</p>`;
     case 'vraagstuk': return uitlegKies(t, ['Vermenigvuldigen, delen en machten', 'Vraagstukken']);
     default: return begrippenLijst(COMPLEX_BEGRIPPEN);
   }
@@ -9394,7 +9907,6 @@ function afdrukOnderzoekToets(stappen, versieTxt){
   const deel = (tekst, n) => `<div class="ozt-deel"><p>${tekst}</p>${lijnen(n)}</div>`;
   const vraag = (nr, titel, punten, delen) => ({ nr, titel, punten, delen });
   const rationaal = !!g.noemer, homografisch = g.type === 'homografisch';
-  const meerBp = !!(g.bps && g.bps.length > 1);
   const tabelInvullen = "Vul in de samenvattende tabel de nieuwe x- en y-waarden, de rij y ' en de rij stijgen / dalen aan.";
   let vragen, rijen, grafiekTekst;
   if(rationaal){
@@ -9408,41 +9920,37 @@ function afdrukOnderzoekToets(stappen, versieTxt){
         deel('a) Bepaal de verticale asymptoot.', 2),
         deel(homografisch ? 'b) Bepaal de horizontale asymptoot.' : 'b) Bepaal de schuine asymptoot.', 3)]),
       homografisch
-        ? vraag(3, 'Eerste afgeleide en verloop van f', 3, [
-          deel("a) Bereken f '(x) met de quotiëntregel.", 3),
+        ? vraag(3, 'Stijgen en dalen', 3, [
+          deel('a) Onderzoek waar f stijgt en waar f daalt.', 5),
           deel("b) Vul in de samenvattende tabel de rij y ' en de rij stijgen / dalen aan.", 0)])
-        : vraag(3, 'Eerste afgeleide en verloop van f', 4, [
-          deel("a) Bereken f '(x) met de quotiëntregel.", 3),
-          deel("b) Bepaal de nulwaarden van f '(x).", 3),
-          deel('c) Bereken de y-waarden van de extrema. Gaat het om een maximum of een minimum?', 3),
-          deel('d) ' + tabelInvullen, 0)]),
+        : vraag(3, 'Stijgen en dalen', 4, [
+          deel('a) Onderzoek waar f stijgt en waar f daalt.', 7),
+          deel('b) Bepaal de coördinaten van de extrema van f.', 3),
+          deel('c) ' + tabelInvullen, 0)]),
     ];
     grafiekTekst = 'Teken de grafiek van f met behulp van de samenvattende tabel. Teken ook de asymptoten in stippellijn.'
-      + (homografisch ? ' Duid de nulpunten duidelijk aan.' : ' Duid de nulpunten en de extrema duidelijk aan.');
+      + ' Duid alle bijzondere punten duidelijk aan.';
     vragen.push(vraag(4, 'Grafiek', homografisch ? 2 : 1, []));
   } else {
     rijen = ['x', 'y', "y '", 'stijgen / dalen', "y ''", 'bol / hol'];
     /* bij ★★★ zijn er soms geen gehele nulwaarden: dezelfde vraag voor iedereen, zodat het blad niets verraadt */
     const ster3 = g.ster === 3;
     vragen = [
-      vraag(1, 'Nulwaarden van f en tekenschema van f', 2, [
-        deel(ster3 ? 'a) Bepaal de nulwaarden van f. Vind je er geen (met Horner, de tabel of de discriminant), schrijf dat dan op.' : 'a) Bepaal de nulwaarden van f.', 5),
+      vraag(1, 'Nulwaarden en tekenschema', 2, [
+        deel(ster3 ? 'a) Bepaal de nulwaarden van f. Vind je er geen, schrijf dat dan op.' : 'a) Bepaal de nulwaarden van f.', 5),
         deel(ster3 ? 'b) Heb je nulwaarden gevonden? Vul dan in de samenvattende tabel de rij x en de rij y (tekenschema van f) aan.' : 'b) Vul in de samenvattende tabel de rij x en de rij y (tekenschema van f) aan.', 0)]),
-      vraag(2, 'Eerste afgeleide en verloop van f', 4, [
-        deel("a) Bereken f '(x).", 2),
-        deel("b) Bepaal de nulwaarden van f '(x).", 4),
-        deel('c) Bereken de y-waarden van de extrema. Gaat het om een maximum of een minimum?', 3),
-        deel('d) ' + tabelInvullen, 0)]),
-      vraag(3, meerBp ? 'Tweede afgeleide en buigpunten' : 'Tweede afgeleide en buigpunt', 3, [
-        deel(meerBp ? "a) Bereken f ''(x) en bepaal de nulwaarden ervan." : "a) Bereken f ''(x) en bepaal de nulwaarde ervan.", 3),
-        deel(meerBp ? 'b) Bereken de coördinaten van de buigpunten.' : 'b) Bereken de coördinaten van het buigpunt.', 2),
-        deel(meerBp
-          ? "c) Vul in de samenvattende tabel de nieuwe x- en y-waarden, de rij y '' en de rij bol / hol aan. Duid de buigpunten aan."
-          : "c) Vul in de samenvattende tabel de nieuwe x- en y-waarde, de rij y '' en de rij bol / hol aan. Duid het buigpunt aan.", 0)]),
+      vraag(2, 'Stijgen en dalen', 4, [
+        deel('a) Onderzoek waar f stijgt en waar f daalt.', 7),
+        deel('b) Bepaal de coördinaten van de extrema van f.', 3),
+        deel('c) ' + tabelInvullen, 0)]),
+      /* de opgave verklapt niet welke afgeleide bij extrema of buigpunten hoort: dat moeten de leerlingen zelf weten */
+      vraag(3, 'Hol en bol', 3, [
+        deel('a) Onderzoek waar de grafiek van f hol en waar ze bol is.', 4),
+        deel('b) Bepaal de coördinaten van de buigpunten van f.', 2),
+        deel("c) Vul in de samenvattende tabel de nieuwe x- en y-waarden, de rij y '' en de rij bol / hol aan.", 0)]),
       vraag(4, 'Grafiek', 1, []),
     ];
-    grafiekTekst = 'Teken de grafiek van f met behulp van de samenvattende tabel. Duid de nulpunten' + (ster3 ? ' (als je ze gevonden hebt)' : '') + ', de extrema en '
-      + (meerBp ? 'de buigpunten' : 'het buigpunt') + ' duidelijk aan.';
+    grafiekTekst = 'Teken de grafiek van f met behulp van de samenvattende tabel. Duid alle bijzondere punten duidelijk aan.';
   }
   const totaal = vragen.reduce((t, v) => t + v.punten, 0);
   const kop = v => `<div class="ozt-vraag"><span><b>Vraag ${v.nr}</b>${v.titel}</span><span>…… / ${v.punten}</span></div>`;
@@ -10937,6 +11445,8 @@ document.getElementById('btn-economie-uitleg').addEventListener('click', showEco
 document.getElementById('btn-wgen-uitleg').addEventListener('click', showWiskTheorie);
 document.querySelectorAll('.js-dossier').forEach(b => b.addEventListener('click', showDossierAfdruk));
 document.querySelectorAll('.js-toetsafdruk').forEach(b => b.addEventListener('click', showToetsAfdruk));
+document.querySelectorAll('[data-examen]').forEach(b => b.addEventListener('click', () => showExamen(b.dataset.examen)));
+document.getElementById('btn-wgen-examen').addEventListener('click', () => showExamen(wiskundeSub));
 document.getElementById('btn-cursus-terug').addEventListener('click', () => {
   document.body.classList.remove('cursus-print');
   showScreen('home');
