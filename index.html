@@ -1,7 +1,7 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Gymnasion Trainer</title>
 <!-- versie van de app: bij elke nieuwe versie aanpassen, dan herlaadt een geopende app (bv. op het beginscherm van een iPhone) zichzelf -->
-<meta name="app-versie" content="2026-11-24-1340">
+<meta name="app-versie" content="2026-11-24-1700">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -878,7 +878,7 @@
           <label>Spelmodus</label>
           <div class="chips" id="chips-mode"></div>
         </div>
-        <p class="hint">Vertalen: een term omzetten van de ene taal naar de andere. Uitleg: term en betekenis aan elkaar koppelen, binnen één taal, over een beperkt aantal vragen. Leermodus: hetzelfde als uitleg, maar dan over alle beschikbare termen. Leesmodus: de lijst rustig doorlezen.</p>
+        <p class="hint" id="hint-mode"></p>
       </div>
 
       <div id="config-vertalen">
@@ -1246,10 +1246,10 @@ const LANGS = [
 const LANG_KEY = { NL:'Nl', EN:'EN', FR:'FR', DU:'DU' };
 const LANG_LABEL_IN = { NL:'het Nederlands', EN:'het Engels', FR:'het Frans', DU:'het Duits' };
 const MODE_OPTIONS = [
-  { code:'vertalen', label:'Vertalen' },
-  { code:'uitleg', label:'Uitleg' },
-  { code:'leren', label:'Leermodus' },
-  { code:'lezen', label:'Leesmodus' },
+  { code:'vertalen', label:'Vertalen', uitleg:'een term omzetten van de ene taal naar de andere.' },
+  { code:'uitleg', label:'Uitleg', uitleg:'term en betekenis aan elkaar koppelen, binnen één taal, over een beperkt aantal vragen.' },
+  { code:'leren', label:'Leermodus', uitleg:'hetzelfde als uitleg, maar dan over alle beschikbare termen.' },
+  { code:'lezen', label:'Leesmodus', uitleg:'de lijst rustig doorlezen.' },
 ];
 /* Hoofdmenu. Alle vaktermen lopen via de Taaltrainer; een vak krijgt
    hier pas een eigen knop als het aparte oefenonderdelen heeft. */
@@ -11919,6 +11919,8 @@ function renderVakTopChips(){
 }
 
 function renderModeChips(){
+  const m = MODE_OPTIONS.find(o => o.code === topMode);
+  document.getElementById('hint-mode').innerHTML = m ? `<b>${m.label}</b>: ${m.uitleg}` : '';
   renderSingleChips('chips-mode', MODE_OPTIONS, topMode, (code) => {
     topMode = code;
     renderModeChips();
