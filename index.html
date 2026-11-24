@@ -1,7 +1,7 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Gymnasion Trainer</title>
 <!-- versie van de app: bij elke nieuwe versie aanpassen, dan herlaadt een geopende app (bv. op het beginscherm van een iPhone) zichzelf -->
-<meta name="app-versie" content="2026-11-24-0750">
+<meta name="app-versie" content="2026-11-24-0815">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -8027,10 +8027,44 @@ function examen5DSAsym(){
       `${nl(gq.explanation)} (4)`],
   ] };
 }
+/* formules in een gewone tekst (uitleg, sleutel) opzoeken en markeren als <span class="wx-m">, zodat Word er een
+   vergelijking van maakt. Een formule is een aaneengesloten stuk met getallen, losse letters (x, F, …), ln/dx, haakjes,
+   machten, grenzen en rekentekens, met minstens één =, /, ∫, √, ⇔ of macht erin. Woorden breken een formule af. */
+function formulesMarkeren(html){
+  const doos = document.createElement('div');
+  doos.innerHTML = html;
+  const tok = "(?:ln|d[xtq]|(?<![A-Za-zÀ-ÿ])[A-Za-z](?![A-Za-zÀ-ÿ])|\\d+(?:,\\d+)?|[()\\[\\]∫₀-₉₋⁰¹²³⁴⁵⁶⁷⁸⁹ⁿ⁻⁺ᐟ+−\\-·/=≈√∛½⅓⅔'⇔→≤≥<>|])";
+  const re = new RegExp(`${tok}(?:\\s*${tok})*`, 'g');
+  const isFormule = f => f.trim().length >= 3 && /[=/∫√∛⇔→≈⁰¹²³⁴⁵⁶⁷⁸⁹ⁿᐟ]/.test(f) && /[0-9A-Za-z]/.test(f);
+  const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const loop = el => [...el.childNodes].forEach(k => {
+    if(k.nodeType === 1){ if(!/^(svg|script|style)$/i.test(k.tagName) && !/(lim|intg|st-breuk|wx-m|px-pt)/.test((k.className || '').toString())) loop(k); return; }
+    if(k.nodeType !== 3) return;
+    /* de uitdrukking vlak na lim of ∫ hoort bij die vergelijking: niet apart markeren */
+    if(k.previousSibling && /(lim|intg)/.test((k.previousSibling.className || '').toString())) return;
+    let uit = '', vanaf = 0, m, iets = false;
+    re.lastIndex = 0;
+    while((m = re.exec(k.nodeValue))){
+      let f = m[0].replace(/[\s(]+$/, '');
+      /* een losse haak aan het einde hoort bij de zin, niet bij de formule */
+      while(f.endsWith(')') && (f.match(/\)/g) || []).length > (f.match(/\(/g) || []).length) f = f.slice(0, -1).replace(/\s+$/, '');
+      if(!isFormule(f)) continue;
+      uit += esc(k.nodeValue.slice(vanaf, m.index)) + `<span class="wx-m">${esc(f)}</span>`;
+      vanaf = m.index + f.length; iets = true;
+    }
+    if(!iets) return;
+    uit += esc(k.nodeValue.slice(vanaf));
+    const tmp = document.createElement('span');
+    tmp.innerHTML = uit;
+    k.replaceWith(...tmp.childNodes);
+  });
+  loop(doos);
+  return doos.innerHTML;
+}
 /* ---------- examen bepaalde integralen (20 punten, extra deel) ---------- */
 function examenIntegralen(){
-  const nl = t => t.replace(/(^|[\s(=·\/])-/g, '$1−').replace(/\n/g, '<br>');
-  const vraag = q => mooieBreuken(q.promptHtml.replace(/(^|[\s(=·\/])-/g, '$1−').replace(/<br>/g, ' '));
+  const nl = t => formulesMarkeren(t.replace(/(^|[\s(=·\/])-/g, '$1−').replace(/\n/g, '<br>'));
+  const vraag = q => formulesMarkeren(mooieBreuken(q.promptHtml.replace(/(^|[\s(=·\/])-/g, '$1−').replace(/<br>/g, ' ')));
   const maak = groep => genIntMachten(randChoice(groep));
   const B = [genIntBerekenen(), maak(['neg2', 'neg3']), maak(['kwad', 'derde']), maak(['ln'])];
   const O1 = genIntOppervlakte();
@@ -8140,7 +8174,8 @@ const wxSup = (b, e) => `<m:sSup><m:e>${b}</m:e><m:sup>${e}</m:sup></m:sSup>`;
 const wxRad = x => `<m:rad><m:radPr><m:degHide m:val="1"/></m:radPr><m:deg/><m:e>${x}</m:e></m:rad>`;
 const wxBreukM = (t, n) => `<m:f><m:num>${t}</m:num><m:den>${n}</m:den></m:f>`;
 const wxM = x => `<m:oMath>${x}</m:oMath>`;
-const WX_SUPS = { '⁰':'0', '¹':'1', '²':'2', '³':'3', '⁴':'4', '⁵':'5', '⁶':'6', '⁷':'7', '⁸':'8', '⁹':'9', 'ⁿ':'n', '⁻':'−' };
+const WX_SUPS = { '⁰':'0', '¹':'1', '²':'2', '³':'3', '⁴':'4', '⁵':'5', '⁶':'6', '⁷':'7', '⁸':'8', '⁹':'9', 'ⁿ':'n', '⁻':'−', '⁺':'+' };
+const WX_SUBS = { '₀':'0', '₁':'1', '₂':'2', '₃':'3', '₄':'4', '₅':'5', '₆':'6', '₇':'7', '₈':'8', '₉':'9', '₋':'−' };
 /* letters cursief, de rest rechtop */
 function wxTekstMath(t){ return (t.match(/[A-Za-z]+|[^A-Za-z]+/g) || []).map(s => (/^[A-Za-z]$/.test(s) ? wxMr(s) : wxMr(s, true))).join(''); }
 /* lineaire wiskundetekst als Word-vergelijking: breuken (a/b, (…)/(…)) met een breukstreep, √ en ∛ als
@@ -8170,6 +8205,17 @@ function wxOmml(t){
       return { x: `<m:rad>${deg}<m:e>${zonderHaakjes(a)}</m:e></m:rad>` };
     }
     if(BREUK[c]){ i++; return { x: wxBreukM(wxMr(BREUK[c][0], true), wxMr(BREUK[c][1], true)) }; }
+    if(c === '∫'){
+      /* ∫₋₁³ (…): integraalteken met de grenzen onder en boven, de integrand erachter */
+      i++;
+      let onder = '', boven = '';
+      while(i < t.length && WX_SUBS[t[i]] !== undefined) onder += WX_SUBS[t[i++]];
+      while(i < t.length && WX_SUPS[t[i]] !== undefined) boven += WX_SUPS[t[i++]];
+      while(t[i] === ' ') i++;
+      const e = metMacht();
+      return { x: `<m:nary><m:naryPr><m:limLoc m:val="subSup"/></m:naryPr><m:sub>${wxTekstMath(onder)}</m:sub><m:sup>${wxTekstMath(boven)}</m:sup><m:e>${e ? e.x : ''}</m:e></m:nary>` };
+    }
+    if(c === ']' || c === '['){ i++; return { x: wxMr(c, true) }; }
     if(/[0-9]/.test(c)){ let k = i; while(k < t.length && /[0-9,.]/.test(t[k])) k++; const g = t.slice(i, k).replace(/[,.]$/, ''); i += g.length; return { x: wxMr(g, true) }; }
     if(/[A-Za-z]/.test(c)){
       let k = i; while(k < t.length && /[A-Za-z]/.test(t[k])) k++;
@@ -8182,6 +8228,13 @@ function wxOmml(t){
   function metMacht(){
     const a = atoom();
     if(!a) return null;
+    if(i < t.length && WX_SUBS[t[i]] !== undefined){
+      /* [F(x)]₋₁³ of een index: onder (en eventueel boven) */
+      let onder = '', boven = '';
+      while(i < t.length && WX_SUBS[t[i]] !== undefined) onder += WX_SUBS[t[i++]];
+      while(i < t.length && WX_SUPS[t[i]] !== undefined) boven += WX_SUPS[t[i++]];
+      return { x: boven ? `<m:sSubSup><m:e>${a.x}</m:e><m:sub>${wxTekstMath(onder)}</m:sub><m:sup>${wxTekstMath(boven)}</m:sup></m:sSubSup>` : `<m:sSub><m:e>${a.x}</m:e><m:sub>${wxTekstMath(onder)}</m:sub></m:sSub>`, macht: true };
+    }
     if(i < t.length && (WX_SUPS[t[i]] !== undefined || t[i] === 'ᐟ')){
       let k = i, e = '';
       while(k < t.length && (WX_SUPS[t[k]] !== undefined || t[k] === 'ᐟ')){ e += t[k] === 'ᐟ' ? '/' : WX_SUPS[t[k]]; k++; }
