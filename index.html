@@ -1,7 +1,7 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Gymnasion Trainer</title>
 <!-- versie van de app: bij elke nieuwe versie aanpassen, dan herlaadt een geopende app (bv. op het beginscherm van een iPhone) zichzelf -->
-<meta name="app-versie" content="2026-11-24-0815">
+<meta name="app-versie" content="2026-11-24-0845">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -1515,6 +1515,70 @@ function parseGonioVorm(str){
   return null;
 }
 
+/* ---------- een ingetypte uitdrukking in x uitrekenen (voor de controle van een primitieve) ----------
+   kent + − · * / ^, haakjes, machten als superscript (x⁻², x³ᐟ²), √ ∛ sqrt cbrt ln, ½ ⅓ ⅔ ¼ ¾ en
+   weggelaten maaltekens (3x, 2ln x, x√x). Geeft een functie x → waarde, of null als de tekst niet te lezen is. */
+function leesUitdrukking(tekst){
+  const SUP = { '⁰':'0', '¹':'1', '²':'2', '³':'3', '⁴':'4', '⁵':'5', '⁶':'6', '⁷':'7', '⁸':'8', '⁹':'9', '⁻':'-', 'ᐟ':'/', 'ⁿ':'n' };
+  let t = String(tekst).replace(/\s+/g, ' ').trim();
+  t = t.replace(/^.*=/, '');                                   /* "F(x) = …" of "∫ … dx = …": enkel het resultaat */
+  t = t.replace(/[+−-]\s*C\b/g, '').replace(/\bC\b/g, '');      /* de integratieconstante telt niet mee */
+  t = t.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻ᐟⁿ]+/g, m => '^(' + [...m].map(c => SUP[c]).join('') + ')');
+  t = t.replace(/[−–]/g, '-').replace(/[·×∙]/g, '*').replace(/(\d),(\d)/g, '$1.$2')
+    .replace(/½/g, '(1/2)').replace(/⅓/g, '(1/3)').replace(/⅔/g, '(2/3)').replace(/¼/g, '(1/4)').replace(/¾/g, '(3/4)').replace(/\s/g, '');
+  let i = 0;
+  const kijk = () => t[i], eet = c => (t[i] === c ? (i++, true) : false);
+  const begintFactor = () => i < t.length && /[0-9.x(√∛a-z]/.test(t[i]);
+  function som(){
+    let f = term();
+    for(;;){
+      if(eet('+')){ const a = f, b = term(); f = x => a(x) + b(x); }
+      else if(eet('-')){ const a = f, b = term(); f = x => a(x) - b(x); }
+      else return f;
+    }
+  }
+  function term(){
+    let f = macht();
+    for(;;){
+      if(eet('*')){ const a = f, b = macht(); f = x => a(x) * b(x); }
+      else if(eet('/')){ const a = f, b = macht(); f = x => a(x) / b(x); }
+      else if(begintFactor()){ const a = f, b = macht(); f = x => a(x) * b(x); }
+      else return f;
+    }
+  }
+  function macht(){
+    if(eet('-')){ const a = macht(); return x => -a(x); }
+    if(eet('+')) return macht();
+    const g = basis();
+    if(eet('^')){ const e = macht(); return x => Math.sign(g(x)) < 0 && Math.abs(e(x) * 3 - Math.round(e(x) * 3)) < 1e-9 && Math.round(e(x) * 3) % 2 !== 0 ? -Math.pow(-g(x), e(x)) : Math.pow(g(x), e(x)); }
+    return g;
+  }
+  function basis(){
+    const c = kijk();
+    if(c === undefined) throw new Error('einde');
+    if(eet('(')){ const a = som(); if(!eet(')')) throw new Error('haakje'); return a; }
+    if(eet('√')){ const a = basis(); return x => Math.sqrt(a(x)); }
+    if(eet('∛')){ const a = basis(); return x => Math.cbrt(a(x)); }
+    if(/[0-9.]/.test(c)){ let k = i; while(k < t.length && /[0-9.]/.test(t[k])) k++; const v = parseFloat(t.slice(i, k)); i = k; if(isNaN(v)) throw new Error('getal'); return () => v; }
+    if(t.startsWith('sqrt', i)){ i += 4; const a = basis(); return x => Math.sqrt(a(x)); }
+    if(t.startsWith('cbrt', i)){ i += 4; const a = basis(); return x => Math.cbrt(a(x)); }
+    if(t.startsWith('ln', i)){ i += 2; const a = macht(); return x => Math.log(a(x)); }
+    if(eet('x')) return x => x;
+    throw new Error('teken');
+  }
+  try{
+    const f = som();
+    return i === t.length ? f : null;
+  } catch(e){ return null; }
+}
+/* juist als het verschil met de juiste primitieve overal dezelfde constante is */
+function controleerPrimitieve(antwoord, juist){
+  const a = leesUitdrukking(antwoord), b = leesUitdrukking(juist);
+  if(!a || !b) return false;
+  const xs = [0.7, 1.3, 2.2, 3.1, 4.6], d = xs.map(x => a(x) - b(x));
+  if(d.some(v => !isFinite(v))) return false;
+  return d.every(v => Math.abs(v - d[0]) < 1e-6 * Math.max(1, Math.abs(b(xs[2]))));
+}
 function checkFunctieAnswer(q, userAnswer){
   if(q.checkKind === 'number'){
     // vraag naar het argument: het volledige getal r cis φ (juiste modulus én argument) is ook goed
@@ -1552,6 +1616,7 @@ function checkFunctieAnswer(q, userAnswer){
   if(q.checkKind === 'tabel'){
     return userAnswer === q.correct;
   }
+  if(q.checkKind === 'primitieve') return controleerPrimitieve(userAnswer, q.checkData.F);
   if(q.checkKind === 'cis'){
     const gv = parseGonioVorm(userAnswer);
     if(!gv) return false;
@@ -6420,44 +6485,37 @@ const INTEGRAAL_BEGRIPPEN = [
 ];
 
 /* ---------- uitleg ---------- */
-/* ---------- integralen met negatieve exponenten, wortels en 1/x ---------- */
-function genIntMachten(soort){
+/* ---------- onbepaalde integralen met negatieve exponenten, wortels en 1/x ---------- */
+function intOnbepaaldItem(soort){
   soort = soort || randChoice(['neg2', 'neg3', 'kwad', 'derde', 'ln']);
-  const br = (t, n) => dqBreuk(t, n), dec = v => String(Math.round(v * 100) / 100).replace('.', ',').replace('-', '−');
-  const antw = (t, n) => Object.assign({ answerType:'kort', checkKind:'number', checkData:{ value: t / n, tol: Number.isInteger(t / n) ? 1e-6 : 0.006 },
-    hint:'Geef je antwoord als breuk (bv. 45/4) of afgerond op 2 cijfers na de komma.' }, { correct: Number.isInteger(t / n) ? mFmt(t / n) : `${br(t, n)} ≈ ${dec(t / n)}` });
-  const basis = { kind:'functie', catId:'int_machten', catLabel:'Negatieve exponenten, wortels en 1/x' };
-  if(soort === 'neg2' || soort === 'neg3'){
-    const m = soort === 'neg2' ? 2 : 3, k = randInt(1, 6) * (m === 3 ? 2 : 1), a = randInt(1, 3), b = randInt(a + 1, 4);
-    /* ∫ k·x⁻ᵐ dx = k·x^(1−m)/(1−m) = −k/((m−1)·x^(m−1)) */
-    const t = k * (b ** (m - 1) - a ** (m - 1)), n = (m - 1) * a ** (m - 1) * b ** (m - 1);
-    const xm = m === 2 ? 'x²' : 'x³', expr = Math.random() < 0.5 ? `${k}/${xm}` : `${k}x${m === 2 ? '⁻²' : '⁻³'}`;
-    const F = m === 2 ? `−${k}/x` : `−${k / 2}/x²`;
-    return Object.assign(basis, { promptHtml:`Bereken ${intHtml(a, b, expr)}` }, antw(t, n), {
-      explanation:`Schrijf als macht: ${k}/${xm} = ${k}x${m === 2 ? '⁻²' : '⁻³'}. De regel xⁿ → xⁿ⁺¹/(n + 1) geldt ook voor negatieve n (behalve n = −1):\n` +
-        `${k}x${m === 2 ? '⁻²' : '⁻³'} → ${k}·x${m === 2 ? '⁻¹' : '⁻²'}/(${mFmt(1 - m)}) = ${F}, dus F(x) = ${F}\n` +
-        `F(${b}) − F(${a}) = ${m === 2 ? `−${k}/${b} + ${k}/${a}` : `−${k / 2}/${b * b} + ${k / 2}/${a * a}`} = ${br(t, n)}` + (Number.isInteger(t / n) ? '' : ` ≈ ${dec(t / n)}`) });
-  }
-  if(soort === 'kwad' || soort === 'derde'){
-    const kw = soort === 'kwad', k = randChoice([1, 1, 2, 3]);
-    const grenzen = kw ? [0, 1, 4, 9, 16] : [0, 1, 8, 27];
-    const i = randInt(0, grenzen.length - 2), j = randInt(i + 1, grenzen.length - 1), a = grenzen[i], b = grenzen[j];
-    const r = v => Math.round(v ** (kw ? 0.5 : 1 / 3));   /* √a of ∛a (gehele getallen) */
-    const macht = v => r(v) ** (kw ? 3 : 4);             /* a^(3/2) of a^(4/3) */
-    const t = k * (kw ? 2 : 3) * (macht(b) - macht(a)), n = kw ? 3 : 4;
-    const wortel = kw ? '√x' : '∛x', exp = kw ? '¹ᐟ²' : '¹ᐟ³', nexp = kw ? '³ᐟ²' : '⁴ᐟ³', fac = kw ? '2/3' : '3/4';
-    return Object.assign(basis, { promptHtml:`Bereken ${intHtml(a, b, (k === 1 ? '' : k) + wortel)}` }, antw(t, n), {
-      explanation:`Schrijf de wortel als macht: ${wortel} = x${exp}. Dan x${exp} → x${nexp}/(${kw ? '3/2' : '4/3'}) = ${fac}·x${nexp}.\n` +
-        `F(x) = ${k === 1 ? '' : k + '·'}${fac}·x${nexp}\n` +
-        `x${nexp} = (${wortel.replace('x', '')}x)${kw ? '³' : '⁴'}: in ${b} is dat ${r(b)}${kw ? '³' : '⁴'} = ${macht(b)}, in ${a} is dat ${r(a)}${kw ? '³' : '⁴'} = ${macht(a)}\n` +
-        `F(${b}) − F(${a}) = ${k === 1 ? '' : k + '·'}${fac}·(${macht(b)} − ${macht(a)}) = ${br(t, n)}` + (Number.isInteger(t / n) ? '' : ` ≈ ${dec(t / n)}`) });
-  }
-  const k = randInt(1, 5), a = randInt(1, 3), b = randChoice([2, 3, 4, 5, 6, 8].filter(x => x > a)), v = k * Math.log(b / a);
-  return Object.assign(basis, { promptHtml:`Bereken ${intHtml(a, b, k === 1 ? '1/x' : k + '/x')}`,
-    answerType:'kort', checkKind:'number', checkData:{ value: v, tol: 0.006 }, hint:'Rond af op 2 cijfers na de komma.',
-    correct: `${k === 1 ? '' : k + '·'}ln(${b}${a === 1 ? '' : '/' + a}) ≈ ${dec(v)}`,
-    explanation:`De regel xⁿ⁺¹/(n + 1) werkt niet voor 1/x = x⁻¹ (je zou door 0 delen). Een primitieve van 1/x is ln x (voor x > 0).\n` +
-      `F(x) = ${k === 1 ? '' : k + '·'}ln x\nF(${b}) − F(${a}) = ${k === 1 ? '' : k + '·'}(ln ${b} − ln ${a})` + (a === 1 ? ` = ${k === 1 ? '' : k + '·'}ln ${b}` : ` = ${k === 1 ? '' : k + '·'}ln(${b}/${a})`) + ` ≈ ${dec(v)}` });
+  const red = (t, n) => { const g = ggd(t, n); return [t / g, n / g]; };
+  const c = (t, n) => { const [a, b] = red(t, n); if(b === 1) return a === 1 ? '' : String(a);
+    const sym = { '1/2':'½', '1/3':'⅓', '2/3':'⅔', '3/4':'¾', '1/4':'¼' }[`${a}/${b}`]; return sym || `${a}/${b}·`; };
+  const deel = (t, n, onder) => { const [a, b] = red(t, n); return b === 1 ? `${a}/${onder}` : `${a}/(${b}${onder})`; };
+  const k = randChoice([1, 2, 3, 4, 5, 6]), K = k === 1 ? '' : String(k);
+  let it;
+  if(soort === 'neg2') it = { f:`${k}/x^(2)`, macht:`${K}x^(−2)`, stap:`${K}${K ? '·' : ''}x^(−1)/(−1)`, F:`−${k}/x`,
+    fout:[`${k}/x`, `−${deel(k, 3, 'x^(3)')}`, `−${2 * k}/x^(3)`] };
+  else if(soort === 'neg3'){ const kk = 2 * randChoice([1, 2, 3]);
+    it = { f:`${kk}/x^(3)`, macht:`${kk}x^(−3)`, stap:`${kk}·x^(−2)/(−2)`, F:`−${deel(kk, 2, 'x^(2)')}`,
+      fout:[`−${deel(kk, 4, 'x^(4)')}`, `${deel(kk, 2, 'x^(2)')}`, `−${3 * kk}/x^(4)`] }; }
+  else if(soort === 'kwad') it = { f:`${K}√x`, macht:`${K}x^(1/2)`, stap:`${K}${K ? '·' : ''}x^(3/2)/(3/2)`, F:`${c(2 * k, 3)}x^(3/2)`,
+    fout:[`${c(3 * k, 2)}x^(3/2)`, `${c(k, 2)}x^(−1/2)`, `${c(2 * k, 3)}x^(1/2)`] };
+  else if(soort === 'derde') it = { f:`${K}∛x`, macht:`${K}x^(1/3)`, stap:`${K}${K ? '·' : ''}x^(4/3)/(4/3)`, F:`${c(3 * k, 4)}x^(4/3)`,
+    fout:[`${c(4 * k, 3)}x^(4/3)`, `${c(k, 3)}x^(−2/3)`, `${c(3 * k, 4)}x^(1/3)`] };
+  else it = { f:`${k}/x`, macht:`${K}x^(−1)`, F:`${K}${K ? '·' : ''}ln x`, fout:[`−${k}/x^(2)`, `${k}/x^(2)`, `${k === 1 ? '' : k}x`] };
+  const S = afgSup;
+  return { soort, f: S(it.f), macht: S(it.macht), stap: it.stap ? S(it.stap) : '', F: S(it.F), fout: it.fout.map(S) };
+}
+function genIntOnbepaald(){
+  const it = intOnbepaaldItem(), juist = `${it.F} + C`;
+  return { kind:'functie', catId:'int_machten', catLabel:'Negatieve exponenten, wortels en 1/x',
+    promptHtml: `Bereken de onbepaalde integraal ∫ ${it.f} dx.`,
+    answerType:'kort', checkKind:'primitieve', checkData:{ F: it.F }, correct: juist,
+    hint: 'Typ het resultaat, bv. -6/x, 2/3x^(3/2) of 3ln x. De + C mag je weglaten.',
+    explanation: it.soort === 'ln'
+      ? `1/x = x⁻¹: de regel xⁿ → xⁿ⁺¹/(n + 1) werkt hier niet (je zou door 0 delen).\nEen primitieve van 1/x is ln x (voor x > 0), dus ∫ ${it.f} dx = ${juist}.`
+      : `Schrijf als macht: ${it.f} = ${it.macht}. De regel xⁿ → xⁿ⁺¹/(n + 1) geldt ook voor negatieve en gebroken n.\n∫ ${it.f} dx = ${it.stap} + C = ${juist}\nControle: leid ${it.F} af, dan krijg je opnieuw ${it.f}.` };
 }
 function theorieIntegralen(){
   const f1 = x => -x * x + 4, f2 = x => x * x - 2 * x - 3, f3 = x => x + 2;
@@ -8065,14 +8123,18 @@ function formulesMarkeren(html){
 function examenIntegralen(){
   const nl = t => formulesMarkeren(t.replace(/(^|[\s(=·\/])-/g, '$1−').replace(/\n/g, '<br>'));
   const vraag = q => formulesMarkeren(mooieBreuken(q.promptHtml.replace(/(^|[\s(=·\/])-/g, '$1−').replace(/<br>/g, ' ')));
-  const maak = groep => genIntMachten(randChoice(groep));
-  const B = [genIntBerekenen(), maak(['neg2', 'neg3']), maak(['kwad', 'derde']), maak(['ln'])];
+  /* vraag 1: onbepaalde integralen (veelterm, negatieve exponent, wortel en 1/x); oppervlakte en vraagstuk: bepaalde integralen */
+  const fv = intVeelterm(randChoice([2, 3]));
+  const O = [intOnbepaaldItem(randChoice(['neg2', 'neg3'])), intOnbepaaldItem(randChoice(['kwad', 'derde'])), intOnbepaaldItem('ln')];
+  const opg = [`(${fmtPoly(fv).replace(/-/g, '−')})`, ...O.map(it => it.f)];
+  const opl = [`∫ (${fmtPoly(fv).replace(/-/g, '−')}) dx = ${fmtPrim(fv).replace(/-/g, '−')} + C`,
+    ...O.map(it => it.soort === 'ln' ? `1/x heeft als primitieve ln x (voor x > 0): ∫ ${it.f} dx = ${it.F} + C` : `${it.f} = ${it.macht}, dus ∫ ${it.f} dx = ${it.stap} + C = ${it.F} + C`)];
   const O1 = genIntOppervlakte();
   let O2; do{ O2 = genIntOppervlakte(); } while(O2.promptHtml.includes('grafieken') === O1.promptHtml.includes('grafieken'));
   const V = genIntVraagstuk(), r = 'abcd';
   return { titel:'Bepaalde integralen', vragen: [
-    ['Integralen berekenen', 8, `<p>Bereken. Schrijf je tussenstappen op.</p>` + B.map((q, i) => `<p>${r[i]})&nbsp; ${vraag(q).replace(/^Bereken /, '')}</p>${pxLijnen(3)}`).join(''),
-      B.map((q, i) => `${r[i]}) ${nl(q.explanation)} (2)`).join('<br>')],
+    ['Onbepaalde integralen', 8, `<p>Bereken de onbepaalde integraal. Schrijf je tussenstappen op.</p>` + opg.map((e, i) => `<p>${r[i]})&nbsp; <span class="wx-m">∫ ${e} dx</span></p>${pxLijnen(3)}`).join(''),
+      opl.map((t, i) => `${r[i]}) ${formulesMarkeren(t)} (2)`).join('<br>')],
     ['Oppervlakte', 7, [O1, O2].map((q, i) => `<p>${r[i]})&nbsp; ${vraag(q)}</p><div class="px-midden px-graf">${q.svg}</div>${pxLijnen(5)}`).join(''),
       [O1, O2].map((q, i) => `${r[i]}) ${nl(q.explanation)} (${i ? 4 : 3})`).join('<br>')],
     ['Vraagstuk', 5, `<p>${vraag(V)}</p>${pxLijnen(6)}`, `${nl(V.explanation)} (5)`],
@@ -8212,8 +8274,12 @@ function wxOmml(t){
       while(i < t.length && WX_SUBS[t[i]] !== undefined) onder += WX_SUBS[t[i++]];
       while(i < t.length && WX_SUPS[t[i]] !== undefined) boven += WX_SUPS[t[i++]];
       while(t[i] === ' ') i++;
-      const e = metMacht();
-      return { x: `<m:nary><m:naryPr><m:limLoc m:val="subSup"/></m:naryPr><m:sub>${wxTekstMath(onder)}</m:sub><m:sup>${wxTekstMath(boven)}</m:sup><m:e>${e ? e.x : ''}</m:e></m:nary>` };
+      /* de integrand loopt tot aan dx (of dt, dq …) */
+      const d = t.slice(i).search(/\s?d[a-z](?![a-z])/);
+      let e;
+      if(d > 0){ e = { x: wxOmml(t.slice(i, i + d)) }; i += d; } else e = metMacht();
+      const pr = onder || boven ? '<m:naryPr><m:limLoc m:val="subSup"/></m:naryPr>' : '<m:naryPr><m:subHide m:val="1"/><m:supHide m:val="1"/></m:naryPr>';
+      return { x: `<m:nary>${pr}<m:sub>${wxTekstMath(onder)}</m:sub><m:sup>${wxTekstMath(boven)}</m:sup><m:e>${e ? e.x : ''}</m:e></m:nary>`, integraal: true };
     }
     if(c === ']' || c === '['){ i++; return { x: wxMr(c, true) }; }
     if(/[0-9]/.test(c)){ let k = i; while(k < t.length && /[0-9,.]/.test(t[k])) k++; const g = t.slice(i, k).replace(/[,.]$/, ''); i += g.length; return { x: wxMr(g, true) }; }
@@ -8255,7 +8321,7 @@ function wxOmml(t){
       i = start + 1; tekst += '/'; continue;
     }
     const begin = i, a = metMacht();
-    if(a){ flush(); a.atoom = true; stukken.push(a); continue; }
+    if(a){ flush(); a.atoom = !a.integraal; stukken.push(a); continue; }
     i = begin + 1; tekst += c;
   }
   flush();
@@ -8661,7 +8727,7 @@ const WISK_EXTRA = {
         uitleg: () => uitlegKies(theorieIntegralen(), ['Primitieve functie']) },
       { id:'berekenen', label:'Bepaalde integraal berekenen', gen: genIntBerekenen,
         uitleg: () => uitlegKies(theorieIntegralen(), ['Primitieve functie', 'De bepaalde integraal berekenen', 'Rekenregels']) },
-      { id:'machten', label:'Negatieve exponenten, wortels en 1/x', gen: () => genIntMachten(),
+      { id:'machten', label:'Negatieve exponenten, wortels en 1/x', gen: genIntOnbepaald,
         uitleg: () => uitlegKies(theorieIntegralen(), ['Negatieve exponenten, wortels en 1/x']) },
       { id:'oppervlakte', label:'Oppervlakte', gen: genIntOppervlakte,
         uitleg: () => uitlegKies(theorieIntegralen(), ['Integraal en oppervlakte', 'Oppervlakte tussen twee grafieken']) },
