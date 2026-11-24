@@ -1,7 +1,7 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Gymnasion Trainer</title>
 <!-- versie van de app: bij elke nieuwe versie aanpassen, dan herlaadt een geopende app (bv. op het beginscherm van een iPhone) zichzelf -->
-<meta name="app-versie" content="2026-11-23-1930">
+<meta name="app-versie" content="2026-11-24-0750">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -7677,7 +7677,7 @@ function examenKans(){
   }
   /* 2. kaarten: aantal combinaties vermenigvuldigen */
   {
-    const soort = [['azen', 'aas'], ['heren', 'heer'], ['vrouwen', 'vrouw'], ['boeren', 'boer']];
+    const soort = [['azen', 'aas'], ['heren', 'heer'], ['dames', 'dame'], ['boeren', 'boer']];
     const [A, B] = shuffle(soort.slice()).slice(0, 2), kl = shuffle(['harten', 'ruiten', 'klaveren', 'schoppen']).slice(0, 2);
     const k1 = randChoice([1, 2]), k2 = randChoice([1, 2]), rest = 5 - k1 - k2;
     const naam = (k, s) => (k === 1 ? `1 ${s[1]}` : `${k} ${s[0]}`);
@@ -9907,7 +9907,7 @@ function updateBoomtoolPreview(){
 
 /* kaarten trekken: verschillende combinaties met elkaar vermenigvuldigen */
 function genVerhaalKaarten(){
-  const soort = [['azen', 'aas'], ['heren', 'heer'], ['vrouwen', 'vrouw'], ['boeren', 'boer']];
+  const soort = [['azen', 'aas'], ['heren', 'heer'], ['dames', 'dame'], ['boeren', 'boer']];
   const naam = (k, s) => (k === 1 ? `1 ${s[1]}` : `${k} ${s[0]}`);
   const groot = v => String(v).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   if(Math.random() < 0.6){
@@ -10930,7 +10930,7 @@ function uitlegCombi(id){
       <div class="formule">coëfficiënt van x³ in (2x − 1)⁵: (2x)³ → k = 2<br>C(5, 2) · 2³ · (−1)² = 10 · 8 · 1 = 80</div>`;
     case 'kaarten': return `
       <h3>Kaarten trekken</h3>
-      <p>Een spel heeft 52 kaarten: 4 kleuren (harten, ruiten, klaveren, schoppen) van elk 13 kaarten, en van elke soort (aas, heer, vrouw, boer …) 4 kaarten. Neem je kaarten <b>tegelijk</b>, dan telt de volgorde niet: je telt met <b>combinaties</b>.</p>
+      <p>Een spel heeft 52 kaarten: 4 kleuren (harten, ruiten, klaveren, schoppen) van elk 13 kaarten, en van elke soort (aas, heer, dame, boer …) 4 kaarten. Neem je kaarten <b>tegelijk</b>, dan telt de volgorde niet: je telt met <b>combinaties</b>.</p>
       <p>Moet je uit verschillende groepen kiezen, tel dan per groep en <b>vermenigvuldig</b>. Vergeet de "andere" kaarten niet als je niet alle kaarten uit de genoemde groepen neemt.</p>
       <div class="formule">5 kaarten met precies 2 azen en 2 heren:<br>2 van de 4 azen: C(4, 2) = 6 &nbsp; 2 van de 4 heren: C(4, 2) = 6 &nbsp; 1 van de 44 andere: C(44, 1) = 44<br>6 · 6 · 44 = 1584 manieren</div>
       <div class="formule">5 kaarten met 3 harten en 2 schoppen: C(13, 3) · C(13, 2) = 286 · 78 = 22 308 manieren</div>`;
