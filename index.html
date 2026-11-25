@@ -8252,12 +8252,14 @@ function examenDF(df5){
       `a) ${nl(qg.explanation)} (${P(2, 1)})<br>b) ${nl(qt.explanation)} (${P(2, 1)})<br>c) ${nl(qv.explanation)} (${P(2, 1)})`]);
   }
   /* volgorde: eerst "is dit een functie?", dan symmetrie en gedrag op oneindig, dan de rest */
-  /* 5 DF: de volgorde van het schriftelijk examen (functies basis met het differentiequotiënt na de rechten, dan functies extra)
+  /* 5 DF: de volgorde van het schriftelijk examen (functies basis: eerst de makkelijke vragen, het differentiequotiënt na de rechten; dan functies extra)
      en een puntenverdeling per hoofdstuk; anders eerst "is dit een functie?", symmetrie en gedrag op oneindig */
   let verdeling;
   if(df5){
     const dq = vragen.findIndex(v => v[0] === 'Differentiequotiënt'), na = vragen.findIndex(v => v[0] === 'Functievoorschrift uit een grafiek');
     vragen.splice(na + 1, 0, ...vragen.splice(dq, 1));
+    /* de makkelijke vragen eerst: "is dit een functie?" en "een grafiek aflezen" */
+    ['Een grafiek aflezen', 'Is dit een functie?'].forEach(t => vragen.unshift(...vragen.splice(vragen.findIndex(v => v[0] === t), 1)));
     const extra = ['Symmetrie', 'Gedrag op oneindig en asymptoten', 'Periodieke functies', 'Rekenen met de periode'];
     const hoofdstuk = v => (extra.includes(v[0]) ? 'Functies extra' : 'Functies basis en differentiequotiënt');
     verdeling = [];
