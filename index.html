@@ -8049,11 +8049,19 @@ function dfRechteGrafiekVragen(){
   const t1 = dfRechte(false), t2 = dfRechte(true), o1 = dfRechte(false), o2 = dfRechte(true);
   const graf = svg => `<div class="px-midden px-graf">${svg}</div>`;
   const tweedePunt = r => { const x = r.x0 + (r.x0 > 0 ? -1 : 1); return `(${mFmt(x)}, ${mFmt(r.m * x + r.q)})`; };
-  const tekenen = ['Een rechte tekenen', 2,
+  /* c) de rechte door twee gegeven punten (gehele coördinaten, verschillende x) */
+  let A, B;
+  do{ A = [randInt(-5, 5), randInt(-5, 5)]; B = [randInt(-5, 5), randInt(-5, 5)]; } while(Math.abs(A[0] - B[0]) < 2 || A[1] === B[1]);
+  const ab = x => A[1] + (B[1] - A[1]) / (B[0] - A[0]) * (x - A[0]);
+  const abSvg = svgGraphPlus(sampleClipped(ab, -6, 6, DB_WIN), DB_WIN, { dots: [{ x:A[0], y:A[1] }, { x:B[0], y:B[1] }] });
+  const pt = P => `(${mFmt(P[0])}, ${mFmt(P[1])})`;
+  const tekenen = ['Een rechte tekenen', 3,
     `<p>a)&nbsp; Teken de grafiek van f(x) = ${dfLin(t1.m, t1.q)}.</p>${graf(dfRechteSvg(t1, false))}` +
-    `<p>b)&nbsp; Teken de grafiek van g(x) = ${dfLin(t2.m, t2.q)}.</p>${graf(dfRechteSvg(t2, false))}`,
+    `<p>b)&nbsp; Teken de grafiek van g(x) = ${dfLin(t2.m, t2.q)}.</p>${graf(dfRechteSvg(t2, false))}` +
+    `<p>c)&nbsp; Teken de rechte door de punten A${pt(A)} en B${pt(B)}.</p>${graf(svgCurveGraph([], DB_WIN))}`,
     `a) snijpunt met de y-as (0, ${mFmt(t1.q)}), snijpunt met de x-as (${mFmt(t1.x0)}, 0) (1)${graf(dfRechteSvg(t1, true))}` +
-    `b) het snijpunt met de y-as (0, ${mFmt(t2.q)}) valt buiten het rooster: gebruik de nulwaarde (${mFmt(t2.x0)}, 0) en een tweede punt, bv. ${tweedePunt(t2)} (1)${graf(dfRechteSvg(t2, true))}`];
+    `b) het snijpunt met de y-as (0, ${mFmt(t2.q)}) valt buiten het rooster: gebruik de nulwaarde (${mFmt(t2.x0)}, 0) en een tweede punt, bv. ${tweedePunt(t2)} (1)${graf(dfRechteSvg(t2, true))}` +
+    `c) duid A${pt(A)} en B${pt(B)} aan en trek de rechte door beide punten, tot aan de rand van het rooster (1)${graf(abSvg)}`];
   const opstellen = ['Functievoorschrift uit een grafiek', 2,
     `<p>a)&nbsp; Stel het functievoorschrift op van de getekende rechte r.</p>${graf(dfRechteSvg(o1, true))}${pxLijnen(2)}` +
     `<p>b)&nbsp; Stel het functievoorschrift op van de getekende rechte s.</p>${graf(dfRechteSvg(o2, true))}${pxLijnen(3)}`,
