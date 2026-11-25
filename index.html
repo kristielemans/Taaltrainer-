@@ -8244,12 +8244,30 @@ function examenDF(df5){
       `a) ${nl(qg.explanation)} (${P(2, 1)})<br>b) ${nl(qt.explanation)} (${P(2, 1)})<br>c) ${nl(qv.explanation)} (${P(2, 1)})`]);
   }
   /* volgorde: eerst "is dit een functie?", dan symmetrie en gedrag op oneindig, dan de rest */
-  const eerst = ['Is dit een functie?', 'Symmetrie', 'Gedrag op oneindig en asymptoten'];
-  const plaats = v => (eerst.includes(v[0]) ? eerst.indexOf(v[0]) : eerst.length);
-  vragen.sort((a, b) => plaats(a) - plaats(b));
+  /* 5 DF: de volgorde van het schriftelijk examen (functies basis met het differentiequotiënt na de rechten, dan functies extra)
+     en een puntenverdeling per hoofdstuk; anders eerst "is dit een functie?", symmetrie en gedrag op oneindig */
+  let verdeling;
+  if(df5){
+    const dq = vragen.findIndex(v => v[0] === 'Differentiequotiënt'), na = vragen.findIndex(v => v[0] === 'Functievoorschrift uit een grafiek');
+    vragen.splice(na + 1, 0, ...vragen.splice(dq, 1));
+    const extra = ['Symmetrie', 'Gedrag op oneindig en asymptoten', 'Periodieke functies', 'Rekenen met de periode'];
+    const hoofdstuk = v => (extra.includes(v[0]) ? 'Functies extra' : 'Functies basis en differentiequotiënt');
+    verdeling = [];
+    vragen.forEach((v, k) => {
+      const h = hoofdstuk(v), laatste = verdeling[verdeling.length - 1];
+      if(laatste && laatste.h === h){ laatste.tot = k + 1; laatste.pt += v[1]; }
+      else verdeling.push({ h, van:k + 1, tot:k + 1, pt:v[1] });
+    });
+    verdeling = verdeling.map(d => [`${d.h} (vraag ${d.van}${d.tot > d.van ? '–' + d.tot : ''})`, d.pt]);
+  }
+  else {
+    const eerst = ['Is dit een functie?', 'Symmetrie', 'Gedrag op oneindig en asymptoten'];
+    const plaats = v => (eerst.includes(v[0]) ? eerst.indexOf(v[0]) : eerst.length);
+    vragen.sort((a, b) => plaats(a) - plaats(b));
+  }
   /* 5 DF: eigen rekentoestel toegelaten maar niet nodig */
   const hulp = df5 ? 'Enkel je eigen rekentoestel is toegelaten, maar een rekentoestel is niet nodig om dit examen op te lossen. Noteer al je tussenstappen: een antwoord zonder berekening levert geen punten op.' : undefined;
-  return { titel:'Wiskunde DF: functies', vragen, hulp };
+  return { titel:'Wiskunde DF: functies', vragen, hulp, verdeling };
 }
 /* ---------- examen 5 DS – functies (100 punten): een selectie DF-vragen (altijd "is dit een functie?"),
    afgeleiden van veeltermfuncties en de analyse van een derdegraadsfunctie met één geheel nulpunt ---------- */
