@@ -545,13 +545,12 @@
   .px-groot svg{ width:100%; max-width:520px; height:auto; }
   .px-veel .px-punten td{ padding:2px 8px; } .px-veel .px-todo{ margin-top:10px; } .px-veel .px-voet{ margin-top:8px; } .px-veel .px-kader{ margin-bottom:10px; }
   .px-kruis{ width:auto; min-width:60%; margin:6px auto 10px; } .px-kruis td{ width:80px; text-align:center; } .px-kruis th{ padding:0 8px; font-weight:600; }
-  .px-vs td{ width:9%; } .px .functie-table{ font-size:10pt; } .px .functie-table td, .px .functie-table th{ border-color:#000; }
+  .px .functie-table{ font-size:10pt; } .px .functie-table td, .px .functie-table th{ border-color:#000; }
   .px-graf svg{ width:8cm; max-width:100%; height:auto; }
   .px path[stroke="var(--coral)"]{ stroke:#000; } .px circle[stroke="var(--coral)"]{ stroke:#000; } .px circle[fill="var(--coral)"]{ fill:#000; }
   .px line[stroke="var(--paper-line)"]{ stroke:#c8c8c8; }
   .px-sam.px-visgraat{ border:none; margin:8px 0 14px; } .px-sam.px-visgraat th, .px-sam.px-visgraat td{ border:none; height:34px; }
-  .px-sam.px-visgraat tr:first-child > *{ border-bottom:1.5px solid #000; } .px-sam.px-visgraat th{ border-right:1.5px solid #000; width:60px; }
-  .px-sam.px-visgraat tr:last-child td + td{ border-left:1px solid #000; }
+  .px-sam.px-visgraat tr + tr > *{ border-top:1.5px solid #000; } .px-sam.px-visgraat th{ border-right:1.5px solid #000; width:90px; }
   .px-grafrooster{ margin:6px auto; border-collapse:collapse; } .px-grafrooster td{ text-align:center; vertical-align:top; padding:4px 12px; }
   .px-grafrooster svg{ width:5.5cm; height:auto; }
   .px-nulgraad{ margin:8px 0 12px; } .px-nulgraad td, .px-nulgraad th{ height:46px; text-align:center; } .px-nulgraad tr > th:first-child{ text-align:left; width:150px; }
@@ -671,6 +670,9 @@
   .modal h3{ font-family:'Fraunces', serif; font-size:1.3rem; margin:0 0 4px; }
   .modal .hint{ color:var(--ink-soft); font-size:0.86rem; margin:0 0 16px; }
   .modal-close-row{ display:flex; justify-content:flex-end; margin-top:20px; gap:10px; }
+  .exgeg-veld{ margin:0 0 12px; }
+  .exgeg-veld label{ display:block; font-weight:600; font-size:0.9rem; margin-bottom:4px; }
+  .exgeg-veld input{ width:100%; box-sizing:border-box; padding:8px 10px; border-radius:8px; border:1.5px solid var(--paper-line); font:inherit; background:#fff; }
   .dropzone{
     border:2px dashed var(--paper-line);
     border-radius:10px;
@@ -1102,7 +1104,7 @@
     <p class="hint">Voor leerlingen én leerkrachten &mdash; sluit dit venster gewoon om verder te gaan.</p>
 
     <p style="font-weight:600; margin-bottom:4px;">Voor leerlingen</p>
-    <p class="hint">Kies bovenaan eerst <b>"Vaktermen"</b>, <b>"Wiskunde DF"</b>, <b>"Wiskunde DS"</b>, <b>"Statistiek"</b> of <b>"Economie"</b>. Bij Vaktermen kies je je spelmodus, taal (of talen) en het vak, hoofdstuk en graad waarover je wil oefenen, en klik je op start. Kies je <b>"Economie"</b>, dan kan je oefenen op <b>"Gini-coëfficiënt"</b>, <b>"Volkomen concurrentie"</b> en <b>"Monopolie"</b>. Bij <b>"Wiskunde DF"</b> (dubbele finaliteit) kies je tussen <b>"Functies basis"</b> (alles op zicht, zonder afgeleiden), <b>"Functies extra"</b> (symmetrie, gedrag op oneindig en periodieke functies, ook op zicht) en <b>"Differentiequotiënt"</b> (de gemiddelde verandering op een grafiek, uit een tabel of met een voorschrift). Bij <b>"Wiskunde DS"</b> (doorstroom) kies je tussen <b>"Functies DS"</b> (doorstroom: met afgeleiden), <b>"Functieonderzoek"</b> (één functie stap voor stap volledig onderzoeken en de grafiek tekenen), <b>"Limieten veeltermen"</b>, <b>"Limieten rationale functies"</b>, <b>"Asymptoten"</b>, <b>"Bepaalde integralen"</b>, <b>"Complexe getallen"</b>, <b>"Combinatieleer"</b> en <b>"Regel van Bayes"</b> (vink aan welke soorten vragen je wil oefenen; de knop <b>"Eerst wat uitleg"</b> geeft de uitleg bij precies die soorten) &mdash; dat zijn willekeurig samengestelde oefeningen (functies DF: rechten, functiewaarden, domein en bereik, tekenverloop, stijgen en dalen, hol en bol, buigpunten, verloopschema; functies DS: afgeleiden berekenen en daarmee extrema en buigpunten bepalen; limieten: invullen, de hoogstegraadsterm voor x → ±∞, rekenen met oneindig, de vormen 0/0 en a/0 en vraagstukken; asymptoten: verticale, horizontale en schuine asymptoten en gaten; bepaalde integralen: onbepaalde integralen, F(b) − F(a), oppervlaktes en vraagstukken; complexe getallen: termen &amp; begrippen, som, vermenigvuldiging, macht, n-de machtswortel, vraagstukken met gegeven formule; combinatieleer: termen &amp; begrippen, rekenen, vraagstukken, "welk telprobleem is dit?" en boomstructuren; regel van Bayes: voorwaardelijke kansen met de formule, een kruistabel, een boomdiagram en een venndiagram) die niet uit een lijst gehaald worden maar telkens opnieuw berekend, dus ze komen niet steeds terug. Staat de lijst van jouw leerkracht of vak er nog niet tussen? Vraag het CSV-bestand aan je leerkracht (bv. via Smartschool) en klik zelf op <b>"Lijst importeren"</b> hierboven om het toe te voegen &mdash; dat moet maar eenmalig, per toestel of browser. Je kan gerust na elkaar lijsten van verschillende leerkrachten of vakken importeren; ze worden gewoon samengevoegd, niets gaat verloren.</p>
+    <p class="hint">Kies bovenaan eerst <b>"Vaktermen"</b>, <b>"Wiskunde DF"</b>, <b>"Wiskunde DS"</b>, <b>"Statistiek"</b> of <b>"Economie"</b>. Bij Vaktermen kies je je spelmodus, taal (of talen) en het vak, hoofdstuk en graad waarover je wil oefenen, en klik je op start. Kies je <b>"Economie"</b>, dan kan je oefenen op <b>"Gini-coëfficiënt"</b>, <b>"Volkomen concurrentie"</b> en <b>"Monopolie"</b>. Bij <b>"Wiskunde DF"</b> (dubbele finaliteit) kies je tussen <b>"Functies basis"</b> (alles op zicht, zonder afgeleiden), <b>"Functies extra"</b> (symmetrie, gedrag op oneindig en periodieke functies, ook op zicht) en <b>"Differentiequotiënt"</b> (de gemiddelde verandering op een grafiek, uit een tabel of met een voorschrift). Bij <b>"Wiskunde DS"</b> (doorstroom) kies je tussen <b>"Functies DS"</b> (doorstroom: met afgeleiden), <b>"Functieonderzoek"</b> (één functie stap voor stap volledig onderzoeken en de grafiek tekenen), <b>"Limieten veeltermen"</b>, <b>"Limieten rationale functies"</b>, <b>"Asymptoten"</b>, <b>"Bepaalde integralen"</b>, <b>"Complexe getallen"</b>, <b>"Combinatieleer"</b> en <b>"Regel van Bayes"</b> (vink aan welke soorten vragen je wil oefenen; de knop <b>"Eerst wat uitleg"</b> geeft de uitleg bij precies die soorten) &mdash; dat zijn willekeurig samengestelde oefeningen (functies DF: rechten, functiewaarden, domein en bereik, tekenverloop, stijgen en dalen, toenemend en afnemend, buigpunten, uitgebreid verloopschema; functies DS: afgeleiden berekenen en daarmee extrema en buigpunten bepalen; limieten: invullen, de hoogstegraadsterm voor x → ±∞, rekenen met oneindig, de vormen 0/0 en a/0 en vraagstukken; asymptoten: verticale, horizontale en schuine asymptoten en gaten; bepaalde integralen: onbepaalde integralen, F(b) − F(a), oppervlaktes en vraagstukken; complexe getallen: termen &amp; begrippen, som, vermenigvuldiging, macht, n-de machtswortel, vraagstukken met gegeven formule; combinatieleer: termen &amp; begrippen, rekenen, vraagstukken, "welk telprobleem is dit?" en boomstructuren; regel van Bayes: voorwaardelijke kansen met de formule, een kruistabel, een boomdiagram en een venndiagram) die niet uit een lijst gehaald worden maar telkens opnieuw berekend, dus ze komen niet steeds terug. Staat de lijst van jouw leerkracht of vak er nog niet tussen? Vraag het CSV-bestand aan je leerkracht (bv. via Smartschool) en klik zelf op <b>"Lijst importeren"</b> hierboven om het toe te voegen &mdash; dat moet maar eenmalig, per toestel of browser. Je kan gerust na elkaar lijsten van verschillende leerkrachten of vakken importeren; ze worden gewoon samengevoegd, niets gaat verloren.</p>
 
     <p style="font-weight:600; margin:16px 0 4px;">Toets</p>
     <p class="hint">Onder START staat een paarse knop <b>TOETS</b>. Bij Wiskunde en Economie: 10 vragen over het gekozen onderdeel. Bij Vaktermen (Vertalen of Uitleg): maximaal 10 termen uit precies één gekozen vak en hoofdstuk. Er is geen hulp of verbetering tussendoor, en je kan elke toets maar één keer starten en moet ze helemaal afwerken. Toon daarna het paarse resultaatscherm aan je leerkracht.</p>
@@ -1199,6 +1201,21 @@
     <div class="modal-close-row">
       <button class="btn btn-ghost" id="confirm-no">Annuleren</button>
       <button class="btn btn-primary" id="confirm-yes">Ja</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXAMENGEGEVENS (leerkracht) -->
+<div class="overlay" id="overlay-exgeg">
+  <div class="modal" style="max-width:420px;">
+    <h3>Gegevens van het examen</h3>
+    <p class="hint">Voor de leerkracht: deze gegevens komen in de hoofding van het examen. Wil je als leerling het examen zelf invullen, klik dan op <b>Annuleren</b>.</p>
+    <div class="exgeg-veld"><label for="exgeg-klas">Klas</label><input type="text" id="exgeg-klas" autocomplete="off"></div>
+    <div class="exgeg-veld"><label for="exgeg-datum">Datum</label><input type="date" id="exgeg-datum"></div>
+    <div class="exgeg-veld"><label for="exgeg-lk">Leerkracht</label><input type="text" id="exgeg-lk" autocomplete="off"></div>
+    <div class="modal-close-row">
+      <button class="btn btn-ghost" id="exgeg-nee" type="button">Annuleren</button>
+      <button class="btn btn-primary" id="exgeg-ja" type="button">OK</button>
     </div>
   </div>
 </div>
@@ -1306,8 +1323,8 @@ const FUNCTIE_CATEGORIES = [
   { id:'domeinbereik', label:'Domein & bereik', uitleg: () => uitlegFunctiesDF('domeinbereik') },
   { id:'teken', label:'Tekenverloop', uitleg: () => uitlegFunctiesDF('teken') },
   { id:'verloop', label:'Stijgen, dalen & extrema', uitleg: () => uitlegFunctiesDF('verloop') },
-  { id:'holbol', label:'Hol, bol & buigpunten', uitleg: () => uitlegFunctiesDF('holbol') },
-  { id:'schema', label:'Verloopschema', uitleg: () => uitlegFunctiesDF('schema') },
+  { id:'holbol', label:'Toenemend, afnemend & buigpunten', uitleg: () => uitlegFunctiesDF('holbol') },
+  { id:'schema', label:'Uitgebreid verloopschema', uitleg: () => uitlegFunctiesDF('schema') },
   { id:'termen', label:'Termen & begrippen', uitleg: () => uitlegFunctiesDF('termen') },
 ];
 const FUNCTIE_AANTAL_OPTIONS = [5, 10, 15, 20];
@@ -1465,9 +1482,11 @@ function parseLinearExpr(str){
   if(!str) return { ok:false };
   let s = normalizeSpokenMath(str).toLowerCase();
   s = s.replace(/\bkeer\b|\bmaal\b/g, '');
+  s = s.replace(/[−–]/g, '-').replace(/½/g, '1/2').replace(/⅓/g, '1/3').replace(/⅔/g, '2/3').replace(/¼/g, '1/4').replace(/¾/g, '3/4');
   s = s.replace(/,/g, '.').replace(/\s+/g, '').replace(/[*·]/g, '');
   s = s.replace(/^[a-z]\(x\)=/, '').replace(/^y=/, '').replace(/^f=/, '');
   if(s === '') return { ok:false };
+  const getal = t => { const d = t.match(/^(-?\d*\.?\d+)\/(\d*\.?\d+)$/); return d ? parseFloat(d[1]) / parseFloat(d[2]) : parseFloat(t); };
   s = s.replace(/(?!^)-/g, '+-');
   const terms = s.split('+').filter(t => t.length > 0);
   let a = 0, b = 0, ok = true, sawX = false;
@@ -1477,11 +1496,11 @@ function parseLinearExpr(str){
       let coef = t.replace('x', '');
       if(coef === '' || coef === '+') coef = '1';
       else if(coef === '-') coef = '-1';
-      const v = parseFloat(coef);
+      const v = getal(coef);
       if(isNaN(v)){ ok = false; return; }
       a += v;
     } else {
-      const v = parseFloat(t);
+      const v = getal(t);
       if(isNaN(v)){ ok = false; return; }
       b += v;
     }
@@ -1522,7 +1541,7 @@ function leesUitdrukking(tekst){
   const SUP = { '⁰':'0', '¹':'1', '²':'2', '³':'3', '⁴':'4', '⁵':'5', '⁶':'6', '⁷':'7', '⁸':'8', '⁹':'9', '⁻':'-', 'ᐟ':'/', 'ⁿ':'n' };
   let t = String(tekst).replace(/\s+/g, ' ').trim();
   t = t.replace(/^.*=/, '');                                   /* "F(x) = …" of "∫ … dx = …": enkel het resultaat */
-  t = t.replace(/[+−-]\s*C\b/g, '').replace(/\bC\b/g, '');      /* de integratieconstante telt niet mee */
+  t = t.replace(/[+−-]\s*(constante|cte|c)\b/gi, '').replace(/\bC\b/g, '');   /* de integratieconstante (+ C of + c) telt niet mee */
   t = t.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻ᐟⁿ]+/g, m => '^(' + [...m].map(c => SUP[c]).join('') + ')');
   t = t.replace(/[−–]/g, '-').replace(/[·×∙]/g, '*').replace(/(\d),(\d)/g, '$1.$2')
     .replace(/½/g, '(1/2)').replace(/⅓/g, '(1/3)').replace(/⅔/g, '(2/3)').replace(/¼/g, '(1/4)').replace(/¾/g, '(3/4)').replace(/\s/g, '');
@@ -1937,6 +1956,7 @@ function dfPraktisch(){
   if(soort === 'bal'){
     const T = randChoice([2, 3, 4]), h0 = 5 * T * T;
     return { tekst:`Een bal valt vanaf een hoogte van ${h0} m naar beneden. De hoogte (in m) na t seconden is h(t) = ${h0} − 5t².`, f:'h',
+      graf:{ xLab:'t (s)', yLab:'h (m)', T, Y:h0, fn: t => h0 - 5 * t * t },
       dom: RR, ber: ivTxt(-Infinity, h0, false, true), pdom: ivTxt(0, T, true, true), pber: ivTxt(0, h0, true, true),
       uitleg:`Wiskundig mag je voor t elk getal invullen: dom h = ℝ. De grafiek is een bergparabool met top (0, ${h0}), dus ber h = ]−∞, ${h0}].\n` +
         `In werkelijkheid begint de val op t = 0 en stopt hij als de bal de grond raakt: ${h0} − 5t² = 0 ⇔ t² = ${T * T} ⇔ t = ${T} (t ≥ 0). Praktisch domein: [0, ${T}].\n` +
@@ -1945,6 +1965,7 @@ function dfPraktisch(){
   if(soort === 'kaars'){
     const c = randChoice([2, 3, 4]), T = randChoice([5, 6, 8, 10]), L0 = c * T;
     return { tekst:`Een kaars is ${L0} cm lang en brandt ${c} cm per uur op. De lengte (in cm) na t uur is L(t) = ${L0} − ${c}t.`, f:'L',
+      graf:{ xLab:'t (uur)', yLab:'L (cm)', T, Y:L0, fn: t => L0 - c * t },
       dom: RR, ber: RR, pdom: ivTxt(0, T, true, true), pber: ivTxt(0, L0, true, true),
       uitleg:`Wiskundig is L een eerstegraadsfunctie: dom L = ℝ en ber L = ℝ.\n` +
         `In werkelijkheid begin je op t = 0 en is de kaars op als L(t) = 0: ${L0} − ${c}t = 0 ⇔ t = ${T}. Praktisch domein: [0, ${T}].\n` +
@@ -1952,10 +1973,33 @@ function dfPraktisch(){
   }
   const v = randChoice([2, 4, 5]), T = randChoice([10, 20, 30]), V = v * T;
   return { tekst:`Een leeg zwembad van ${V} m³ wordt gevuld met ${v} m³ water per uur. Het volume (in m³) na t uur is V(t) = ${v}t.`, f:'V',
+    graf:{ xLab:'t (uur)', yLab:'V (m³)', T, Y:V, fn: t => v * t },
     dom: RR, ber: RR, pdom: ivTxt(0, T, true, true), pber: ivTxt(0, V, true, true),
     uitleg:`Wiskundig is V een eerstegraadsfunctie: dom V = ℝ en ber V = ℝ.\n` +
       `In werkelijkheid begint het vullen op t = 0 en stopt het als het zwembad vol is: ${v}t = ${V} ⇔ t = ${T}. Praktisch domein: [0, ${T}].\n` +
       `Het volume gaat van 0 m³ tot ${V} m³: praktisch bereik [0, ${V}].` };
+}
+function dfPraktischRooster(g, metGrafiek){
+  const stap = m => [1, 2, 5, 10, 20, 50].find(s => m / s <= 10);
+  const sx = stap(g.T), sy = stap(g.Y), nx = Math.ceil(g.T / sx) + 1, ny = Math.ceil(g.Y / sy) + 1;
+  /* vaste tekenruimte: de hokjes passen zich aan het aantal stappen aan */
+  const cx = 320 / nx, cy = 220 / ny, L = 44, B = 30, Tp = 26, W = L + 320 + 60, H = Tp + 220 + B;
+  const X = t => L + t / sx * cx, Y = y => Tp + 220 - y / sy * cy;
+  let o = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="Calibri, Arial, sans-serif" font-size="11">`;
+  const x0 = L, y0 = Tp + 220, x1 = L + 320;
+  for(let i = 0; i <= nx; i++) o += `<line x1="${X(i * sx)}" y1="${Tp}" x2="${X(i * sx)}" y2="${y0}" stroke="#c8c8c8" stroke-width="0.8"/>`;
+  for(let j = 0; j <= ny; j++) o += `<line x1="${x0}" y1="${Y(j * sy)}" x2="${x1}" y2="${Y(j * sy)}" stroke="#c8c8c8" stroke-width="0.8"/>`;
+  o += `<line x1="${x0}" y1="${y0}" x2="${x1 + 14}" y2="${y0}" stroke="#000" stroke-width="1.4"/><path d="M${x1 + 14} ${y0} l-7 -4 v8 z"/>`;
+  o += `<line x1="${x0}" y1="${y0}" x2="${x0}" y2="${Tp - 14}" stroke="#000" stroke-width="1.4"/><path d="M${x0} ${Tp - 14} l-4 7 h8 z"/>`;
+  for(let i = 0; i <= nx; i++) o += `<text x="${X(i * sx)}" y="${y0 + 15}" text-anchor="middle">${i * sx}</text>`;
+  for(let j = 1; j <= ny; j++) o += `<text x="${x0 - 5}" y="${Y(j * sy) + 4}" text-anchor="end">${j * sy}</text>`;
+  o += `<text x="${x1 + 16}" y="${y0 + 15}" font-weight="bold">${g.xLab}</text><text x="${x0 + 8}" y="${Tp - 10}" font-weight="bold">${g.yLab}</text>`;
+  if(metGrafiek){
+    const pts = Array.from({ length: 41 }, (_, k) => k * g.T / 40).map(t => `${X(t).toFixed(1)},${Y(g.fn(t)).toFixed(1)}`);
+    o += `<polyline points="${pts.join(' ')}" fill="none" stroke="#000" stroke-width="2"/>` +
+      [0, g.T].map(t => `<circle cx="${X(t)}" cy="${Y(g.fn(t))}" r="3.5" fill="#000"/>`).join('');
+  }
+  return o + '</svg>';
 }
 function genDBPraktisch(){
   const s = dfPraktisch(), vraagDom = Math.random() < 0.5;
@@ -2287,10 +2331,11 @@ const DEFINITIE_ITEMS = [
   { term:'Tekenschema', definitie:'Een tabel die toont waar f(x) positief (+), negatief (−) of nul is.' },
   { term:'Maximum', definitie:'Een hoogste functiewaarde: daar gaat de functie van stijgen naar dalen.' },
   { term:'Minimum', definitie:'Een laagste functiewaarde: daar gaat de functie van dalen naar stijgen.' },
-  { term:'Hol', definitie:'De grafiek buigt zoals een dalparabool (∪).' },
-  { term:'Bol', definitie:'De grafiek buigt zoals een bergparabool (∩).' },
-  { term:'Verloopschema', definitie:'Een tabel die samenvat waar een functie stijgt of daalt, haar extrema, en waar ze hol of bol is.' },
-  { term:'Buigpunt', definitie:'Een punt waar de grafiek van hol naar bol wisselt of omgekeerd.' },
+  { term:'Toenemend stijgend', definitie:'De functie stijgt steeds sneller: de grafiek wordt steeds steiler.' },
+  { term:'Afnemend dalend', definitie:'De functie daalt steeds trager: de grafiek wordt steeds minder steil.' },
+  { term:'Verloopschema', definitie:'Een tabel die samenvat waar een functie stijgt of daalt en waar haar extrema liggen.' },
+  { term:'Uitgebreid verloopschema', definitie:'Een verloopschema dat ook toont waar de functie toenemend of afnemend stijgt of daalt, met de buigpunten.' },
+  { term:'Buigpunt', definitie:'Een punt waar het stijgen of dalen wisselt van toenemend naar afnemend of omgekeerd.' },
 ];
 function genDefinitie(){
   const idx = randInt(0, DEFINITIE_ITEMS.length - 1);
@@ -2493,13 +2538,28 @@ function fmtHyp(a, h, k){ return a + '/' + (h === 0 ? 'x' : '(' + xMin(h) + ')')
 /* bemonsteren zonder buiten het venster te tekenen (voor asymptoten) */
 function sampleClipped(f, x0, x1, win, n){
   n = n || 240;
+  const binnen = x => { const y = f(x); return isFinite(y) && y >= win.yMin && y <= win.yMax; };
+  /* het punt waar de kromme de boven- of onderrand van het venster raakt (tussen een x binnen en een x buiten),
+     zodat de grafiek tot aan de rand doorloopt en niet in de tekening lijkt te stoppen */
+  const rand = (xIn, xUit) => {
+    for(let k = 0; k < 40; k++){ const m = (xIn + xUit) / 2; if(binnen(m)) xIn = m; else xUit = m; }
+    const yu = f(xUit), yi = f(xIn);
+    return [xIn, isFinite(yu) ? (yu > win.yMax ? win.yMax : win.yMin) : (yi > (win.yMin + win.yMax) / 2 ? win.yMax : win.yMin)];
+  };
   const segs = [];
-  let cur = [];
+  let cur = [], vorigeX = null, vorigeIn = false;
   for(let i = 0; i <= n; i++){
     const x = x0 + (x1 - x0) * i / n;
-    const y = f(x);
-    if(isFinite(y) && y >= win.yMin && y <= win.yMax) cur.push([x, y]);
-    else { if(cur.length > 1) segs.push(cur); cur = []; }
+    if(binnen(x)){
+      if(!cur.length && vorigeX !== null && !vorigeIn) cur.push(rand(x, vorigeX));
+      cur.push([x, f(x)]); vorigeIn = true;
+    }
+    else {
+      if(cur.length) cur.push(rand(vorigeX, x));
+      if(cur.length > 1) segs.push(cur);
+      cur = []; vorigeIn = false;
+    }
+    vorigeX = x;
   }
   if(cur.length > 1) segs.push(cur);
   return segs;
@@ -3280,7 +3340,10 @@ function afgeleideStappen(coefs){
 const VS_OPTIES = {
   stijgt:'↗ (stijgend)', daalt:'↘ (dalend)', max:'max', min:'min',
   hol:'∪ (hol)', bol:'∩ (bol)', bp:'buigpunt',
+  ts:'toenemend stijgend', as:'afnemend stijgend', td:'toenemend dalend', ad:'afnemend dalend',
 };
+/* DF: stijgen/dalen en hol/bol samen in één term (hol + stijgend = toenemend stijgend, enz.) */
+const VS_TERM = { stijgt:{ hol:'ts', bol:'as' }, daalt:{ hol:'ad', bol:'td' } };
 /* verloopschema (tabel) van een derdegraadsfunctie uit maakDerdegraads */
 function verloopschemaData(g){
   const l = g.s - g.d, r = g.s + g.d;
@@ -3289,9 +3352,12 @@ function verloopschemaData(g){
   const verloop = [op ? 'stijgt' : 'daalt', op ? 'max' : 'min', op ? 'daalt' : 'stijgt', '', op ? 'daalt' : 'stijgt', op ? 'min' : 'max', op ? 'stijgt' : 'daalt'];
   const holRechts = g.k > 0;
   const kromming = [holRechts ? 'bol' : 'hol', '', holRechts ? 'bol' : 'hol', 'bp', holRechts ? 'hol' : 'bol', '', holRechts ? 'hol' : 'bol'];
-  return { xs, verloop, kromming };
+  /* uitgebreid verloopschema (DF): één rij met toenemend/afnemend stijgend/dalend, max, min en bp */
+  const uitgebreid = verloop.map((v, i) => (VS_TERM[v] ? VS_TERM[v][kromming[i]] : (v || kromming[i])));
+  return { xs, verloop, kromming, uitgebreid };
 }
-const VS_SYMBOOL = { stijgt:'↗', daalt:'↘', max:'max', min:'min', hol:'∪', bol:'∩', bp:'bp', '':'', '?':'?' };
+const VS_SYMBOOL = { stijgt:'↗', daalt:'↘', max:'max', min:'min', hol:'∪', bol:'∩', bp:'bp', ts:'toen. ↗', as:'afn. ↗', td:'toen. ↘', ad:'afn. ↘', '':'', '?':'?' };
+const VS_LEGENDE = 'toen. ↗ = toenemend stijgend, afn. ↗ = afnemend stijgend, toen. ↘ = toenemend dalend, afn. ↘ = afnemend dalend, bp = buigpunt';
 function verloopschemaTabel(xs, rijen){
   let kop = '<th>x</th><td>−∞</td>';
   xs.forEach(x => { kop += `<td></td><td>${mFmt(x)}</td>`; });
@@ -3302,43 +3368,66 @@ function verloopschemaTabel(xs, rijen){
 function genVerloopschemaZicht(){
   const g = maakDerdegraads();
   const d = verloopschemaData(g);
-  const rijKeuze = Math.random() < 0.55 ? 'verloop' : 'kromming';
-  const cellen = d[rijKeuze];
-  const kandidaten = cellen.map((c, i) => ({ c, i })).filter(o => o.c !== '');
+  const kandidaten = d.uitgebreid.map((c, i) => ({ c, i }));
   const { c: juistCode, i: idx } = randChoice(kandidaten);
-  const metVraag = arr => arr.map((c, i) => (i === idx ? '?' : c));
-  const rijen = [
-    { label:'f', cellen: rijKeuze === 'verloop' ? metVraag(d.verloop) : d.verloop },
-    { label:'kromming', cellen: rijKeuze === 'kromming' ? metVraag(d.kromming) : d.kromming },
-  ];
-  const opties = rijKeuze === 'verloop' ? ['stijgt', 'daalt', 'max', 'min'] : ['hol', 'bol', 'bp', randChoice(['max', 'min'])];
+  const rijen = [{ label:'f', cellen: d.uitgebreid.map((c, i) => (i === idx ? '?' : c)) }];
+  const opties = idx % 2 === 1 ? ['max', 'min', 'bp', randChoice(['ts', 'ad'])] : ['ts', 'as', 'td', 'ad'];
   const juist = VS_OPTIES[juistCode];
-  const plaats = idx % 2 === 1 ? `in x = ${mFmt(d.xs[(idx - 1) / 2])}` : 'op dat interval';
+  const plaats = idx % 2 === 1 ? `In x = ${mFmt(d.xs[(idx - 1) / 2])}` : 'Op dat interval';
   return {
-    kind:'functie', catId:'schema', catLabel:'Verloopschema',
-    promptHtml: `Dit is het verloopschema van de getekende functie.<br>Wat hoort op de plaats van het vraagteken?`,
-    svg: g.svg, extraHtml: verloopschemaTabel(d.xs, rijen),
+    kind:'functie', catId:'schema', catLabel:'Uitgebreid verloopschema',
+    promptHtml: `Dit is het uitgebreid verloopschema van de getekende functie.<br>Wat hoort op de plaats van het vraagteken?`,
+    svg: g.svg, extraHtml: verloopschemaTabel(d.xs, rijen) + `<p class="hint">${VS_LEGENDE}</p>`,
     answerType:'lang', options: shuffle(opties.map(o => VS_OPTIES[o])), correct: juist,
-    explanation: `Lees de grafiek van links naar rechts. ${plaats === 'op dat interval' ? 'Op dat interval' : 'In ' + plaats.slice(3)}: ${juist}.\n↗ = stijgend, ↘ = dalend, max/min = top of dal.\n∪ = hol (buigt als een dal), ∩ = bol (buigt als een berg), bp = buigpunt (wissel tussen hol en bol).`,
+    explanation: `Lees de grafiek van links naar rechts. ${plaats}: ${juist}.\nToenemend stijgend: de grafiek stijgt steeds sneller (wordt steiler). Afnemend stijgend: ze stijgt steeds trager.\nToenemend dalend: ze daalt steeds sneller. Afnemend dalend: ze daalt steeds trager.\nIn een buigpunt wisselt toenemend en afnemend; max en min zijn de toppen.`,
   };
 }
 
-/* hol/bol op zicht: grafiek van een derdegraadsfunctie of een parabool */
+/* toenemend/afnemend stijgen of dalen en buigpunten op zicht (DF): derdegraadsfunctie of parabool */
+const VS_TERM_UITLEG = 'Toenemend stijgend: de grafiek stijgt steeds sneller (wordt steiler). Afnemend stijgend: ze stijgt steeds trager.\nToenemend dalend: ze daalt steeds sneller. Afnemend dalend: ze daalt steeds trager.';
 function genHolBolZicht(){
   if(Math.random() < 0.65){
-    let q;
-    do{ q = genHolBolGrafiek(); } while(!q.svg);
-    return q;
+    const g = maakDerdegraads(), d = verloopschemaData(g);
+    const svg = svgGraphPlus(sampleClipped(g.f, -6, 6, DB_WIN), DB_WIN, {});
+    const r = Math.random();
+    const uitleg = `In het buigpunt (${mFmt(g.s)}, ${mFmt(g.C)}) wisselt de grafiek van ${VS_OPTIES[d.uitgebreid[2]]} naar ${VS_OPTIES[d.uitgebreid[4]]}.`;
+    if(r < 0.3){
+      return {
+        kind:'functie', catId:'holbol', catLabel:'Buigpunt (grafiek)',
+        promptHtml: `Wat is de x-coördinaat van het buigpunt?`, svg,
+        answerType:'kort', checkKind:'number', checkData:{ value:g.s, punt:[g.s, g.C] }, correct:String(g.s),
+        explanation: uitleg + '\nEen buigpunt is een punt waar het stijgen of dalen wisselt van toenemend naar afnemend (of omgekeerd).',
+      };
+    }
+    if(r < 0.5){
+      const juist = pTxt({ x:g.s, y:g.C });
+      return {
+        kind:'functie', catId:'holbol', catLabel:'Buigpunt (grafiek)',
+        promptHtml: `Welk punt is het buigpunt van de grafiek?`, svg,
+        answerType:'lang', options: uniqOpts(juist, [pTxt(g.max), pTxt(g.min), pTxt({ x:g.C, y:g.s })]), correct: juist,
+        explanation: uitleg + '\nOpgepast: een top (maximum of minimum) is geen buigpunt.',
+      };
+    }
+    /* één van de vier intervallen tussen min, bp en max */
+    const k = randChoice([0, 2, 4, 6]), grens = [-Infinity, ...d.xs, Infinity], iv = ivTxt(grens[k / 2], grens[k / 2 + 1], false, false);
+    const juist = VS_OPTIES[d.uitgebreid[k]];
+    return {
+      kind:'functie', catId:'holbol', catLabel:'Toenemend of afnemend (grafiek)',
+      promptHtml: `Hoe verloopt f op ${iv}?`, svg,
+      answerType:'lang', options: ['ts', 'as', 'td', 'ad'].map(c => VS_OPTIES[c]), correct: juist,
+      explanation: `Op ${iv} is f ${juist}.\n${VS_TERM_UITLEG}`,
+    };
   }
   const a = randChoice([-1, 1]) * randChoice([0.5, 1]), p = randInt(-3, 3), top = a > 0 ? randInt(-4, 0) : randInt(0, 4);
   const svg = svgCurveGraph(sampleClipped(x => a * (x - p) * (x - p) + top, -6, 6, DB_WIN), DB_WIN);
   if(Math.random() < 0.5){
-    const juist = a > 0 ? 'Overal hol (∪)' : 'Overal bol (∩)';
+    const rechts = Math.random() < 0.5, iv = rechts ? ivTxt(p, Infinity, false, false) : ivTxt(-Infinity, p, false, false);
+    const code = a > 0 ? (rechts ? 'ts' : 'ad') : (rechts ? 'td' : 'as'), juist = VS_OPTIES[code];
     return {
-      kind:'functie', catId:'holbol', catLabel:'Hol of bol (grafiek)',
-      promptHtml: `Is deze grafiek hol of bol?`, svg,
-      answerType:'lang', options: ['Overal hol (∪)', 'Overal bol (∩)', 'Eerst hol, dan bol', 'Eerst bol, dan hol'], correct: juist,
-      explanation: `Deze parabool is een ${a > 0 ? 'dalparabool: ze buigt overal als een dal → overal hol (∪)' : 'bergparabool: ze buigt overal als een berg → overal bol (∩)'}.`,
+      kind:'functie', catId:'holbol', catLabel:'Toenemend of afnemend (grafiek)',
+      promptHtml: `Hoe verloopt f op ${iv}?`, svg,
+      answerType:'lang', options: ['ts', 'as', 'td', 'ad'].map(c => VS_OPTIES[c]), correct: juist,
+      explanation: `Deze ${a > 0 ? 'dalparabool' : 'bergparabool'} is op ${iv} ${juist}.\n${VS_TERM_UITLEG}`,
     };
   }
   const juist = 'Nee, een parabool heeft geen buigpunt';
@@ -3346,7 +3435,7 @@ function genHolBolZicht(){
     kind:'functie', catId:'holbol', catLabel:'Buigpunt (grafiek)',
     promptHtml: `Heeft deze grafiek een buigpunt?`, svg,
     answerType:'lang', options: [juist, `Ja, in de top (${mFmt(p)}, ${mFmt(top)})`, 'Ja, in de nulwaarden', 'Ja, in het snijpunt met de y-as'], correct: juist,
-    explanation: `De parabool is overal ${a > 0 ? 'hol' : 'bol'}: ze wisselt nooit tussen hol en bol.\nDe top is een ${a > 0 ? 'minimum' : 'maximum'}, geen buigpunt.`,
+    explanation: `Een ${a > 0 ? 'dalparabool daalt afnemend en stijgt daarna toenemend' : 'bergparabool stijgt afnemend en daalt daarna toenemend'}: ze wisselt nooit van toenemend naar afnemend (of omgekeerd).\nDe top is een ${a > 0 ? 'minimum' : 'maximum'}, geen buigpunt.`,
   };
 }
 
@@ -3567,21 +3656,20 @@ function theorieFuncties(){
     <p>Een <b>maximum</b> is een top: daar gaat f van stijgen naar dalen, hier (−1, 3). Een <b>minimum</b> is een dal: daar gaat f van dalen naar stijgen, hier (3, −3). Samen heten ze <b>extrema</b>.</p>
     <p>Opgepast: de grenzen van de intervallen zijn <b>x-waarden</b>, geen y-waarden.</p>
 
-    <h3>4. Hol en bol</h3>
-    <p>Een stuk grafiek is <b>hol (∪)</b> als het buigt zoals een dal (een schaaltje dat water kan opvangen), en <b>bol (∩)</b> als het buigt zoals een berg.</p>
-    <p>In de grafiek hierboven is f <b>bol</b> op ]−∞, 1[ en <b>hol</b> op ]1, +∞[. Een dalparabool is overal hol, een bergparabool overal bol.</p>
+    <h3>4. Toenemend en afnemend stijgen of dalen</h3>
+    <p>Kijk ook <b>hoe snel</b> de grafiek stijgt of daalt:</p>
+    <div class="formule">toenemend stijgend: f stijgt steeds sneller (de grafiek wordt steeds steiler)<br>afnemend stijgend: f stijgt steeds trager<br>toenemend dalend: f daalt steeds sneller<br>afnemend dalend: f daalt steeds trager</div>
+    <p>In de grafiek hierboven is f <b>afnemend stijgend</b> op ]−∞, −1[, <b>toenemend dalend</b> op ]−1, 1[, <b>afnemend dalend</b> op ]1, 3[ en <b>toenemend stijgend</b> op ]3, +∞[.</p>
+    <p>Een dalparabool is eerst afnemend dalend en dan toenemend stijgend; een bergparabool is eerst afnemend stijgend en dan toenemend dalend.</p>
 
     <h3>5. Buigpunten</h3>
-    <p>Een <b>buigpunt</b> is een punt waar de grafiek wisselt van hol naar bol of omgekeerd. Hierboven is dat (1, 0), het open bolletje op de stippellijn.</p>
+    <p>Een <b>buigpunt</b> is een punt waar het stijgen of dalen wisselt van <b>toenemend naar afnemend</b> of omgekeerd. Hierboven is dat (1, 0), het open bolletje op de stippellijn: daar daalt f het snelst.</p>
     <p>Opgepast: een top (maximum of minimum) is <b>geen</b> buigpunt, en een parabool heeft nooit een buigpunt.</p>
 
-    <h3>6. Het verloopschema: alles in één tabel</h3>
-    <p>Je kan alles wat je afleest samenvatten in een <b>verloopschema</b>. Voor de grafiek hierboven:</p>
-    ${verloopschemaTabel([-1, 1, 3], [
-      { label:'f', cellen:['stijgt', 'max', 'daalt', '', 'daalt', 'min', 'stijgt'] },
-      { label:'kromming', cellen:['bol', '', 'bol', 'bp', 'hol', '', 'hol'] },
-    ])}
-    <div class="formule">↗ stijgend &nbsp; ↘ dalend &nbsp; max / min: top / dal<br>∪ hol &nbsp; ∩ bol &nbsp; bp: buigpunt</div>
+    <h3>6. Het uitgebreid verloopschema: alles in één tabel</h3>
+    <p>Je kan alles wat je afleest samenvatten in een <b>uitgebreid verloopschema</b>. Voor de grafiek hierboven:</p>
+    ${verloopschemaTabel([-1, 1, 3], [{ label:'f', cellen:['as', 'max', 'td', 'bp', 'ad', 'min', 'ts'] }])}
+    <div class="formule">toen. ↗ toenemend stijgend &nbsp; afn. ↗ afnemend stijgend<br>toen. ↘ toenemend dalend &nbsp; afn. ↘ afnemend dalend<br>max / min: top / dal &nbsp; bp: buigpunt</div>
   `;
 }
 
@@ -5860,8 +5948,9 @@ function genDpSymmetrie(){
 
 /* ---------- Gedrag op oneindig en asymptoten op een grafiek ---------- */
 /* links/rechts: '+∞', '−∞', een getal (de grafiek nadert tot dat getal) of 'sch' (blijft schommelen) */
-function dpGedragFunctie(){
-  const t = randChoice(['parabool', 'derde', 'hyperbool', 'hyperbool', 'kwadraat', 'exp', 'exp', 'bult', 'sinus']);
+/* metVA = false (DF): enkel grafieken zonder verticale asymptoot, DF kent alleen horizontale asymptoten */
+function dpGedragFunctie(metVA = true){
+  const t = randChoice(metVA ? ['parabool', 'derde', 'hyperbool', 'hyperbool', 'kwadraat', 'exp', 'exp', 'bult', 'sinus'] : ['parabool', 'derde', 'exp', 'exp', 'bult', 'bult', 'sinus']);
   if(t === 'parabool'){
     const a = randChoice([0.3, 0.5, -0.3, -0.5]), p = randInt(-2, 2), q = a > 0 ? randInt(-5, -1) : randInt(1, 5);
     const e = a > 0 ? '+∞' : '−∞';
@@ -5911,9 +6000,9 @@ function dpGedragUitleg(g){
   s += g.ha !== null ? `\nHA: y = ${mFmt(g.ha)}.` : '\nGeen horizontale asymptoot.';
   return s;
 }
-function genDpOneindig(){
-  if(Math.random() < 0.1) return genDpBegrip('oneindig');
-  const g = dpGedragFunctie();
+function genDpOneindig(metVA = true){
+  if(Math.random() < 0.1) return genDpBegrip('oneindig', metVA);
+  const g = dpGedragFunctie(metVA);
   const svg = dpGraf(g.f, g.va);
   const uitleg = dpGedragUitleg(g);
   if(Math.random() < 0.5){
@@ -5925,6 +6014,15 @@ function genDpOneindig(){
       kind:'functie', catId:'dp_oneindig', catLabel:'Gedrag op oneindig',
       promptHtml: `Wat doet f(x) als <b>x → ${rechts ? '+∞' : '−∞'}</b> (heel ver naar ${rechts ? 'rechts' : 'links'})?`, svg,
       answerType:'lang', options: uniqOpts(juist, shuffle(['f(x) → +∞', 'f(x) → −∞', dpGedragTxt(kGok), 'f(x) blijft schommelen', dpGedragTxt(kGok + 1)])), correct: juist,
+      explanation: uitleg,
+    };
+  }
+  if(!metVA){
+    const k = g.ha !== null ? g.ha : randInt(-3, 3), juist = g.ha !== null ? `HA: y = ${mFmt(g.ha)}` : 'Geen horizontale asymptoot';
+    return {
+      kind:'functie', catId:'dp_oneindig', catLabel:'Horizontale asymptoot op een grafiek',
+      promptHtml: 'Heeft deze grafiek een horizontale asymptoot? Zo ja, welke?', svg,
+      answerType:'lang', options: uniqOpts(juist, shuffle([`HA: y = ${mFmt(k)}`, 'Geen horizontale asymptoot', `HA: y = ${mFmt(k + 1)}`, `HA: y = ${mFmt(k - 1)}`, `HA: x = ${mFmt(k)}`])), correct: juist,
       explanation: uitleg,
     };
   }
@@ -6022,8 +6120,8 @@ const DP_BEGRIPPEN = {
   ],
   oneindig: [
     { vraag:'Wat is een horizontale asymptoot?', juist:'Een horizontale rechte y = b waar de grafiek steeds dichter bij komt als x heel groot of heel klein wordt',
-      fout:['Een verticale rechte waar de grafiek wegschiet', 'De hoogste waarde van de functie', 'Het snijpunt met de y-as'] },
-    { vraag:'Wat is een verticale asymptoot?', juist:'Een verticale rechte x = a waar de grafiek naar boven of beneden wegschiet zonder ze te raken',
+      fout:['Een horizontale rechte door de top van de grafiek', 'De hoogste waarde van de functie', 'Het snijpunt met de y-as'] },
+    { va:true, vraag:'Wat is een verticale asymptoot?', juist:'Een verticale rechte x = a waar de grafiek naar boven of beneden wegschiet zonder ze te raken',
       fout:['Een horizontale rechte waar de grafiek dichter bij komt', 'De symmetrieas van de grafiek', 'Een rechte die de grafiek in één punt snijdt'] },
     { vraag:'Wat betekent "gedrag op oneindig"?', juist:'Wat er met f(x) gebeurt als x heel groot (x → +∞) of heel klein (x → −∞) wordt',
       fout:['Waar de grafiek de x-as snijdt', 'Of de functie stijgt of daalt rond x = 0', 'De grootste waarde die f(x) bereikt'] },
@@ -6035,8 +6133,8 @@ const DP_BEGRIPPEN = {
       fout:['De hoogste waarde van de functie', 'Het verschil tussen de top en het dal', 'Het aantal toppen op de grafiek'] },
   ],
 };
-function genDpBegrip(deel){
-  const item = randChoice(DP_BEGRIPPEN[deel]);
+function genDpBegrip(deel, metVA = true){
+  const item = randChoice(DP_BEGRIPPEN[deel].filter(it => metVA || !it.va));
   const label = { sym:'Symmetrie', oneindig:'Gedrag op oneindig', periode:'Periodieke functies' }[deel];
   return { kind:'functie', catId:'dp_' + deel, catLabel:label + ': begrip', promptHtml: item.vraag,
     answerType:'lang', options: shuffle([item.juist, ...item.fout]), correct: item.juist, explanation: item.juist + '.' };
@@ -6057,7 +6155,7 @@ function buildDpVraag(){
 function theorieDfPlus(){
   const even = dpGraf(x => 0.25 * x * x - 3);
   const oneven = dpGraf(x => 0.05 * x ** 3 - x, [], { dots:[{ x:2, y:-1.6 }, { x:-2, y:1.6 }] });
-  const hyp = dpGraf(x => 2 / (x - 1) + 3, [1], { vlines:[1], hlines:[3] });
+  const bult = dpGraf(x => 8 / ((x - 1) ** 2 + 2) - 2, [], { hlines:[-2] });
   const per = dpLijn([-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6].map(x => [x, [1, 3, -1][((x % 3) + 3) % 3]]));
   return `
     <h3>1. Even en oneven functies</h3>
@@ -6071,10 +6169,10 @@ function theorieDfPlus(){
     <h3>3. Gedrag op oneindig</h3>
     <p>Kijk wat er met f(x) gebeurt heel ver naar rechts (<b>x → +∞</b>) en heel ver naar links (<b>x → −∞</b>). Er zijn vier mogelijkheden:</p>
     <div class="formule">f(x) → +∞ : de grafiek gaat onbeperkt omhoog<br>f(x) → −∞ : de grafiek gaat onbeperkt omlaag<br>f(x) nadert tot b : de grafiek komt steeds dichter bij y = b<br>f(x) blijft schommelen : de grafiek blijft op en neer gaan</div>
-    <h3>4. Asymptoten op een grafiek</h3>
-    <p>Een <b>horizontale asymptoot</b> (HA) y = b is een horizontale rechte waar de grafiek steeds dichter bij komt voor x → +∞ of x → −∞. Een <b>verticale asymptoot</b> (VA) x = a is een verticale rechte waar de grafiek naar boven of beneden wegschiet, zonder ze ooit te raken.</p>
-    <div class="theorie-svg">${hyp}</div>
-    <p>Hier: VA x = 1 en HA y = 3 (in stippellijn). Op de toets staan de asymptoten niet getekend: je moet ze zelf zien.</p>
+    <h3>4. Horizontale asymptoot op een grafiek</h3>
+    <p>Een <b>horizontale asymptoot</b> (HA) y = b is een horizontale rechte waar de grafiek steeds dichter bij komt voor x → +∞ of x → −∞. Je vindt ze dus via het gedrag op oneindig: nadert f(x) tot b, dan is y = b een HA.</p>
+    <div class="theorie-svg">${bult}</div>
+    <p>Hier: links en rechts nadert f(x) tot −2, dus HA y = −2 (in stippellijn). Op de toets staat de asymptoot niet getekend: je moet ze zelf zien.</p>
     <h3>5. Periodieke functies</h3>
     <p>Een functie is <b>periodiek</b> als haar grafiek zich na een vaste afstand steeds op dezelfde manier herhaalt. De kleinste zo'n afstand is de <b>periode</b> p: f(x + p) = f(x).</p>
     <div class="theorie-svg">${per}</div>
@@ -6096,10 +6194,10 @@ const DP_BLAD = {
     { svg: () => dpGraf(x => 3 * Math.sin(Math.PI * x / 4) - 1.5), opl:'geen van beide (verschoven: gaat niet door de oorsprong)' },
   ],
   B: [
-    { f: x => 2 / (x - 2) + 1, va:[2], ha:1, links:1, rechts:1 },
+    { f: x => 1 - 6 / ((x - 2) ** 2 + 2), va:[], ha:1, links:1, rechts:1 },
     { f: x => -0.3 * (x + 1) ** 2 + 4, va:[], ha:null, links:'−∞', rechts:'−∞' },
     { f: x => -1 + 2 ** (x - 1), va:[], ha:-1, links:-1, rechts:'+∞' },
-    { f: x => 3 / ((x + 1) ** 2) - 2, va:[-1], ha:-2, links:-2, rechts:-2 },
+    { f: x => -2 + 2 ** (-(x + 1)), va:[], ha:-2, links:'+∞', rechts:-2 },
     { f: x => 0.1 * x ** 3 - 1.5 * x + 1, va:[], ha:null, links:'−∞', rechts:'+∞' },
     { f: x => 1 + 2 * Math.sin(Math.PI * x / 2), va:[], ha:null, links:'sch', rechts:'sch' },
   ],
@@ -6116,7 +6214,7 @@ function cursusDfPlus(){
   const graf = (nr, svg, vraag) => `<div class="cg"><div class="cg-nr">${nr}</div>${svg}${vraag}</div>`;
   const lijn = t => `<div class="cg-lijn">${t}</div>`;
   const A = DP_BLAD.A.map((o, i) => graf('A' + (i + 1), o.svg(), lijn('even / oneven / geen van beide')));
-  const B = DP_BLAD.B.map((o, i) => graf('B' + (i + 1), dpGraf(o.f, o.va), lijn('x → −∞: f(x) …') + lijn('x → +∞: f(x) …') + lijn('VA: …') + lijn('HA: …')));
+  const B = DP_BLAD.B.map((o, i) => graf('B' + (i + 1), dpGraf(o.f, o.va), lijn('x → −∞: f(x) …') + lijn('x → +∞: f(x) …') + lijn('HA: …')));
   const C = DP_BLAD.C.map((o, i) => graf('C' + (i + 1), o.svg(), lijn('periodiek? ja / nee') + lijn('periode: …')));
   const kort = g => g === 'sch' ? 'blijft schommelen' : typeof g === 'number' ? `nadert tot ${mFmt(g)}` : g;
   return `
@@ -6128,13 +6226,13 @@ function cursusDfPlus(){
 <h2 class="nieuwe-pagina">Voorbeelden</h2>
 <div class="cg-rooster">
   <div class="cg"><div class="cg-nr">Voorbeeld 1 – Symmetrie</div>${dpLijn([[-6, 1], [-5, 3], [-4, -1], [-3, 2], [-2, -2], [-1, 0], [0, 3], [1, 0], [2, -2], [3, 2], [4, -1], [5, 3], [6, 1]])}</div>
-  <div class="cg"><div class="cg-nr">Voorbeeld 2 – Gedrag op oneindig</div>${dpGraf(x => -1 / (x - 1) - 2, [1])}</div>
+  <div class="cg"><div class="cg-nr">Voorbeeld 2 – Gedrag op oneindig</div>${dpGraf(x => 6 / ((x + 1) ** 2 + 2) - 2)}</div>
   <div class="cg"><div class="cg-nr">Voorbeeld 3 – Periode</div>${dpLijn([-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6].map(x => [x, [-2, 1, 3, 1][((x % 4) + 4) % 4]]))}</div>
 </div>
 <p><b>Voorbeeld 1.</b> Is de functie even, oneven of geen van beide?</p>
 <div class="pv-oplossing"><b>Oplossing:</b> even. Kijk naar punten met tegengestelde x: f(1) = 0 en f(−1) = 0, f(2) = −2 en f(−2) = −2, f(5) = 3 en f(−5) = 3, … Bij x en −x hoort telkens dezelfde y: de grafiek is spiegelsymmetrisch t.o.v. de y-as.</div>
-<p><b>Voorbeeld 2.</b> Beschrijf het gedrag op oneindig en geef de asymptoten.</p>
-<div class="pv-oplossing"><b>Oplossing:</b> heel ver naar links en heel ver naar rechts komt de grafiek steeds dichter bij de rechte y = −2: x → −∞ en x → +∞: f(x) nadert tot −2, dus HA y = −2. Bij x = 1 schiet de grafiek omhoog (links) en omlaag (rechts) zonder die rechte te raken: VA x = 1.</div>
+<p><b>Voorbeeld 2.</b> Beschrijf het gedrag op oneindig en geef de horizontale asymptoot.</p>
+<div class="pv-oplossing"><b>Oplossing:</b> heel ver naar links en heel ver naar rechts komt de grafiek steeds dichter bij de rechte y = −2: x → −∞ en x → +∞: f(x) nadert tot −2, dus HA y = −2.</div>
 <p><b>Voorbeeld 3.</b> Is de functie periodiek? Zo ja, wat is de periode?</p>
 <div class="pv-oplossing"><b>Oplossing:</b> ja. De top in (2, 3) komt terug in (6, 3) en in (−2, 3): het stuk grafiek herhaalt zich na 4 eenheden. De periode is 4, dus f(x + 4) = f(x).</div>
 
@@ -6148,7 +6246,7 @@ function cursusDfPlus(){
 <p><b>A10.</b> f is oneven en gedefinieerd in 0. Hoeveel is f(0)? Waarom? ……………………………………………</p>
 
 <h3 class="nieuwe-pagina">Reeks B – Gedrag op oneindig en asymptoten</h3>
-<p>Vul aan: wat doet f(x) als x → −∞ en als x → +∞? Welke verticale en horizontale asymptoten heeft de grafiek (schrijf "geen" als er geen is)?</p>
+<p>Vul aan: wat doet f(x) als x → −∞ en als x → +∞? Welke horizontale asymptoot heeft de grafiek (schrijf "geen" als er geen is)?</p>
 <div class="cg-rooster">${B.join('')}</div>
 
 <h3 class="nieuwe-pagina">Reeks C – Periodieke functies</h3>
@@ -6166,7 +6264,7 @@ ${cTabel(['Nr', 'Oplossing'], DP_BLAD.A.map((o, i) => ['A' + (i + 1), o.opl]).co
   ['A10', 'f(0) = 0: het punt (0, f(0)) moet op zichzelf terechtkomen bij een halve draai om de oorsprong, dus f(0) = −f(0)'],
 ]))}
 <h3>Reeks B</h3>
-${cTabel(['Nr', 'x → −∞', 'x → +∞', 'VA', 'HA'], DP_BLAD.B.map((o, i) => ['B' + (i + 1), kort(o.links), kort(o.rechts), o.va.length ? 'x = ' + mFmt(o.va[0]) : 'geen', o.ha !== null ? 'y = ' + mFmt(o.ha) : 'geen']))}
+${cTabel(['Nr', 'x → −∞', 'x → +∞', 'HA'], DP_BLAD.B.map((o, i) => ['B' + (i + 1), kort(o.links), kort(o.rechts), o.ha !== null ? 'y = ' + mFmt(o.ha) : 'geen']))}
 <h3>Reeks C</h3>
 ${cTabel(['Nr', 'Oplossing'], DP_BLAD.C.map((o, i) => ['C' + (i + 1), o.opl]).concat([
   ['C7', 'f(12) = f(2 + 2 · 5) = 4 en f(−3) = f(2 − 5) = 4'],
@@ -7866,7 +7964,9 @@ function examenKans(){
     hulp:'Rekentoestel toegelaten. Noteer al je tussenstappen: een antwoord zonder berekening levert geen punten op. Geef kansen als breuk of afgerond op 4 cijfers na de komma.' };
 }
 /* ---------- examen Wiskunde DF: functies basis, functies extra (symmetrie, gedrag op oneindig,
-   asymptoten) en het differentiequotiënt (50 punten) ---------- */
+   asymptoten) en het differentiequotiënt. Met df5 (het examen 5 DF): een extra vraag over het snijpunt van twee
+   rechten en 1 punt per antwoord, het totaal is dan wat het is. Zonder df5 (deel A van het examen 5 DS): de
+   oorspronkelijke puntenverdeling ---------- */
 /* gebroken lijn op een domein [a, b] of [a, b[ met nulwaarden enkel in roosterpunten en zonder horizontale stukken */
 function pxDfZigzag(){
   for(;;){
@@ -7881,13 +7981,112 @@ function pxDfZigzag(){
     if(nul.length >= 2 && nul.length <= 3 && pts.some(p => p[1] > 0) && pts.some(p => p[1] < 0) && keer.length >= 2 && keer.length <= 4) return { a, b, pts, nul, keer, rOpen: Math.random() < 0.5 };
   }
 }
-/* leeg visgraatdiagram: x-waarden bovenaan, tekens of pijlen eronder */
-function pxVisgraat(rij2){
-  const leeg = '<td></td>'.repeat(11);
-  return `<table class="px-sam px-visgraat"><tr><th>x</th>${leeg}</tr><tr><th>${rij2}</th>${leeg}</tr></table>`;
+/* leeg schema zonder vakjes: x boven de streep, de andere rijen eronder; de leerling vult alles zelf in */
+function pxVisgraat(...rijen){
+  return `<table class="px-sam px-visgraat">${['x', ...rijen].map(r => `<tr><th>${r}</th><td></td></tr>`).join('')}</table>`;
 }
-function examenDF(){
+/* y = mx + q netjes uitgeschreven (m, q geheel) */
+function dfLin(m, q, x){
+  x = x || 'x';
+  const mT = m === 1 ? '' : m === -1 ? '−' : mFmt(m);
+  return q === 0 ? `${mT}${x}` : `${mT}${x} ${q < 0 ? '−' : '+'} ${Math.abs(q)}`;
+}
+/* m₁x + q₁ = m₂x + q₂ oplossen, stap voor stap */
+function dfLinStappen(m1, q1, m2, q2, x){
+  x = x || 'x';
+  const dm = m1 - m2, dq = q2 - q1;
+  const links = dm === 1 ? x : dm === -1 ? '−' + x : mFmt(dm) + x;
+  return `${dfLin(m1, q1, x)} = ${dfLin(m2, q2, x)} ⇔ ${links} = ${mFmt(dq)} ⇔ ${x} = ${mFmt(dq / dm)}`;
+}
+/* vraagstukken met twee lineaire functies (geen prijs/hoeveelheid of vraag en aanbod) */
+const DF_SNIJ_CONTEXT = [
+  () => { /* spaarpot */
+    const x0 = randInt(6, 12), r1 = randInt(3, 5), r2 = randChoice([7, 8, 10]), a2 = randChoice([5, 10, 15, 20]), a1 = a2 + (r2 - r1) * x0;
+    return { m1:r1, q1:a1, m2:r2, q2:a2, x0, y0: a2 + r2 * x0, f:'L', g:'T', A:'Lies', B:'Tom',
+      tekst:`Lies heeft € ${a1} in haar spaarpot en spaart elke week € ${r1} bij. Tom heeft € ${a2} in zijn spaarpot en spaart elke week € ${r2} bij. Noem x het aantal weken.`,
+      voorschrift:'Stel voor Lies en voor Tom een functievoorschrift op dat het bedrag in de spaarpot na x weken geeft.',
+      wanneer:'Na hoeveel weken hebben Lies en Tom evenveel geld in hun spaarpot?', hoeveel:'Hoeveel geld heeft elk van hen dan?',
+      antw:(x, y) => `Na ${x} weken hebben ze allebei € ${y}.` };
+  },
+  () => { /* twee kaarsen */
+    const x0 = randInt(2, 6), d2 = randInt(1, 2), d1 = d2 + randInt(1, 3), y0 = randInt(4, 12), h2 = y0 + d2 * x0, h1 = y0 + d1 * x0;
+    return { m1:-d1, q1:h1, m2:-d2, q2:h2, x0, y0, f:'h', g:'k', A:'kaars A', B:'kaars B',
+      tekst:`Kaars A is ${h1} cm lang en brandt elk uur ${d1} cm op. Kaars B is ${h2} cm lang en brandt elk uur ${d2} cm op. Beide kaarsen worden tegelijk aangestoken. Noem x het aantal uur.`,
+      voorschrift:'Stel voor elke kaars een functievoorschrift op dat de lengte (in cm) na x uur geeft.',
+      wanneer:'Na hoeveel uur zijn beide kaarsen even lang?', hoeveel:'Hoe lang is elke kaars dan?',
+      antw:(x, y) => `Na ${x} uur zijn beide kaarsen ${y} cm lang.` };
+  },
+  () => { /* een vat loopt leeg, een ander vat wordt gevuld */
+    const x0 = randInt(5, 15), d = randInt(2, 5), f = randInt(1, 3), v2 = randChoice([0, 10, 20, 30]), y0 = v2 + f * x0, v1 = y0 + d * x0;
+    return { m1:-d, q1:v1, m2:f, q2:v2, x0, y0, f:'A', g:'B', A:'vat A', B:'vat B',
+      tekst:`Vat A bevat ${v1} liter water en loopt leeg met ${d} liter per minuut. Vat B bevat ${v2 ? v2 + ' liter water' : 'nog geen water'} en wordt gevuld met ${f} liter per minuut. Beide kranen gaan tegelijk open. Noem x het aantal minuten.`,
+      voorschrift:'Stel voor elk vat een functievoorschrift op dat de hoeveelheid water (in liter) na x minuten geeft.',
+      wanneer:'Na hoeveel minuten zit er in beide vaten evenveel water?', hoeveel:'Hoeveel liter water zit er dan in elk vat?',
+      antw:(x, y) => `Na ${x} minuten zit er in beide vaten ${y} liter.` };
+  },
+  () => { /* twee planten */
+    const x0 = randInt(4, 10), g1 = randInt(1, 2), g2 = g1 + randInt(1, 3), h2 = randInt(3, 8), h1 = h2 + (g2 - g1) * x0;
+    return { m1:g1, q1:h1, m2:g2, q2:h2, x0, y0: h2 + g2 * x0, f:'p', g:'z', A:'de plant van Sara', B:'de plant van Jonas',
+      tekst:`De plant van Sara is ${h1} cm hoog en groeit elke week ${g1} cm. De plant van Jonas is ${h2} cm hoog en groeit elke week ${g2} cm. Noem x het aantal weken.`,
+      voorschrift:'Stel voor elke plant een functievoorschrift op dat de hoogte (in cm) na x weken geeft.',
+      wanneer:'Na hoeveel weken zijn beide planten even hoog?', hoeveel:'Hoe hoog is elke plant dan?',
+      antw:(x, y) => `Na ${x} weken zijn beide planten ${y} cm hoog.` };
+  },
+];
+/* rechte y = mx + q met gehele snijpunten: buiten = true → het snijpunt met de y-as valt buiten het rooster (|q| ≥ 7),
+   het snijpunt met de x-as ligt er wel in */
+function dfRechte(buiten){
+  let m, x0, q;
+  do{
+    m = buiten ? randChoice([-4, -3, -2, 2, 3, 4]) : randChoice([-3, -2, -1, 1, 2, 3]);
+    x0 = randNonZero(buiten ? -4 : -5, buiten ? 4 : 5); q = -m * x0;
+  } while(buiten ? Math.abs(q) < 7 || Math.abs(q) > 14 : Math.abs(q) > 5);
+  return { m, q, x0 };
+}
+const dfRechteSvg = (r, metLijn) => svgCurveGraph(metLijn ? sampleClipped(x => r.m * x + r.q, -6, 6, DB_WIN) : [], DB_WIN);
+/* 5 DF: een rechte tekenen bij een gegeven voorschrift, en het voorschrift opstellen bij een getekende rechte */
+function dfRechteGrafiekVragen(){
+  const t1 = dfRechte(false), t2 = dfRechte(true), o1 = dfRechte(false), o2 = dfRechte(true);
+  const graf = svg => `<div class="px-midden px-graf">${svg}</div>`;
+  const tweedePunt = r => { const x = r.x0 + (r.x0 > 0 ? -1 : 1); return `(${mFmt(x)}, ${mFmt(r.m * x + r.q)})`; };
+  const tekenen = ['Een rechte tekenen', 2,
+    `<p>a)&nbsp; Teken de grafiek van f(x) = ${dfLin(t1.m, t1.q)}.</p>${graf(dfRechteSvg(t1, false))}` +
+    `<p>b)&nbsp; Teken de grafiek van g(x) = ${dfLin(t2.m, t2.q)}.</p>${graf(dfRechteSvg(t2, false))}`,
+    `a) snijpunt met de y-as (0, ${mFmt(t1.q)}), snijpunt met de x-as (${mFmt(t1.x0)}, 0) (1)${graf(dfRechteSvg(t1, true))}` +
+    `b) het snijpunt met de y-as (0, ${mFmt(t2.q)}) valt buiten het rooster: gebruik de nulwaarde (${mFmt(t2.x0)}, 0) en een tweede punt, bv. ${tweedePunt(t2)} (1)${graf(dfRechteSvg(t2, true))}`];
+  const opstellen = ['Functievoorschrift uit een grafiek', 2,
+    `<p>a)&nbsp; Stel het functievoorschrift op van de getekende rechte r.</p>${graf(dfRechteSvg(o1, true))}${pxLijnen(2)}` +
+    `<p>b)&nbsp; Stel het functievoorschrift op van de getekende rechte s.</p>${graf(dfRechteSvg(o2, true))}${pxLijnen(3)}`,
+    `a) b = ${mFmt(o1.q)} (snijpunt met de y-as), rico = ${mFmt(o1.m)}, dus r: y = ${dfLin(o1.m, o1.q)} (1)<br>` +
+    `b) rico uit (${mFmt(o2.x0)}, 0) en ${tweedePunt(o2)}: ${mFmt(o2.m)}; door (${mFmt(o2.x0)}, 0): 0 = ${mFmt(o2.m)} · ${dqTussen(o2.x0)} + b ⇔ b = ${mFmt(o2.q)}, dus s: y = ${dfLin(o2.m, o2.q)} (1)`];
+  return [tekenen, opstellen];
+}
+function dfSnijpuntVraag(){
+  /* a) twee rechten met een geheel snijpunt */
+  let m1, m2, q1, q2, x0, y0;
+  do{
+    x0 = randNonZero(-4, 4); y0 = randInt(-5, 5);
+    m1 = randNonZero(-3, 3); m2 = randNonZero(-3, 3);
+    q1 = y0 - m1 * x0; q2 = y0 - m2 * x0;
+  } while(m1 === m2 || q1 === 0 || q2 === 0 || Math.abs(q1) > 10 || Math.abs(q2) > 10);
+  /* b) vraagstuk */
+  const c = randChoice(DF_SNIJ_CONTEXT)();
+  const vb = (n, m, q) => `${n}(x) = ${dfLin(m, q)}`;
+  return ['Snijpunt van twee rechten', 5,
+    `<p>a)&nbsp; Bereken het snijpunt van de rechten r: y = ${dfLin(m1, q1)} en s: y = ${dfLin(m2, q2)}.</p>${pxLijnen(3)}` +
+    `<p>${c.tekst}</p>` +
+    `<p>b)&nbsp; ${c.voorschrift}</p>${pxLijn2(`${c.A}: ${c.f}(x) =`, `${c.B}: ${c.g}(x) =`)}` +
+    `<p>c)&nbsp; ${c.wanneer} Schrijf je berekening op.</p>${pxLijnen(3)}` +
+    `<p>d)&nbsp; ${c.hoeveel}</p>${pxLijnen(2)}`,
+    `a) ${dfLinStappen(m1, q1, m2, q2)}; y = ${dfLin(m1, q1).replace('x', ' · ' + dqTussen(x0)).replace(/^ · /, '').replace(/^− · /, '−')} = ${mFmt(y0)}, dus het snijpunt is S(${mFmt(x0)}, ${mFmt(y0)}) (1)<br>` +
+    `b) ${vb(c.f, c.m1, c.q1)} (1)<br>&nbsp;&nbsp;&nbsp; ${vb(c.g, c.m2, c.q2)} (1)<br>` +
+    `c) ${c.f}(x) = ${c.g}(x): ${dfLinStappen(c.m1, c.q1, c.m2, c.q2)} (1)<br>` +
+    `d) ${c.f}(${c.x0}) = ${c.g}(${c.x0}) = ${c.y0}. ${c.antw(c.x0, c.y0)} (1)`];
+}
+const examenDF5 = () => examenDF(true);
+function examenDF(df5){
   const vragen = [], nl = t => t.replace(/(^|[\s(=·])-/g, '$1−').replace(/\n/g, '<br>');
+  const P = (oud, nieuw) => (df5 ? nieuw : oud);
   /* 1. rechten */
   {
     let m, q, x1, x2, y1, y2;
@@ -7897,14 +8096,27 @@ function examenDF(){
     } while(!Number.isInteger(y1) || !Number.isInteger(y2) || q === 0);
     const mTxt = m === 0.5 ? '1/2' : m === -0.5 ? '−1/2' : mFmt(m), mT = m === 0.5 ? '½' : m === -0.5 ? '−½' : m === 1 ? '' : m === -1 ? '−' : mFmt(m);
     const vgl = `y = ${mT}x ${q < 0 ? '−' : '+'} ${Math.abs(q)}`;
-    vragen.push(['Rechten', 4,
-      `<p>De rechte r gaat door de punten A(${mFmt(x1)}, ${mFmt(y1)}) en B(${mFmt(x2)}, ${mFmt(y2)}).</p>` +
-      `<p>a)&nbsp; Bereken de richtingscoëfficiënt van r.</p>${pxLijnen(2)}<p>b)&nbsp; Bepaal het functievoorschrift van r.</p>${pxLijnen(2)}<p>c)&nbsp; Bereken de nulwaarde van de functie f(x) = ${vgl.slice(4)}.</p>${pxLijnen(2)}`,
-      `a) m = (${mFmt(y2)} − ${dqTussen(y1)}) / (${mFmt(x2)} − ${dqTussen(x1)}) = ${mFmt(y2 - y1)} / ${x2 - x1} = ${mTxt} (1)<br>` +
-      `b) f(x) = ${mT}x + q door A: ${mFmt(y1)} = ${mTxt} · ${dqTussen(x1)} + q ⇔ q = ${mFmt(q)}, dus f(x) = ${vgl.slice(4)} (2)<br>c) ${vgl.slice(4)} = 0 ⇔ x = ${dqBreuk(-q * 2, m * 2)} (1)`]);
+    const vrA = `<p>De rechte r gaat door de punten A(${mFmt(x1)}, ${mFmt(y1)}) en B(${mFmt(x2)}, ${mFmt(y2)}).</p>` +
+      `<p>a)&nbsp; Bereken de richtingscoëfficiënt van r.</p>${pxLijnen(2)}<p>b)&nbsp; Bepaal het functievoorschrift van r.</p>${pxLijnen(2)}`;
+    const slA = `a) m = (${mFmt(y2)} − ${dqTussen(y1)}) / (${mFmt(x2)} − ${dqTussen(x1)}) = ${mFmt(y2 - y1)} / ${x2 - x1} = ${mTxt} (1)<br>` +
+      `b) f(x) = ${mT}x + q door A: ${mFmt(y1)} = ${mTxt} · ${dqTussen(x1)} + q ⇔ q = ${mFmt(q)}, dus f(x) = ${vgl.slice(4)} (${P(2, 1)})`;
+    if(df5){
+      /* 5 DF: de nulwaarde is een aparte vraag over een andere functie, zodat ze niet over r lijkt te gaan */
+      vragen.push(['Rechten', 2, vrA, slA]);
+      let m2, q2;
+      do{ m2 = randNonZero(-5, 5); q2 = randNonZero(-12, 12); } while(Math.abs(m2) === 1 || (m2 === m && q2 === q) || q2 % m2 === 0 && Math.abs(q2 / m2) > 6);
+      vragen.push(['Nulwaarde van een functie', 1,
+        `<p>Bereken de nulwaarde van de functie g(x) = ${dfLin(m2, q2)}.</p>${pxLijnen(2)}`,
+        `${dfLin(m2, q2)} = 0 ⇔ ${mFmt(m2)}x = ${mFmt(-q2)} ⇔ x = ${dqBreuk(-q2, m2)} (1)`]);
+      vragen.push(...dfRechteGrafiekVragen());
+    }
+    else vragen.push(['Rechten', 4, vrA + `<p>c)&nbsp; Bereken de nulwaarde van de functie f(x) = ${vgl.slice(4)}.</p>${pxLijnen(2)}`,
+      slA + `<br>c) ${vgl.slice(4)} = 0 ⇔ x = ${dqBreuk(-q * 2, m * 2)} (1)`]);
   }
-  /* 2. hoeveel nulwaarden kan een veeltermfunctie van graad 0 tot 5 hebben? */
-  {
+  /* 1b. (enkel 5 DF) snijpunt van twee rechten: eerst rechtstreeks, dan in een vraagstuk */
+  if(df5) vragen.push(dfSnijpuntVraag());
+  /* 2. hoeveel nulwaarden kan een veeltermfunctie van graad 0 tot 5 hebben? (niet in het examen 5 DF) */
+  if(!df5){
     const graden = [0, 1, 2, 3, 4, 5];
     vragen.push(['Aantal nulwaarden', 3,
       `<p>Hoeveel nulwaarden kan een veeltermfunctie van de volgende graad hebben? Vul de tabel in.</p>` +
@@ -7945,32 +8157,34 @@ function examenDF(){
       (y1 > y0 ? stijg : daal).push(ivTxt(kp[i], kp[i + 1], true, !(rOpen && kp[i + 1] === b)));
     }
     const ext = keer.map(p => `${p[1] > pts.find(q => q[0] === p[0] - 1)[1] ? 'maximum' : 'minimum'} (${mFmt(p[0])}, ${mFmt(p[1])})`);
-    vragen.push(['Een grafiek aflezen', 9,
+    vragen.push(['Een grafiek aflezen', P(9, 7),
       `<p>Hieronder staat de volledige grafiek van een functie f.</p><div class="px-midden px-graf">${svg}</div>` +
       `${pxLijn2('a)&nbsp; dom f =', 'b)&nbsp; ber f =')}${pxLijn2(`c)&nbsp; f(${mFmt(kx)}) =`, 'd)&nbsp; nulwaarden:')}` +
-      `<p>e)&nbsp; Maak het tekenschema van f.</p>${pxVisgraat('f(x)')}<p>f)&nbsp; Waar stijgt f en waar daalt f? Vul het schema in met ↗ en ↘.</p>${pxVisgraat('f')}` +
-      `<p>g)&nbsp; Geef de coördinaten van alle (lokale) maxima en minima. De eindpunten van de grafiek tellen niet mee.</p>${pxLijnen(2)}`,
+      `<p>e)&nbsp; Maak het tekenschema van f.</p>${pxVisgraat('f(x)')}<p>f)&nbsp; Geef de coördinaten van alle (lokale) maxima en minima. De eindpunten van de grafiek tellen niet mee.</p>${pxLijnen(2)}` +
+      `<p>g)&nbsp; Maak het verloopschema van f.</p>${pxVisgraat('f')}`,
       `a) dom f = ${ivTxt(a, b, true, !rOpen)} (1)<br>b) ber f = ${ivTxt(lo, hi, loDicht, hiDicht)} (1)<br>c) f(${mFmt(kx)}) = ${mFmt(ky)} (1)<br>d) ${nul.slice(0, -1).map(mFmt).join(', ')} en ${mFmt(nul[nul.length - 1])} (1)<br>` +
-      `e) ${tekenTxt} (2)<br>f) stijgt op ${stijg.join(' en ')}; daalt op ${daal.join(' en ')} (2)<br>g) ${ext.join(', ')} (1)`]);
+      `e) ${tekenTxt} (${P(2, 1)})<br>f) ${ext.join(', ')} (1)<br>g) stijgt op ${stijg.join(' en ')}; daalt op ${daal.join(' en ')} (${P(2, 1)})`]);
   }
   /* 5. domein en praktisch domein */
   {
     const pr = dfPraktisch();
-    vragen.push(['Domein en praktisch domein', 5,
+    const pG = pr.graf, pBegin = pG.fn(0), pEind = pG.fn(pG.T);
+    vragen.push(['Domein en praktisch domein', P(5, 5),
       `<p>${pr.tekst}</p>${pxLijn2(`a)&nbsp; dom ${pr.f} =`, `b)&nbsp; ber ${pr.f} =`)}<p>c)&nbsp; Wat is het praktisch domein van ${pr.f}? Leg uit.</p>${pxLijnen(2)}` +
-      `<p>d)&nbsp; Wat is het praktisch bereik van ${pr.f}? Leg uit.</p>${pxLijnen(2)}`,
-      `a) dom ${pr.f} = ${pr.dom} (1)<br>b) ber ${pr.f} = ${pr.ber} (1)<br>c) praktisch domein ${pr.pdom} (2)<br>d) praktisch bereik ${pr.pber} (1)<br>${nl(pr.uitleg)}`]);
+      `<p>d)&nbsp; Wat is het praktisch bereik van ${pr.f}? Leg uit.</p>${pxLijnen(2)}` +
+      (df5 ? `<p>e)&nbsp; Teken de grafiek van ${pr.f} op het praktisch domein.</p><div class="px-midden px-groot">${dfPraktischRooster(pG, false)}</div>` : ''),
+      `a) dom ${pr.f} = ${pr.dom} (1)<br>b) ber ${pr.f} = ${pr.ber} (1)<br>c) praktisch domein ${pr.pdom} (${P(2, 1)})<br>d) praktisch bereik ${pr.pber} (1)<br>${nl(pr.uitleg)}` +
+      (df5 ? `<br>e) de grafiek loopt van (0, ${pBegin}) tot (${pG.T}, ${pEind}) (1)<div class="px-midden px-groot">${dfPraktischRooster(pG, true)}</div>` : '')]);
   }
   /* 6. verloopschema van een derdegraadsfunctie op zicht */
   {
     const g = maakDerdegraads(), d = verloopschemaData(g);
-    const leeg = '<td></td>'.repeat(9);
-    vragen.push(['Verloopschema', 5,
-      `<p>De grafiek van f is getekend.</p><div class="px-midden px-graf">${g.svg}</div>` +
-      `${pxLijn2('a)&nbsp; maximum:', 'minimum:')}${pxLijn('b)&nbsp; buigpunt:')}<p>c)&nbsp; Vul het verloopschema volledig in: de x-waarden, stijgen (↗) of dalen (↘), max en min, hol (∪) of bol (∩) en het buigpunt.</p>` +
-      `<table class="px-sam px-vs">${['x', 'f', 'kromming'].map(r => `<tr><th>${r}</th>${leeg}</tr>`).join('')}</table>`,
-      `a) maximum ${pTxt(g.max)}, minimum ${pTxt(g.min)} (2)<br>b) buigpunt (${mFmt(g.s)}, ${mFmt(g.C)}) (1)<br>c) (2)` +
-      verloopschemaTabel(d.xs, [{ label:'f', cellen: d.verloop }, { label:'kromming', cellen: d.kromming }])]);
+    vragen.push(['Verloopschema', P(5, 4),
+      `<p>De grafiek van f is getekend.</p><div class="px-midden px-graf">${svgGraphPlus(sampleClipped(g.f, -6, 6, DB_WIN), DB_WIN, { dots: [{ x:g.s, y:g.C }] })}</div>` +
+      `${pxLijn2('a)&nbsp; maximum:', 'minimum:')}${pxLijn('b)&nbsp; buigpunt:')}<p>c)&nbsp; Vul het uitgebreid verloopschema aan.</p>${df5 ? pxVisgraat('f') : pxVisgraat('f', 'kromming')}`,
+      (df5 ? `a) maximum ${pTxt(g.max)} (1)<br>&nbsp;&nbsp;&nbsp; minimum ${pTxt(g.min)} (1)` : `a) maximum ${pTxt(g.max)}, minimum ${pTxt(g.min)} (2)`) + `<br>b) buigpunt (${mFmt(g.s)}, ${mFmt(g.C)}) (1)<br>c) (${P(2, 1)})` +
+      (df5 ? verloopschemaTabel(d.xs, [{ label:'f', cellen: d.uitgebreid }]) + `<p>${VS_LEGENDE}</p>`
+        : verloopschemaTabel(d.xs, [{ label:'f', cellen: d.verloop }, { label:'kromming', cellen: d.kromming }]))]);
   }
   /* 7. symmetrie: twee grafieken van een verschillende soort */
   {
@@ -7982,51 +8196,60 @@ function examenDF(){
     const [s1, s2] = shuffle(['even', 'oneven', 'geen']).slice(0, 2), g1 = kies(s1), g2 = kies(s2);
     const te = dpSymTabel('even'), to = dpSymTabel('oneven');
     const uitleg = { even:'even: spiegelsymmetrisch t.o.v. de y-as, f(−x) = f(x)', oneven:'oneven: puntsymmetrisch t.o.v. de oorsprong, f(−x) = −f(x)', geen:'even noch oneven: niet spiegelsymmetrisch t.o.v. de y-as en niet puntsymmetrisch t.o.v. de oorsprong' };
-    vragen.push(['Symmetrie', 6,
+    vragen.push(['Symmetrie', P(6, 4),
       `<p>a)&nbsp; Is de functie hieronder even, oneven of geen van beide? Verklaar je antwoord.</p><div class="px-midden px-graf">${g1.svg}</div>${pxLijnen(2)}` +
       `<p>b)&nbsp; En deze functie? Verklaar je antwoord.</p><div class="px-midden px-graf">${g2.svg}</div>${pxLijnen(2)}` +
       `<p>c)&nbsp; Vul de tabel aan zodat de functie f <b>even</b> is.</p>${dpSymTabelHtml(te, 'f')}` +
       `<p>d)&nbsp; Vul de tabel aan zodat de functie g <b>oneven</b> is.</p>${dpSymTabelHtml(to, 'g')}`,
-      `a) ${uitleg[s1]}${g1.extra} (1)<br>b) ${uitleg[s2]}${g2.extra} (1)<br>c) even: f(−x) = f(x) (2)${dpSymTabelHtml(te, 'f', true)}` +
-      `d) oneven: g(−x) = −g(x), en dus g(0) = 0 (2)${dpSymTabelHtml(to, 'g', true)}`]);
+      `a) ${uitleg[s1]}${g1.extra} (1)<br>b) ${uitleg[s2]}${g2.extra} (1)<br>c) even: f(−x) = f(x) (${P(2, 1)})${dpSymTabelHtml(te, 'f', true)}` +
+      `d) oneven: g(−x) = −g(x), en dus g(0) = 0 (${P(2, 1)})${dpSymTabelHtml(to, 'g', true)}`]);
   }
   /* 8. gedrag op oneindig en asymptoten */
   {
-    let g; do{ g = dpGedragFunctie(); } while(g.ha === null);
+    /* 5 DF: enkel een horizontale asymptoot (DF kent geen verticale asymptoten) */
+    let g; do{ g = dpGedragFunctie(!df5); } while(g.ha === null);
     const as = [...g.va.map(x => `VA: x = ${mFmt(x)}`), `HA: y = ${mFmt(g.ha)}`].join(' en ');
-    vragen.push(['Gedrag op oneindig en asymptoten', 4,
+    vragen.push(['Gedrag op oneindig en asymptoten', P(4, 3),
       `<p>De grafiek van f is getekend.</p><div class="px-midden px-graf">${dpGraf(g.f, g.va)}</div>` +
-      `${pxLijn('a)&nbsp; Wat doet f(x) als x → +∞?')}${pxLijn('b)&nbsp; Wat doet f(x) als x → −∞?')}<p>c)&nbsp; Geef de vergelijkingen van alle asymptoten van de grafiek.</p>${pxLijnen(2)}`,
-      `a) ${dpGedragTxt(g.rechts)} (1)<br>b) ${dpGedragTxt(g.links)} (1)<br>c) ${as}${g.va.length ? '' : ' (geen verticale asymptoot)'} (2)`]);
+      `${pxLijn('a)&nbsp; Wat doet f(x) als x → +∞?')}${pxLijn('b)&nbsp; Wat doet f(x) als x → −∞?')}` +
+      (df5 ? `<p>c)&nbsp; Geef de vergelijking van de horizontale asymptoot van de grafiek.</p>${pxLijnen(1)}` : `<p>c)&nbsp; Geef de vergelijkingen van alle asymptoten van de grafiek.</p>${pxLijnen(2)}`),
+      `a) ${dpGedragTxt(g.rechts)} (1)<br>b) ${dpGedragTxt(g.links)} (1)<br>c) ${as}${g.va.length || df5 ? '' : ' (geen verticale asymptoot)'} (${P(2, 1)})`]);
   }
   /* 9. periodieke functies */
   {
     const p = randChoice([3, 4, 5]), pts = dpPeriodiekPatroon(p), Y = x => pts.find(q => q[0] === ((x % p) + p) % p)[1];
     const xg = randInt(4, 8) * p + randInt(1, p - 1), r = ((xg % p) + p) % p;
     const p2 = randChoice([2, 3, 4, 5, 6, 8]), a2 = randInt(-3, 4), b2 = randNonZero(-6, 6), n2 = randChoice([3, 4, 5, -2]), x2 = a2 + n2 * p2;
-    vragen.push(['Periodieke functies', 4,
-      `<p>De grafiek van een periodieke functie f is getekend.</p><div class="px-midden px-graf">${dpLijn(pts)}</div>` +
-      `<p>a)&nbsp; Bepaal de periode van f. Leg uit hoe je die afleest.</p>${pxLijnen(2)}<p>b)&nbsp; Bereken f(${xg}). Schrijf je redenering op.</p>${pxLijnen(2)}` +
-      `<p>c)&nbsp; g is periodiek met periode ${p2} en g(${mFmt(a2)}) = ${mFmt(b2)}. Hoeveel is g(${mFmt(x2)})?</p>${pxLijnen(2)}`,
-      `a) hetzelfde stuk grafiek herhaalt zich telkens na ${p} eenheden op de x-as: periode ${p} (2)<br>` +
-      `b) ${xg} = ${(xg - r) / p} · ${p} + ${r}, dus f(${xg}) = f(${r}) = ${mFmt(Y(r))} (1)<br>` +
-      `c) ${mFmt(x2)} = ${mFmt(a2)} ${n2 > 0 ? '+' : '−'} ${Math.abs(n2)} · ${p2}, dus g(${mFmt(x2)}) = g(${mFmt(a2)}) = ${mFmt(b2)} (1)`]);
+    const vrF = `<p>De grafiek van een periodieke functie f is getekend.</p><div class="px-midden px-graf">${dpLijn(pts)}</div>` +
+      `<p>a)&nbsp; Bepaal de periode van f. Leg uit hoe je die afleest.</p>${pxLijnen(2)}<p>b)&nbsp; Bereken f(${xg}). Schrijf je redenering op.</p>${pxLijnen(2)}`;
+    const slF = `a) hetzelfde stuk grafiek herhaalt zich telkens na ${p} eenheden op de x-as: periode ${p} (${P(2, 1)})<br>` +
+      `b) ${xg} = ${(xg - r) / p} · ${p} + ${r}, dus f(${xg}) = f(${r}) = ${mFmt(Y(r))} (1)`;
+    const vrG = `g is periodiek met periode ${p2} en g(${mFmt(a2)}) = ${mFmt(b2)}. Hoeveel is g(${mFmt(x2)})?`;
+    const slG = `${mFmt(x2)} = ${mFmt(a2)} ${n2 > 0 ? '+' : '−'} ${Math.abs(n2)} · ${p2}, dus g(${mFmt(x2)}) = g(${mFmt(a2)}) = ${mFmt(b2)} (1)`;
+    if(df5){
+      /* 5 DF: g is een aparte vraag, zodat ze niet bij de getekende grafiek van f lijkt te horen */
+      vragen.push(['Periodieke functies', 2, vrF, slF]);
+      vragen.push(['Rekenen met de periode', 1, `<p>${vrG}</p>${pxLijnen(2)}`, slG]);
+    }
+    else vragen.push(['Periodieke functies', 4, vrF + `<p>c)&nbsp; ${vrG}</p>${pxLijnen(2)}`, slF + `<br>c) ${slG}`]);
   }
   /* 10. differentiequotiënt: op een grafiek, uit een tabel en met een voorschrift */
   {
     const qg = genDqGrafiek(), qv = genDqVoorschrift();
     let qt; do{ qt = genDqTabel(); } while(qt.options || !/Betekenis/.test(qt.explanation));
-    vragen.push(['Differentiequotiënt', 6,
+    vragen.push(['Differentiequotiënt', P(6, 3),
       `<p>a)&nbsp; ${qg.promptHtml}</p><div class="px-midden px-graf">${qg.svg}</div>${pxLijnen(3)}` +
       `<p>b)&nbsp; ${qt.promptHtml} Wat betekent dat getal in deze situatie?</p>${qt.extraHtml}${pxLijnen(3)}` +
       `<p>c)&nbsp; ${nl(qv.promptHtml)}</p>${pxLijnen(4)}`,
-      `a) ${nl(qg.explanation)} (2)<br>b) ${nl(qt.explanation)} (2)<br>c) ${nl(qv.explanation)} (2)`]);
+      `a) ${nl(qg.explanation)} (${P(2, 1)})<br>b) ${nl(qt.explanation)} (${P(2, 1)})<br>c) ${nl(qv.explanation)} (${P(2, 1)})`]);
   }
   /* volgorde: eerst "is dit een functie?", dan symmetrie en gedrag op oneindig, dan de rest */
   const eerst = ['Is dit een functie?', 'Symmetrie', 'Gedrag op oneindig en asymptoten'];
   const plaats = v => (eerst.includes(v[0]) ? eerst.indexOf(v[0]) : eerst.length);
   vragen.sort((a, b) => plaats(a) - plaats(b));
-  return { titel:'Wiskunde DF: functies', vragen };
+  /* 5 DF: eigen rekentoestel toegelaten maar niet nodig */
+  const hulp = df5 ? 'Enkel je eigen rekentoestel is toegelaten, maar een rekentoestel is niet nodig om dit examen op te lossen. Noteer al je tussenstappen: een antwoord zonder berekening levert geen punten op.' : undefined;
+  return { titel:'Wiskunde DF: functies', vragen, hulp };
 }
 /* ---------- examen 5 DS – functies (100 punten): een selectie DF-vragen (altijd "is dit een functie?"),
    afgeleiden van veeltermfuncties en de analyse van een derdegraadsfunctie met één geheel nulpunt ---------- */
@@ -8138,7 +8361,7 @@ function examenIntegralen(){
     ['Vraagstuk', 5, `<p>${vraag(V)}</p>${pxLijnen(6)}`, `${nl(V.explanation)} (5)`],
   ] };
 }
-const EXAMENS = { complex: examenComplex, onderzoek: examenOnderzoek, combinatoriek: examenKans, binomium: examenKans, kansrekenen: examenKans, bayes: examenKans, functies: examenDF, analyse: examen5DS, limveelterm: examen5DSAsym, limrationaal: examen5DSAsym, asymptoten: examen5DSAsym, integralen: examenIntegralen, dfplus: examenDF, diffq: examenDF };
+const EXAMENS = { complex: examenComplex, onderzoek: examenOnderzoek, combinatoriek: examenKans, binomium: examenKans, kansrekenen: examenKans, bayes: examenKans, functies: examenDF5, analyse: examen5DS, limveelterm: examen5DSAsym, limrationaal: examen5DSAsym, asymptoten: examen5DSAsym, integralen: examenIntegralen, dfplus: examenDF5, diffq: examenDF5 };
 /* logo's van de school (verkleind uit de officiële examenhoofding) */
 const PX_LOGO_GYM = 'data:image/jpeg;base64,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';
 const PX_LOGO_SSO = 'data:image/png;base64,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';
@@ -8174,12 +8397,13 @@ function examenHtml(px, inst){
   const totaal = px.vragen.reduce((t, v) => t + v[1], 0);
   const [sj0, sj1] = exSchooljaar(), jaar = inst.periode === 'December' ? sj0 : sj1;
   const lijnVeld = '<span class="px-veld" contenteditable="true"></span>';
+  const gVeld = t => `<span class="px-veld" contenteditable="true">${escHtml(t || '')}</span>`;
   const kop = `<div class="px-pagina px-eerste${px.vragen.length > 6 ? ' px-veel' : ''}">
 <div class="px-logos"><img src="${PX_LOGO_GYM}" alt="Het Gymnasion"><img src="${PX_LOGO_SSO}" alt="Stedelijk secundair onderwijs"></div>
 <div class="px-kader"><div class="px-band"><b>EXAMEN ${inst.periode.toUpperCase()}</b><br><small>Schooljaar ${sj0}-${sj1}</small></div>
 <table class="px-info"><tr><td>Voornaam en naam:</td><td colspan="3">${lijnVeld}</td></tr>
-<tr><td>Klas:</td><td>${lijnVeld}</td><td>Datum:</td><td>${lijnVeld}</td></tr>
-<tr><td>Vak:</td><td>Wiskunde</td><td>Leerkracht:</td><td>${lijnVeld}</td></tr></table></div>
+<tr><td>Klas:</td><td>${gVeld(exGegevens.klas)}</td><td>Datum:</td><td>${gVeld(exGegevens.datum)}</td></tr>
+<tr><td>Vak:</td><td>Wiskunde</td><td>Leerkracht:</td><td>${gVeld(exGegevens.leerkracht)}</td></tr></table></div>
 <table class="px-punten"><tr><th colspan="2"><i>Hulpmiddelen of opmerkingen bij dit examen</i></th></tr>
 <tr><td colspan="2">${px.hulp || 'Rekentoestel toegelaten. Noteer al je tussenstappen: een antwoord zonder berekening levert geen punten op. Rond niet-gehele waarden af op 1 cijfer na de komma, tenzij een exacte waarde gevraagd wordt.'}</td></tr>
 <tr><th colspan="2"><i>Puntenverdeling</i></th></tr>
@@ -8488,6 +8712,7 @@ function wxTabel(el, ctx){
   const lijn = k => `<w:${k} w:val="single" w:sz="${k === 'insideV' ? 6 : 12}" w:space="0" w:color="000000"/>`;
   const rand = cls.includes('px-grafrooster') ? '' : cls.includes('px-visgraat') ? `<w:tblBorders>${lijn('insideH')}${lijn('insideV')}</w:tblBorders>` : WX_RAND;
   if(cls.includes('px-grafrooster')) br = Array(n).fill(Math.floor(WX_TW / n));
+  if(cls.includes('px-visgraat')) br = [1500, WX_TW - 1500];
   let t = `<w:tbl><w:tblPr><w:tblW w:w="${br.reduce((a, b) => a + b, 0)}" w:type="dxa"/><w:jc w:val="center"/>${rand}<w:tblLayout w:type="fixed"/></w:tblPr><w:tblGrid>` + br.map(b => `<w:gridCol w:w="${b}"/>`).join('') + '</w:tblGrid>';
   rijen.forEach(rij => {
     t += `<w:tr><w:trPr><w:cantSplit/><w:trHeight w:val="${leeg || cls.includes('px-sam') ? 560 : 360}" w:hRule="atLeast"/></w:trPr>`;
@@ -8544,6 +8769,9 @@ function wxHoofding(x, px, periode){
   const [sj0, sj1] = exSchooljaar();
   x = x.replace('EXAMEN DECEMBER', 'EXAMEN ' + periode.toUpperCase()).replace(/Schooljaar \d{4}-\d{4}/, `Schooljaar ${sj0}-${sj1}`);
   x = naLabel(x, '>Vak: <', 'Wiskunde');
+  x = naLabel(x, '>Klas: <', exGegevens.klas || '');
+  x = naLabel(x, '>Leerkracht: <', exGegevens.leerkracht || '');
+  x = naLabel(x.replace('>Datum: xx/xx/2026 <', '>Datum: <'), '>Datum: <', exGegevens.datum || '');
   x = naLabel(x, 'Hulpmiddelen of opmerkingen', px.hulp || WX_STD_HULP);
   const rijen = [...x.matchAll(/<w:tr\b(?:(?!<\/w:tr>).)*<\/w:tr>/gs)];
   const onderdeel = rijen.filter(m => m[0].includes('Examenonderdeel')), totaalLeeg = rijen.filter(m => m[0].includes('>Totaal<') && !m[0].includes('/100'));
@@ -8654,6 +8882,28 @@ async function wxDownload(px, periode, knop){
   } finally { knop.disabled = false; knop.textContent = oud; }
 }
 let exStaat = null;
+/* gegevens die de leerkracht invult in de hoofding; Annuleren = leeg laten (een leerling vult het examen zelf in) */
+const EX_LK_STANDAARD = 'Kris Tielemans';
+let exGegevens = {};
+function exVraagGegevens(klaar){
+  const ov = document.getElementById('overlay-exgeg'), v = id => document.getElementById(id), g = exGegevens;
+  v('exgeg-klas').value = g.klas || '';
+  v('exgeg-datum').value = g.datumIso || '';
+  v('exgeg-lk').value = g.leerkracht || EX_LK_STANDAARD;
+  const sluit = res => { ov.classList.remove('show'); v('exgeg-ja').onclick = v('exgeg-nee').onclick = ov.onkeydown = null; klaar(res); };
+  v('exgeg-ja').onclick = () => {
+    const iso = v('exgeg-datum').value;
+    sluit({ klas: v('exgeg-klas').value.trim(), leerkracht: v('exgeg-lk').value.trim(), datumIso: iso, datum: iso ? iso.split('-').reverse().join('/') : '' });
+  };
+  v('exgeg-nee').onclick = () => sluit(null);
+  ov.onkeydown = e => { if(e.key === 'Enter') v('exgeg-ja').click(); else if(e.key === 'Escape') v('exgeg-nee').click(); };
+  ov.classList.add('show');
+  v('exgeg-klas').focus();
+}
+function exStart(mode){
+  if(!EXAMENS[mode]) return;
+  exVraagGegevens(g => { exGegevens = g || {}; showExamen(mode); });
+}
 function showExamen(mode, nieuw){
   const maak = EXAMENS[mode];
   if(!maak) return;
@@ -8663,10 +8913,13 @@ function showExamen(mode, nieuw){
     <label class="afdruk-optie">Periode <select id="px-periode">${['December', 'Juni'].map(p => `<option${p === st.periode ? ' selected' : ''}>${p}</option>`).join('')}</select></label>
     <label class="afdruk-optie"><input type="checkbox" id="px-leeg"${st.legePagina ? ' checked' : ''}> lege pagina vóór de reflectie</label>
     <label class="afdruk-optie"><input type="checkbox" id="px-opl"${st.oplossingen ? ' checked' : ''}> oplossingen tonen</label>
+    <button class="btn btn-ghost" type="button" id="px-gegevens">Gegevens</button>
     <button class="btn btn-ghost" type="button" id="px-word">Word (examen + sleutel)</button>`;
   toonAfdruk(examenHtml(st.px, st), opties);
   document.getElementById('px-nieuw').addEventListener('click', () => showExamen(mode));
   document.getElementById('px-word').addEventListener('click', e => wxDownload(st.px, st.periode, e.currentTarget));
+  /* gegevens achteraf aanpassen (Annuleren laat ze hier ongewijzigd) */
+  document.getElementById('px-gegevens').addEventListener('click', () => exVraagGegevens(g => { if(g){ exGegevens = g; showExamen(mode, false); } }));
   /* periode en lege pagina: opnieuw opmaken met dezelfde vragen */
   document.getElementById('px-periode').addEventListener('change', e => { st.periode = e.target.value; showExamen(mode, false); });
   document.getElementById('px-leeg').addEventListener('change', e => { st.legePagina = e.target.checked; showExamen(mode, false); });
@@ -8690,8 +8943,8 @@ const WISK_EXTRA = {
     categories: [
       { id:'symmetrie', label:'Symmetrie', gen: genDpSymmetrie,
         uitleg: () => uitlegKies(theorieDfPlus(), ['Even en oneven functies', 'Symmetrie herkennen']) },
-      { id:'oneindig', label:'Gedrag op oneindig & asymptoten', gen: genDpOneindig,
-        uitleg: () => uitlegKies(theorieDfPlus(), ['Gedrag op oneindig', 'Asymptoten op een grafiek']) },
+      { id:'oneindig', label:'Gedrag op oneindig & horizontale asymptoot', gen: () => genDpOneindig(false),
+        uitleg: () => uitlegKies(theorieDfPlus(), ['Gedrag op oneindig', 'Horizontale asymptoot op een grafiek']) },
       { id:'periodiek', label:'Periodieke functies', gen: genDpPeriodiek,
         uitleg: () => uitlegKies(theorieDfPlus(), ['Periodieke functies', 'De periode aflezen en gebruiken']) },
     ],
@@ -8735,11 +8988,11 @@ const WISK_EXTRA = {
       { id:'buigpunt', label:'Hol, bol & buigpunten berekenen', gen: genBuigpuntBerekenen, uitleg: theorieAnBuigpunt },
       { id:'begrippen', label:'Begrippen', gen: genAnalyseBegrip, uitleg: theorieAnBegrippen },
       /* basisleerstof uit Wiskunde DF – Functies extra: dezelfde vragen en dezelfde uitleg */
-      { id:'symmetrie', label:'Symmetrie (uit DF)', gen: genDpSymmetrie,
+      { id:'symmetrie', label:'Symmetrie', gen: genDpSymmetrie,
         uitleg: () => uitlegKies(theorieDfPlus(), ['Even en oneven functies', 'Symmetrie herkennen']) },
-      { id:'oneindig', label:'Gedrag op oneindig (uit DF)', gen: genDpOneindig,
-        uitleg: () => uitlegKies(theorieDfPlus(), ['Gedrag op oneindig', 'Asymptoten op een grafiek']) },
-      { id:'periodiek', label:'Periodieke functies (uit DF)', gen: genDpPeriodiek,
+      { id:'oneindig', label:'Gedrag op oneindig', gen: genDpOneindig,
+        uitleg: () => uitlegKies(theorieDfPlus(), ['Gedrag op oneindig', 'Horizontale asymptoot op een grafiek']) },
+      { id:'periodiek', label:'Periodieke functies', gen: genDpPeriodiek,
         uitleg: () => uitlegKies(theorieDfPlus(), ['Periodieke functies', 'De periode aflezen en gebruiken']) },
     ],
   },
@@ -9080,62 +9333,8 @@ function genVerloopAfgeleide(){
   };
 }
 
-/* ---------- Hol, bol & buigpunten ---------- */
+/* ---------- Hol, bol & buigpunten (DS: met de tweede afgeleide) ---------- */
 const HOL = 'Hol (∪)', BOL = 'Bol (∩)';
-function genHolBolGrafiek(){
-  if(Math.random() < 0.65){
-    const g = maakDerdegraads();
-    const svg = svgGraphPlus(sampleClipped(g.f, -6, 6, DB_WIN), DB_WIN, {});
-    const r = Math.random();
-    const holRechts = g.k > 0;
-    const uitleg = `Links van x = ${g.s} buigt de grafiek als een ${holRechts ? 'berg (∩): bol' : 'dal (∪): hol'}, rechts ervan als een ${holRechts ? 'dal (∪): hol' : 'berg (∩): bol'}.\nHet buigpunt is het punt waar dat wisselt: (${mFmt(g.s)}, ${mFmt(g.C)}).`;
-    if(r < 0.4){
-      return {
-        kind:'functie', catId:'holbol', catLabel:'Buigpunt (grafiek)',
-        promptHtml: `Wat is de x-coördinaat van het buigpunt?`, svg,
-        answerType:'kort', checkKind:'number', checkData:{ value:g.s, punt:[g.s, g.C] }, correct:String(g.s),
-        explanation: uitleg,
-      };
-    }
-    if(r < 0.7){
-      const juist = pTxt({ x:g.s, y:g.C });
-      return {
-        kind:'functie', catId:'holbol', catLabel:'Buigpunt (grafiek)',
-        promptHtml: `Welk punt is het buigpunt van de grafiek?`, svg,
-        answerType:'lang', options: uniqOpts(juist, [pTxt(g.max), pTxt(g.min), pTxt({ x:g.C, y:g.s })]), correct: juist,
-        explanation: uitleg + '\nOpgepast: een top (maximum of minimum) is geen buigpunt.',
-      };
-    }
-    const rechts = Math.random() < 0.5;
-    const juist = (rechts === holRechts) ? HOL : BOL;
-    return {
-      kind:'functie', catId:'holbol', catLabel:'Hol of bol (grafiek)',
-      promptHtml: `Is de grafiek hol of bol op ${rechts ? ivTxt(g.s, Infinity, false, false) : ivTxt(-Infinity, g.s, false, false)}?`, svg,
-      answerType:'lang', options: [HOL, BOL], correct: juist,
-      explanation: uitleg,
-    };
-  }
-  const a = randChoice([-2, -1, 1, 2]), p = randInt(-3, 3), q = randInt(-4, 4);
-  const co = a === 1 ? '' : (a === -1 ? '-' : String(a));
-  const expr = (p === 0 ? co + 'x²' : co + '(' + xMin(p) + ')²') + plusK(q);
-  if(Math.random() < 0.5){
-    const juist = a > 0 ? 'Overal hol (∪)' : 'Overal bol (∩)';
-    return {
-      kind:'functie', catId:'holbol', catLabel:'Hol of bol',
-      promptHtml: `Is de grafiek van f(x) = ${expr} hol of bol?`,
-      answerType:'lang', options: ['Overal hol (∪)', 'Overal bol (∩)', 'Eerst hol, dan bol', 'Eerst bol, dan hol'], correct: juist,
-      explanation: `Een parabool met a ${a > 0 ? '> 0 is een dalparabool: overal hol (∪)' : '< 0 is een bergparabool: overal bol (∩)'}.\n(f''(x) = ${2 * a} is overal ${a > 0 ? 'positief' : 'negatief'}.)`,
-    };
-  }
-  const juist = 'Nee, een parabool heeft geen buigpunt';
-  return {
-    kind:'functie', catId:'holbol', catLabel:'Buigpunt',
-    promptHtml: `Heeft de grafiek van f(x) = ${expr} een buigpunt?`,
-    answerType:'lang', options: [juist, `Ja, in de top (${p}, ${q})`, 'Ja, in de nulwaarden', 'Ja, in het snijpunt met de y-as'], correct: juist,
-    explanation: `Een parabool is overal ${a > 0 ? 'hol' : 'bol'}: ze wisselt nooit van hol naar bol.\nDe top is een ${a > 0 ? 'minimum' : 'maximum'}, geen buigpunt.`,
-  };
-}
-
 function genHolBolAfgeleide(){
   const s = randInt(-5, 5);
   const tekens = [randChoice(['+', MIN]), randChoice(['+', MIN])];
@@ -11089,8 +11288,8 @@ function uitlegFunctiesDF(id){
     case 'domeinbereik': return uitlegKies(theorieDomeinBereik(), ['Het domein', 'Het bereik', 'Intervallen noteren', 'Praktisch domein en praktisch bereik']);
     case 'teken': return uitlegKies(theorieFuncties(), ['Tekenverloop']) + `<h3>Hoeveel nulwaarden?</h3><p>${NUL_GRAAD_REGEL}</p><table class="functie-table compact"><tr><th>graad</th><th>mogelijk aantal nulwaarden</th></tr>${NUL_GRAAD.map((t, g) => `<tr><td>${g}</td><td>${t}</td></tr>`).join('')}</table>`;
     case 'verloop': return uitlegKies(theorieFuncties(), ['Stijgen, dalen en extrema']);
-    case 'holbol': return metGrafiek(uitlegKies(theorieFuncties(), ['Hol en bol', 'Buigpunten']));
-    case 'schema': return uitlegKies(theorieFuncties(), ['Het verloopschema: alles in één tabel'])
+    case 'holbol': return metGrafiek(uitlegKies(theorieFuncties(), ['Toenemend en afnemend stijgen of dalen', 'Buigpunten']));
+    case 'schema': return uitlegKies(theorieFuncties(), ['Het uitgebreid verloopschema: alles in één tabel'])
       .replace('Voor de grafiek hierboven:</p>', `Voor deze grafiek:</p><div class="theorie-svg">${voorbeeldDerdegraads()}</div>`);
     default: return begrippenLijst(FUNCTIES_DF_BEGRIPPEN);
   }
@@ -12642,9 +12841,16 @@ function normalizeAnswer(str){
     .replace(/[.,;:!?'"()]/g, '');
 }
 
+/* getypte of ingesproken antwoorden: onzichtbare tekens (bv. een zero-width space van het iPhone-toetsenbord) weg,
+   speciale spaties worden gewone spaties, − en – worden een gewoon minteken */
+function schoonAntwoord(str){
+  return String(str).replace(/[\u200B-\u200D\u2060\uFEFF]/g, '').replace(/[\u00A0\u2000-\u200A\u202F\u205F\u3000]/g, ' ')
+    .replace(/[−–—]/g, '-').trim();
+}
 function submitAnswer(userAnswer, gaveUp){
   const q = quiz.questions[quiz.index];
   let correct = false;
+  if(typeof userAnswer === 'string' && q.answerType === 'kort') userAnswer = schoonAntwoord(userAnswer);
   if(!gaveUp){
     if(q.answerType === 'kort' || q.answerType === 'punten' || q.answerType === 'tabel' || q.answerType === 'statgraf'){
       if(q.kind === 'functie'){
@@ -12888,8 +13094,8 @@ document.getElementById('btn-economie-uitleg').addEventListener('click', showEco
 document.getElementById('btn-wgen-uitleg').addEventListener('click', showWiskTheorie);
 document.querySelectorAll('.js-dossier').forEach(b => b.addEventListener('click', showDossierAfdruk));
 document.querySelectorAll('.js-toetsafdruk').forEach(b => b.addEventListener('click', showToetsAfdruk));
-document.querySelectorAll('[data-examen]').forEach(b => b.addEventListener('click', () => showExamen(b.dataset.examen)));
-document.getElementById('btn-wgen-examen').addEventListener('click', () => showExamen(wiskundeSub));
+document.querySelectorAll('[data-examen]').forEach(b => b.addEventListener('click', () => exStart(b.dataset.examen)));
+document.getElementById('btn-wgen-examen').addEventListener('click', () => exStart(wiskundeSub));
 document.getElementById('btn-cursus-terug').addEventListener('click', () => {
   document.body.classList.remove('cursus-print');
   showScreen('home');
