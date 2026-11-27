@@ -3138,8 +3138,8 @@ function asAlleTxt(a){
   const va = a.va.length ? 'VA: ' + [...a.va].sort((u, v) => u - v).map(x => `x = ${mFmt(x)}`).join(' en ') : 'geen VA';
   return va + '; ' + (a.ha != null ? `HA: y = ${mFmt(a.ha)}` : a.sa ? `SA: y = ${a.sa}` : 'geen HA en geen SA');
 }
-function genAsAlle(){
-  const soort = randChoice(['hyp', 'gelijk', 'tweeVA', 'geenVA', 'schuin', 'gat']);
+function genAsAlle(soort){
+  soort = soort || randChoice(['hyp', 'gelijk', 'tweeVA', 'geenVA', 'schuin', 'gat']);
   let f, as, fout, uitleg;
   if(soort === 'hyp'){
     const h = randNonZero(-5, 5), k = randNonZero(-4, 4), a = randNonZero(-5, 5);
@@ -3189,8 +3189,19 @@ function genAsAlle(){
   return {
     kind:'functie', catId:'as_alle', catLabel:'Alle asymptoten',
     promptHtml: `Bereken alle asymptoten van f(x) = ${f}.`,
-    answerType:'lang', options: uniqOpts(juist, fout.map(asAlleTxt)), correct: juist, explanation: uitleg,
+    answerType:'lang', options: uniqOpts(juist, fout.map(asAlleTxt)), correct: juist, explanation: uitleg, asymptoten: as,
   };
+}
+/* een vraag "bereken alle asymptoten" op 3 punten: VA, HA en SA, telkens 1 punt (ook "geen" is een antwoord) */
+function asDrieRegels(){
+  const r = t => pxLijn(`&nbsp;&nbsp;&nbsp;&nbsp; ${t}:`);
+  return r('VA') + r('HA') + r('SA');
+}
+/* fmt maakt van de vergelijkingen Word-formules; de puntenaanduiding (1) blijft erbuiten */
+function asDrieAntwoorden(q, fmt){
+  const a = q.asymptoten;
+  return `VA: ${fmt(a.va.length ? [...a.va].sort((u, v) => u - v).map(x => `x = ${mFmt(x)}`).join(' en ') : 'geen')} (1)<br>` +
+    `HA: ${fmt(a.ha != null ? `y = ${mFmt(a.ha)}` : 'geen')} (1)<br>SA: ${fmt(a.sa ? `y = ${a.sa.replace(/-/g, '−')}` : 'geen')} (1)`;
 }
 
 /* ---------- grafieken met een gat of een schuine asymptoot ---------- */
@@ -8399,14 +8410,15 @@ function examen5DSAsym(){
   const nl = t => formulesMarkeren(t.replace(/(^|[\s(=·/])-/g, '$1−').replace(/lim \(x → ([^)]*)\)/g, '<span class="lim">lim<sub> x → $1 </sub></span>').replace(/\n/g, '<br>'));
   const vraag = q => mooieBreuken(q.promptHtml.replace(/(^|[\s(=·/])-/g, '$1−').replace(/: [xy] = \?$/, '.').replace(/<br>/g, ' '));
   const L = [genLvInvullen(), genLvOneindig(), genLrNul(), genLrANul(), genLrOneindig()];
-  const As = [genAsVA(), genAsHA(), genAsSchuin()];
+  /* de leerling zoekt zelf welke asymptoten er zijn: altijd één met een SA, één met twee VA's of een gat, en nog een andere */
+  const As = shuffle(['schuin', randChoice(['gat', 'tweeVA', 'hyp', 'gelijk', 'geenVA'])]).map(t => genAsAlle(t));
   let gq; do{ gq = genAsGrafiek(); } while(!/HA/.test(gq.explanation) || !/VA/.test(gq.explanation));
   const r = 'abcde';
   return { titel:'Wiskunde 5 DS: asymptoten en limieten', vragen: [
     ['Limieten', 10, L.map((q, i) => `<p>${r[i]})&nbsp; ${vraag(q)}</p>${pxLijnen(i < 2 ? 2 : 3)}`).join(''),
       L.map((q, i) => `${r[i]}) ${nl(q.explanation)} (2)`).join('<br>')],
-    ['Asymptoten berekenen', 6, As.map((q, i) => `<p>${r[i]})&nbsp; ${vraag(q)}</p>${pxLijnen(3)}`).join(''),
-      As.map((q, i) => `${r[i]}) ${nl(q.explanation)} (2)`).join('<br>')],
+    ['Asymptoten berekenen', 6, `<p>Schrijf "geen" als de functie zo'n asymptoot niet heeft.</p>` + As.map((q, i) => `<p>${r[i]})&nbsp; ${vraag(q)}</p>${pxLijnen(3)}${asDrieRegels()}`).join(''),
+      As.map((q, i) => `${r[i]}) ${nl(q.explanation)}<br>${asDrieAntwoorden(q, nl)}`).join('<br>'), undefined, true],
     ['Asymptoten op een grafiek', 4, `<p>Geef de vergelijkingen van alle asymptoten van deze grafiek.</p><div class="px-midden px-graf">${gq.svg}</div>${pxLijnen(2)}`,
       `${nl(gq.explanation)} (4)`],
   ] };
@@ -8479,6 +8491,7 @@ function exAantalAntwoorden(html){
   d.querySelectorAll('svg, table').forEach(e => e.remove());
   const t = d.textContent, tel = re => (t.match(re) || []).length;
   let m;
+  if((m = t.match(/Asymptoten: ([^\n]*)/))) return (m[1].match(/[xy] = /g) || []).length || 1;
   if((m = t.match(/Nulwaarden van f: ([^\n]*)/))) return m[1].split(/;| en /).length;
   if((m = t.match(/Nulwaarden van f': ([^\n]*)/))) return (m[1].match(/x [=≈]/g) || []).length || 1;
   if(tel(/(maximum|minimum) \(/g)) return tel(/(maximum|minimum) \(/g);
@@ -8491,6 +8504,7 @@ function exAantalAntwoorden(html){
   return 1;
 }
 function exEenPunt(v){
+  if(v[5]) return v.slice(0, 5);
   let vorige = 0, som = 0;
   const opl = v[3].replace(/(\s|<\/div>|<\/table>)\((\d+)\)(?=\s*(<br>|<div|<table|<svg|$))/g, (heel, voor, n, _, i) => {
     const k = exAantalAntwoorden(v[3].slice(vorige, i));
@@ -8502,10 +8516,8 @@ function exEenPunt(v){
 function exDeelFuncties(){
   const px = examen5DS(), n = px.vragen.length - 4;
   const vragen = px.vragen.slice(0, n).map(exEenPunt);
-  const P = vragen[n - 1][1], A = vragen.slice(0, n - 1).reduce((t, v) => t + v[1], 0);
   vragen[0][4] = undefined;
-  vragen[n - 1][4] = `<p class="px-deel px-nieuw">Afgeleiden (${P} punten)</p>`;
-  return { naam:'Functies en afgeleiden', vragen, verdeling: [['Functies', A], ['Afgeleiden', P]], omgezet:true };
+  return { naam:'Functies en afgeleiden', vragen, afgeleidenApart:true, omgezet:true };
 }
 function exDeelAnalyse(k){
   const px = examenOnderzoek(k.ster);
@@ -8530,10 +8542,147 @@ function exKeuzeVan(mode){
   (EX_DELEN_STANDAARD[mode] || []).forEach(id => { k[id] = true; });
   return k;
 }
+/* het totaal afronden op een veelvoud van 50: ligt het er 1 of 2 punten naast, dan komen er kleine deelvragen van
+   1 punt bij of gaan er af (de laatste deelvraag van een opsomming zoals afgeleiden, limieten of integralen) */
+const EX_LETTERS = 'abcdefghijklmnop';
+function exLaatsteLetter(opl){ const m = [...opl.matchAll(/(?:^|<br>)([a-p])\) /g)]; return m.length ? m[m.length - 1][1] : null; }
+function exDeelvraagErbij(v){
+  const L = exLaatsteLetter(v[3]);
+  if(!L) return false;
+  const N = EX_LETTERS[EX_LETTERS.indexOf(L) + 1], mn = t => t.replace(/-/g, '−');
+  let vraag, opl;
+  if(v[0] === 'Afgeleiden'){
+    const c = [randNonZero(-6, 6)];
+    for(let i = 1; i <= randInt(2, 4); i++) c.push(Math.random() < 0.3 ? 0 : randInt(-9, 9));
+    vraag = `<p>${N})&nbsp; <span class="wx-m">f(x) = ${mn(fmtPoly(c))}</span></p>${pxLijn("&nbsp;&nbsp;&nbsp;&nbsp; f'(x) =")}`;
+    opl = `${N}) <span class="wx-m">f'(x) = ${mn(fmtPoly(afgeleide(c)))}</span> (1)`;
+  } else if(v[0] === 'Onbepaalde integralen'){
+    const fv = intVeelterm(randChoice([2, 3]));
+    vraag = `<p>${N})&nbsp; <span class="wx-m">∫ (${mn(fmtPoly(fv))}) dx</span></p>${pxLijnen(3)}`;
+    opl = `${N}) ${formulesMarkeren(`∫ (${mn(fmtPoly(fv))}) dx = ${mn(fmtPrim(fv))} + C`)} (1)`;
+  } else if(v[0] === 'Rekenen in algebraïsche vorm'){
+    const M = randInt(2001, 2099);
+    vraag = `${pxLijn(`${N})&nbsp; i<sup>${M}</sup> =`)}${pxLijn()}`;
+    opl = `${N}) ${M} = 4 · ${Math.floor(M / 4)} + ${M % 4}, dus i<sup>${M}</sup> = ${['1', 'i', '−1', '−i'][M % 4]} (1)`;
+  } else return false;
+  v[2] += vraag; v[3] += '<br>' + opl; v[1] += 1;
+  return true;
+}
+function exDeelvraagEraf(v){
+  const L = exLaatsteLetter(v[3]);
+  if(!L || L === 'a' || L === 'b') return false;                       /* minstens twee deelvragen overhouden */
+  const iO = v[3].lastIndexOf(`<br>${L}) `), weg = v[3].slice(iO);
+  const pt = [...weg.matchAll(/\((\d+)\)/g)].reduce((t, m) => t + +m[1], 0);
+  const iL = v[2].lastIndexOf(`${L})&nbsp;`);
+  if(iO < 0 || iL < 0 || pt !== 1) return false;
+  const iV = Math.max(v[2].lastIndexOf('<p>', iL), v[2].lastIndexOf('<div class="px-lijn">', iL));
+  if(iV < 0) return false;
+  v[2] = v[2].slice(0, iV); v[3] = v[3].slice(0, iO); v[1] -= 1;
+  return true;
+}
+/* kleine vragen van 1 of 2 punten per onderdeel, om het totaal aan te vullen tot een veelvoud van 50 */
+const exMn = t => t.replace(/-/g, '−');
+function exVeelterm(){ const c = [randNonZero(-6, 6)]; for(let i = 1; i <= randInt(2, 4); i++) c.push(Math.random() < 0.3 ? 0 : randInt(-9, 9)); return c; }
+function kleinAfgeleiden(n){
+  const L = 'ab', fs = Array.from({ length:n }, exVeelterm), pre = i => (n > 1 ? `${L[i]})&nbsp; ` : '');
+  return [n > 1 ? 'Afgeleiden' : 'Afgeleide', n, `<p>Bereken de afgeleide functie.</p>` + fs.map((c, i) => `<p>${pre(i)}<span class="wx-m">f(x) = ${exMn(fmtPoly(c))}</span></p>${pxLijn("&nbsp;&nbsp;&nbsp;&nbsp; f'(x) =")}`).join(''),
+    fs.map((c, i) => `${n > 1 ? L[i] + ') ' : ''}<span class="wx-m">f'(x) = ${exMn(fmtPoly(afgeleide(c)))}</span> (1)`).join('<br>')];
+}
+function kleinIMacht(){
+  const M = randInt(2001, 2099);
+  return ['Machten van i', 1, `<p>Bereken i<sup>${M}</sup>.</p>${pxLijn(`&nbsp;&nbsp;&nbsp;&nbsp; i<sup>${M}</sup> =`)}`,
+    `${M} = 4 · ${Math.floor(M / 4)} + ${M % 4}, dus i<sup>${M}</sup> = ${['1', 'i', '−1', '−i'][M % 4]} (1)`];
+}
+function kleinCxVgl(){
+  const n = randInt(2, 9);
+  return ['Vergelijking in ℂ', 2, `<p>Los op in ℂ: <span class="wx-m">z² + ${n * n} = 0</span></p>${pxLijnen(2)}${pxLijn('&nbsp;&nbsp;&nbsp;&nbsp; z =')}`,
+    `<span class="wx-m">z² = −${n * n} = ${n * n}i²</span><br>z = ${n}i (1)<br>z = −${n}i (1)`];
+}
+function kleinNulwaarden(){
+  const r1 = randInt(-6, 4), r2 = randInt(r1 + 1, 6), f = [1, -(r1 + r2), r1 * r2], D = (r1 + r2) ** 2 - 4 * r1 * r2;
+  return ['Nulwaarden', 2, `<p>Bepaal de nulwaarden van <span class="wx-m">f(x) = ${exMn(fmtPoly(f))}</span>.</p>${pxLijnen(3)}`,
+    `${formulesMarkeren(exMn(`${fmtPoly(f)} = 0: D = ${tussenHaakjes(f[1])}² − 4·${tussenHaakjes(f[2])} = ${D}`))}<br>x = ${mFmt(r1)} (1)<br>x = ${mFmt(r2)} (1)`];
+}
+function kleinLimiet(){
+  const a = randNonZero(-3, 3), c = [randNonZero(-3, 3), randInt(-6, 6), randInt(-6, 6)], w = evalPoly(c, a);
+  const lim = `<span class="lim">lim<sub> x → ${mFmt(a)} </sub></span>`;
+  return ['Limiet', 1, `<p>Bereken ${lim} <span class="wx-m">(${exMn(fmtPoly(c))})</span>.</p>${pxLijnen(2)}`,
+    `Een veelterm: gewoon invullen. ${lim} <span class="wx-m">(${exMn(fmtPoly(c))}) = ${mFmt(w)}</span> (1)`];
+}
+function kleinAsymptoten(){
+  const q = genAsAlle(), nl = t => formulesMarkeren(t.replace(/(^|[\s(=·/])-/g, '$1−').replace(/\n/g, '<br>'));
+  return ['Asymptoten', 3, `<p>${mooieBreuken(q.promptHtml.replace(/(^|[\s(=·/])-/g, '$1−'))} Schrijf "geen" als de functie zo'n asymptoot niet heeft.</p>${pxLijnen(3)}${asDrieRegels()}`,
+    nl(q.explanation) + '<br>' + asDrieAntwoorden(q, nl)];
+}
+function kleinLimieten(){
+  const [p, q] = [kleinLimiet(), kleinLimiet()];
+  return ['Limieten', 2, p[2].replace('<p>', '<p>a)&nbsp; ') + q[2].replace('<p>', '<p>b)&nbsp; '), `a) ${p[3]}<br>b) ${q[3]}`];
+}
+function kleinIntegralen(n){
+  const L = 'ab', fs = Array.from({ length:n }, () => intVeelterm(randChoice([2, 3]))), pre = i => (n > 1 ? `${L[i]})&nbsp; ` : '');
+  return [n > 1 ? 'Onbepaalde integralen' : 'Onbepaalde integraal', n, `<p>Bereken de onbepaalde integraal.</p>` + fs.map((f, i) => `<p>${pre(i)}<span class="wx-m">∫ (${exMn(fmtPoly(f))}) dx</span></p>${pxLijnen(2)}`).join(''),
+    fs.map((f, i) => `${n > 1 ? L[i] + ') ' : ''}${formulesMarkeren(exMn(`∫ (${fmtPoly(f)}) dx = ${fmtPrim(f)} + C`))} (1)`).join('<br>')];
+}
+function kleinRij(){
+  const n = randInt(5, 8);
+  let f = 1; for(let i = 2; i <= n; i++) f *= i;
+  return ['Combinatieleer', 1, `<p>Op hoeveel manieren kunnen ${n} leerlingen naast elkaar op een rij gaan zitten?</p>${pxLijnen(2)}`, `permutatie: ${n}! = ${pxGetal(f)} (1)`];
+}
+function kleinCodes(){
+  const k = randChoice([3, 4, 5]);
+  let z = 1; for(let i = 0; i < k; i++) z *= 10 - i;
+  return ['Codes', 2, `<p>Een code bestaat uit ${k} cijfers (0 tot 9).</p><p>a)&nbsp; Hoeveel codes zijn er mogelijk?</p>${pxLijn()}<p>b)&nbsp; Hoeveel codes zijn er als elk cijfer maar één keer mag voorkomen?</p>${pxLijn()}`,
+    `a) variatie met herhaling: 10<sup>${k}</sup> = ${pxGetal(10 ** k)} (1)<br>b) variatie zonder herhaling: ${Array.from({ length:k }, (_, i) => 10 - i).join(' · ')} = ${pxGetal(z)} (1)`];
+}
+const EX_KLEIN = {
+  complex: { 1: kleinIMacht, 2: kleinCxVgl },
+  analyse: { 1: () => kleinAfgeleiden(1), 2: kleinNulwaarden },
+  asym: { 1: kleinLimiet, 2: kleinLimieten, 3: kleinAsymptoten },
+  integralen: { 1: () => kleinIntegralen(1), 2: () => kleinIntegralen(2) },
+  kans: { 1: kleinRij, 2: kleinCodes },
+};
+/* het tekort (hoogstens 4 punten) aanvullen: per onderdeel om de beurt een kleine vraag van 2 (of 1) punt achteraan,
+   bij asymptoten en limieten ook een asymptotenvraag van 3 punten;
+   bij Functies en afgeleiden komen er afgeleiden bij in de opsomming */
+function exAanvullen(delen, tekort){
+  for(let k = 0; tekort > 0 && k < 20; k++){
+    const d = delen[k % delen.length], pt = tekort >= 3 && EX_KLEIN[d.id] && EX_KLEIN[d.id][3] ? 3 : Math.min(2, tekort);
+    if(d.afgeleidenApart){
+      const afg = d.vragen[d.vragen.length - 1];
+      for(let i = 0; i < pt; i++) exDeelvraagErbij(afg);
+    } else if(EX_KLEIN[d.id]) d.vragen.push(EX_KLEIN[d.id][pt]());
+    else continue;
+    tekort -= pt;
+  }
+}
+const exTotaal = delen => delen.reduce((t, d) => t + d.vragen.reduce((u, v) => u + v[1], 0), 0);
+function exMaakDelen(keuze){
+  return EX_DELEN.filter(d => keuze[d.id]).map(d => Object.assign(d.maak(keuze), { id: d.id }))
+    .map(d => (d.omgezet ? d : Object.assign(d, { vragen: d.vragen.map(exEenPunt) })));
+}
 function examenOpMaat(keuze){
-  const delen = EX_DELEN.filter(d => keuze[d.id]).map(d => d.maak(keuze)).map(d => (d.omgezet ? d : Object.assign(d, { vragen: d.vragen.map(exEenPunt) })));
+  /* het totaal moet een veelvoud van 50 zijn: opnieuw samenstellen tot het er hoogstens 4 punten onder ligt en dan
+     aanvullen met kleine vragen. Lukt dat niet, dan vallen er hoogstens 2 deelvragen weg (bij 1 of 2 punten te veel). */
+  let delen = null, reserve = null;
+  for(let poging = 0; poging < 40 && !delen; poging++){
+    const dl = exMaakDelen(keuze), T = exTotaal(dl), tekort = Math.max(50, Math.ceil(T / 50) * 50) - T;
+    if(tekort <= 4){ delen = dl; exAanvullen(dl, tekort); }
+    else if(!reserve || T % 50 < reserve.over) reserve = { dl, over: T % 50 };
+  }
+  if(!delen){
+    delen = reserve.dl;
+    if(exTotaal(delen) >= 50 && reserve.over <= 2){
+      const alle = delen.flatMap(d => d.vragen).sort((x, y) => (exLaatsteLetter(y[3]) || '').localeCompare(exLaatsteLetter(x[3]) || ''));
+      for(let i = 0; i < reserve.over; i++){ const v = alle.find(x => !x.aangepast && exDeelvraagEraf(x)); if(v) v.aangepast = true; }
+    }
+  }
   const vragen = [], verdeling = [];
   delen.forEach((d, k) => {
+    if(d.afgeleidenApart){
+      const afg = d.vragen[d.vragen.length - 1];
+      afg[4] = `<p class="px-deel px-nieuw">Afgeleiden (${afg[1]} punten)</p>`;
+      d.verdeling = [['Functies', d.vragen.slice(0, -1).reduce((t, v) => t + v[1], 0)], ['Afgeleiden', afg[1]]];
+    }
     const pt = d.vragen.reduce((t, v) => t + v[1], 0);
     const kop = `<p class="px-deel${k ? ' px-nieuw' : ''}">${d.naam} (${pt} punten)</p>`;
     d.vragen.forEach((v, i) => vragen.push(i ? v : [v[0], v[1], v[2], v[3], kop + (v[4] || '')]));
@@ -9205,7 +9354,7 @@ const WISK_EXTRA = {
         uitleg: () => uitlegKies(theorieAsymptoten(), ['Wat is een asymptoot?', 'Horizontale asymptoot (HA)', 'Snelle regels voor een breuk (rationale functie)']) },
       { id:'sa', label:'Schuine asymptoten', gen: genAsSchuin,
         uitleg: () => uitlegKies(theorieAsymptoten(), ['Wat is een asymptoot?', 'Schuine asymptoot (SA)']) },
-      { id:'alle', label:'Alle asymptoten berekenen', gen: genAsAlle,
+      { id:'alle', label:'Alle asymptoten berekenen', gen: () => genAsAlle(),
         uitleg: () => uitlegKies(theorieAsymptoten(), ['Wat is een asymptoot?', 'Verticale asymptoot (VA)', 'Opgepast: een gat in plaats van een VA', 'Horizontale asymptoot (HA)', 'Schuine asymptoot (SA)', 'Snelle regels voor een breuk (rationale functie)']) },
       { id:'grafiek', label:'Asymptoten aflezen op een grafiek', gen: () => randChoice([genAsGrafiek, genAsGrafiekExtra])(),
         uitleg: () => uitlegKies(theorieAsymptoten(), ['Wat is een asymptoot?', 'Verticale asymptoot (VA)', 'Horizontale asymptoot (HA)', 'Schuine asymptoot (SA)']) },
